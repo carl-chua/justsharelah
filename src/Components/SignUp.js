@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import firebase from "../API/Firebase";
 
 const SignUp = ({ history }) => {
@@ -78,6 +79,9 @@ const SignUp = ({ history }) => {
         </label>
         <button type="submit">Sign Up</button>
       </form>
+      <Link to="/login">
+        <button>Go Login Page</button>
+      </Link>
     </div>
   );
 };
