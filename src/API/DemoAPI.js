@@ -1,6 +1,6 @@
 import firebase from './Firebase.js'
 
-export function demoPost(setTestData) {
+export function demoPost() {
     firebase.firestore()
       .collection("test")
       .add({
