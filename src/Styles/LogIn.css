@@ -1,0 +1,22 @@
+.login {
+  color: #67776d;
+  font-size: 50px;
+}
+
+.smallLinks {
+  color: #67776d;
+}
+
+.forgotPassword {
+  color: #67776d;
+  position: absolute;
+  bottom: 210px;
+  left: 928px;
+}
+
+.createAccount {
+  color: #67776d;
+  position: absolute;
+  bottom: 210px;
+  left: 1296px;
+}
