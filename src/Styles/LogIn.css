@@ -9,14 +9,12 @@
 
 .forgotPassword {
   color: #67776d;
-  position: absolute;
-  bottom: 210px;
-  left: 928px;
+  position: relative;
+  font-size: 14px;
 }
 
 .createAccount {
   color: #67776d;
-  position: absolute;
-  bottom: 210px;
-  left: 1296px;
+  position: relative;
+  font-size: 14px;
 }

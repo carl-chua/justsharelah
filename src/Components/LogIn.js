@@ -136,15 +136,15 @@ const Login = ({ history }) => {
               color="primary"
               className={classes.submit}
             >
-              Sign In
+              LOGIN
             </Button>
-            <Grid container>
-              <Grid item xs>
+            <Grid container direction="column">
+              <Grid item>
                 <Link className="forgotPassword">Forgot password?</Link>
               </Grid>
               <Grid item>
                 <Link className="createAccount" to="/signup">
-                  {"Don't have an account? Sign Up"}
+                  {"Don't have an account? Register"}
                 </Link>
               </Grid>
             </Grid>
