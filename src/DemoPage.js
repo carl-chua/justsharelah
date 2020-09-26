@@ -18,7 +18,9 @@ export default function DemoPage() {
 
         return unsubscribe;
     },[])
+
     const demoHeader = useSelector((state) => state.demoHeader);
+    
     return (
         <div className="Demo">
             <div>{demoHeader ? demoHeader : null}</div>

@@ -1,0 +1,132 @@
+import { Avatar, Card, Box, CardContent, CardActions, Button } from "@material-ui/core";
+
+import Rating from '@material-ui/lab/Rating';
+import React from "react";
+
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles({
+    root: {
+        background : 'linear-gradient(to bottom, #FFD076 25%, white 25%, white)',
+            //minWidth : 220,
+            paddingLeft : "5%",
+            paddingRight : "5%",
+            maxHeight : "auto",
+    },
+    cardContent : {
+        display : "flex",
+        flexDirection : "column",
+        justifyContent : "space",
+        alignItems : "center",
+        paddingTop : "12%",
+    },
+    nameText : {
+        fontWeight : "bold", 
+        fontSize:40, 
+        margin:0,
+    },
+    subText : {
+        fontSize:"100%",
+        color:"gray", 
+        margin:0
+    },
+    buttonPrimary : {
+        backgroundColor : '#CC7F5D',
+        padding : 5,
+        paddingLeft : 15,
+        paddingRight : 15,
+    },
+    ratingBox : {
+        display : "flex",
+        flexDirection : "column",
+        justifyContent : "center",
+        alignItems : "center",
+    }
+})  
+
+export default function UserCard({user}) {
+
+    const styles = useStyles()
+
+    return (
+        <Card 
+            className = {styles.root}
+        >
+            <CardContent
+                className = {styles.cardContent}
+            >
+                <Avatar 
+                    src = {user.imageUrl} 
+                    style = {{
+                        width:120,
+                        height:120,
+                        }}
+                    >
+                        <span style = {{fontSize:"300%"}}>{user.name.charAt(0)}</span>
+                </Avatar>
+                <div>
+                    <p className = {styles.nameText}>{user.name}</p>
+                    <p className = {styles.subText}>{user.city}</p>
+                </div>
+                <Box
+                    style = {{
+                        display : "flex",
+                        flexDirection : "row",
+                        alignItems : "center",
+                        justifyContent : "center",
+                        width : "100%",
+                    }}
+                >
+                    
+                    <p>
+                        ({user.rating ? user.rating.toFixed(1) : "0.0"})
+                    </p>
+                        <Rating 
+                            value = {user.rating}
+                            readOnly = {true}
+                            precision = {0.5}
+                        />
+                    <p className = {styles.subText}>
+                            {user.ratingCount ? user.ratingCount : "0"}
+                    </p>
+                </Box>
+                <Button 
+                    size="small"
+                    className = {styles.buttonPrimary}
+                    onClick = {() => console.log("clicked")}
+                >
+                            <span style = {{color:"white"}}>Follow</span>
+                </Button>
+                <Box
+                    display="flex"
+                    flexDirection = "row"
+                    justifyContent = "space-between"
+                    alignItems = "center"
+                    style = {{
+                        width : "100%",
+                        paddingTop : "5%",
+                    }}
+                >
+                    <Button>
+                        <Box
+                            className = {styles.ratingBox}
+                        >
+                            <p className = {styles.subText}>Followers</p>
+                            <p className = {styles.subText}>0</p>
+                        </Box>
+                    </Button>
+                    <Button>
+                        <Box
+                            className = {styles.ratingBox}
+                        >
+                            <p className = {styles.subText}>Following</p>
+                            <p className = {styles.subText}>0</p>
+                        </Box>
+                    </Button>
+                </Box>
+            </CardContent>
+        </Card>
+    )
+
+}
