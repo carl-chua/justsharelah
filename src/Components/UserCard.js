@@ -50,6 +50,7 @@ export default function UserCard({user}) {
     const styles = useStyles()
 
     return (
+        user ? 
         <Card 
             className = {styles.root}
         >
@@ -63,10 +64,10 @@ export default function UserCard({user}) {
                         height:120,
                         }}
                     >
-                        <span style = {{fontSize:"300%"}}>{user.name.charAt(0)}</span>
+                        <span style = {{fontSize:"300%"}}>{user.username.charAt(0).toUpperCase()}</span>
                 </Avatar>
                 <div>
-                    <p className = {styles.nameText}>{user.name}</p>
+                    <p className = {styles.nameText}>{user.username}</p>
                     <p className = {styles.subText}>{user.city}</p>
                 </div>
                 <Box
@@ -113,7 +114,7 @@ export default function UserCard({user}) {
                             className = {styles.ratingBox}
                         >
                             <p className = {styles.subText}>Followers</p>
-                            <p className = {styles.subText}>0</p>
+                            <p className = {styles.subText}>{user.follwers ? user.follwers.length : 0}</p>
                         </Box>
                     </Button>
                     <Button>
@@ -121,12 +122,14 @@ export default function UserCard({user}) {
                             className = {styles.ratingBox}
                         >
                             <p className = {styles.subText}>Following</p>
-                            <p className = {styles.subText}>0</p>
+                            <p className = {styles.subText}>{user.following ? user.following.length : 0}</p>
                         </Box>
                     </Button>
                 </Box>
             </CardContent>
         </Card>
+        :
+        null
     )
 
 }

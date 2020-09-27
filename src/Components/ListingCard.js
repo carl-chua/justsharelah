@@ -1,4 +1,4 @@
-import { Avatar, Card, Box, CardContent, CardMedia, CardActionArea } from "@material-ui/core";
+import {Card, Box, CardContent, CardMedia, CardActionArea } from "@material-ui/core";
 
 import React from "react";
 
@@ -40,7 +40,7 @@ export default function ListingCard({data}) {
 
     return (
         <Card className = {styles.root}>
-            <CardActionArea>
+            <CardActionArea onClick = {() => console.log("clicked listingcard")}>
                 <CardMedia
                     component = "img"
                     src = "https://images.unsplash.com/photo-1596650956793-68f12df4e549?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2980&q=80"
@@ -69,7 +69,7 @@ export default function ListingCard({data}) {
                             <text className = {styles.mainText}>{data.title.substr(0,20)}</text>
                             <text className = {styles.subText}>Min target : S${data.minOrder}</text>
                             <text className = {styles.desText}>
-                                {data.description.length < 50 ? data.description : data.description.substr(0,50) + "..."}
+                                {data.description.length < 70 ? data.description : data.description.substr(0,70) + "..."}
                             </text>
                         </div>
                         <div 

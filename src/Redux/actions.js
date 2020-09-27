@@ -2,7 +2,7 @@
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_OUT = "SIGN_OUT";
 export const RE_SIGN_IN = "RE_SIGN_IN";
-export const CURRENT_USER = "GET_CURRENT_USER";
+export const CURRENT_USER = "CURRENT_USER";
 export const DEMO_HEADER = "DEMO_HEADER";
 
 export const signIn = (userId) => ({
@@ -19,7 +19,7 @@ export const reSignIn = () => ({
     payload: null,
 });
   
-export const getCurrentUser = (userData) => ({
+export const currentUser = (userData) => ({
     type : CURRENT_USER,
     payload : userData,
 });
