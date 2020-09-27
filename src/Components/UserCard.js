@@ -97,7 +97,7 @@ export default function UserCard({user}) {
                     className = {styles.buttonPrimary}
                     onClick = {() => console.log("clicked")}
                 >
-                            <span style = {{color:"white"}}>Follow</span>
+                    <span style = {{color:"white"}}>Follow</span>
                 </Button>
                 <Box
                     display="flex"
