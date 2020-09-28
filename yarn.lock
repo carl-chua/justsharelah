@@ -1579,7 +1579,6 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-<<<<<<< HEAD
 "@material-ui/lab@^4.0.0-alpha.56":
   version "4.0.0-alpha.56"
   resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.56.tgz#ff63080949b55b40625e056bbda05e130d216d34"
@@ -1591,8 +1590,6 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
 
-=======
->>>>>>> 44a863c8b298ec2a6bdfc19480f311ddd123cfe1
 "@material-ui/styles@^4.10.0":
   version "4.10.0"
   resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.10.0.tgz#2406dc23aa358217aa8cc772e6237bd7f0544071"
