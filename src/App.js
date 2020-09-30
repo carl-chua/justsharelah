@@ -10,6 +10,8 @@ import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
+import CreateListing from "./Components/CreateListing";
+import ListingDetails from "./Components/ListingDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +28,8 @@ function App() {
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/createListing" component={CreateListing} />
+            <Route exact path="/listingDetails" component={ListingDetails} />
           </div>
         </Router>
       </AuthProvider>
