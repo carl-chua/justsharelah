@@ -12,6 +12,8 @@ import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
 import CreateListing from "./Components/CreateListing";
 import ListingDetails from "./Components/ListingDetails";
+import ChatWidget from "./Components/ChatWidget";
+import ChatClient from "./Components/ChatClient";
 
 import UserPage from './Screens/UserPage'
 import { Container } from "@material-ui/core";
@@ -40,6 +42,8 @@ function App() {
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/listingDetails" component={ListingDetails} />
             <Route exact path="/user/:username" component = {UserPage}/>
+            <Route exact path="/chatWidget" component = {ChatWidget}/>
+            <Route exact path="/chatClient" component = {ChatClient}/>
           </div>
         </Router>
       </AuthProvider>
