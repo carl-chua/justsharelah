@@ -17,6 +17,12 @@ import { Container } from "@material-ui/core";
 function App() {
   const dispatch = useDispatch();
 
+  // //Declare a new state variable, which we'll call "testData"
+  // //The argument to useState is the initial state
+  // //useState returns a pair of values: the current state and a function that updates it.
+  // const[testData, setTestData] = useState([]);
+
+  // Similar to componentDidMount and componentDidUpdate
   React.useEffect(() => {
     dispatch(demoHeader("R123124123"));
   }, []);
