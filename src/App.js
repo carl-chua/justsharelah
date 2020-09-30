@@ -13,6 +13,9 @@ import SignUp from "./Components/SignUp";
 import CreateListing from "./Components/CreateListing";
 import ListingDetails from "./Components/ListingDetails";
 
+import UserPage from './Screens/UserPage'
+import { Container } from "@material-ui/core";
+
 function App() {
   const dispatch = useDispatch();
 
@@ -24,12 +27,13 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Router>
-          <div>
+          <div style={{height:"100vh"}}>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/listingDetails" component={ListingDetails} />
+            <Route exact path="/user/:username" component = {UserPage}/>
           </div>
         </Router>
       </AuthProvider>
