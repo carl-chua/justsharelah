@@ -8,18 +8,21 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
     root: {
-        background : 'linear-gradient(to bottom, #FFD076 25%, white 25%, white)',
+        background : 'linear-gradient(to bottom, #FFD076 30%, white 20%, white)',
             //minWidth : 220,
             paddingLeft : "5%",
             paddingRight : "5%",
             maxHeight : "auto",
+            borderRadius : "8%",
+            border : "1px solid #BEBEBE",
+            boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)"
     },
     cardContent : {
         display : "flex",
         flexDirection : "column",
         justifyContent : "space",
         alignItems : "center",
-        paddingTop : "12%",
+        paddingTop : "25%",
     },
     nameText : {
         fontWeight : "bold", 
@@ -60,8 +63,8 @@ export default function UserCard({user}) {
                 <Avatar 
                     src = {user.imageUrl} 
                     style = {{
-                        width:120,
-                        height:120,
+                        width:100,
+                        height:100,
                         }}
                     >
                         <span style = {{fontSize:"300%"}}>{user.username.charAt(0).toUpperCase()}</span>
@@ -106,7 +109,8 @@ export default function UserCard({user}) {
                     alignItems = "center"
                     style = {{
                         width : "100%",
-                        paddingTop : "5%",
+                        paddingTop : "8%",
+                        paddingBottom : "10%",
                     }}
                 >
                     <Button>
