@@ -18,14 +18,12 @@ import "../Styles/SignUp.css";
 const useStyles = makeStyles((theme) => ({
   root: { height: "100vh" },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
-    backgroundRepeat: "no-repeat",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    width: "630",
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: "70%",
   },
   paper: {
     margin: theme.spacing(8, 4),
@@ -158,13 +156,19 @@ const SignUp = ({ history }) => {
     >
       <CssBaseline />
       <Grid
-        style={{ maxheight: "100%" }}
+        style={{ 
+          maxheight: "100%", background: "#7AA18A", 
+        }}
         item
         xs={false}
         sm={4}
         md={7}
         className={classes.image}
       />
+      <Grid item>
+            className={classes.image}
+              <img className={classes.img} alt="complex" src="/images/undraw_mobile_login_ikmv (2).svg" />
+          </Grid>
       <Grid
         style={{
           background: "#F5F8F6",

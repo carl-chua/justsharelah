@@ -11,7 +11,8 @@ import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
 
-import UserPage from './Screens/UserPage'
+import UserPage from './Screens/UserPage';
+import SettingsPage from './Screens/SettingsPage';
 import { Container } from "@material-ui/core";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component = {UserPage}/>
+            <Route exact path="/settings/:username" component = {SettingsPage}/>
           </div>
         </Router>
       </AuthProvider>
