@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { demoListener, demoPost, demoFetch } from "./API/DemoAPI";
 import DemoPage from "./DemoPage";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,9 +13,9 @@ import CreateListing from "./Components/CreateListing";
 import ListingDetails from "./Components/ListingDetails";
 import ChatWidget from "./Components/ChatWidget";
 import ChatClient from "./Components/ChatClient";
-
-import UserPage from './Screens/UserPage'
+import UserPage from "./Screens/UserPage";
 import { Container } from "@material-ui/core";
+import "./Styles/index.css";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,15 +34,15 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Router>
-          <div style={{height:"100vh"}}>
+          <div style={{ height: "100vh" }}>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/listingDetails" component={ListingDetails} />
-            <Route exact path="/user/:username" component = {UserPage}/>
-            <Route exact path="/chatWidget" component = {ChatWidget}/>
-            <Route exact path="/chatClient" component = {ChatClient}/>
+            <Route exact path="/user/:username" component={UserPage} />
+            <Route exact path="/chatWidget" component={ChatWidget} />
+            <Route exact path="/chatClient" component={ChatClient} />
           </div>
         </Router>
       </AuthProvider>

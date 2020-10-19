@@ -14,11 +14,12 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/SignUp.css";
+import signupImage from "../Media/Capture.PNG";
 
 const useStyles = makeStyles((theme) => ({
   root: { height: "100vh" },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage: `url(${signupImage})`,
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -73,12 +74,6 @@ const SignUp = ({ history }) => {
         country,
         city,
       } = event.target.elements;
-      console.log(username.value);
-      console.log(email.value);
-      console.log(password.value);
-      console.log(country.value);
-      console.log(city.value);
-      console.log(phoneNumber.value);
       try {
         await firebase
           .auth()

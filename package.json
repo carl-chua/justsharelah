@@ -22,7 +22,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "stream-chat": "^2.4.0",
-    "stream-chat-react": "^3.0.0"
+    "stream-chat-react": "^3.0.0",
+    "yarn": "^1.22.10"
   },
   "scripts": {
     "start": "react-scripts start",
