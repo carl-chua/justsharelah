@@ -7,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import "../Styles/Styles.css";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     root: {
         marginLeft : "2.5%",
         marginRight : "2.5%",
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         minWidth: '50vw',
         textAlign: "start"
     },
-}))
+})
 
 const countries = [
     {

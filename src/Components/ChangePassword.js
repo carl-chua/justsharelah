@@ -49,6 +49,7 @@ export default function Profile({data}) {
                     <TextField
                     label="Current Password"
                     id="outlined-size-small"
+                    defaultValue= {data.password}
                     variant="outlined"
                     size="small"
                     className = {classes.textfield}
