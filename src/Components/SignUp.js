@@ -14,19 +14,16 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/SignUp.css";
-import signupImage from "../Media/Capture.PNG";
 
 const useStyles = makeStyles((theme) => ({
   root: { height: "100vh" },
   image: {
-    backgroundImage: `url(${signupImage})`,
-    backgroundRepeat: "no-repeat",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    width: "630",
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: "70%",
   },
   paper: {
     margin: theme.spacing(8, 4),
@@ -74,6 +71,12 @@ const SignUp = ({ history }) => {
         country,
         city,
       } = event.target.elements;
+      console.log(username.value);
+      console.log(email.value);
+      console.log(password.value);
+      console.log(country.value);
+      console.log(city.value);
+      console.log(phoneNumber.value);
       try {
         await firebase
           .auth()
@@ -153,13 +156,19 @@ const SignUp = ({ history }) => {
     >
       <CssBaseline />
       <Grid
-        style={{ maxheight: "100%" }}
+        style={{ 
+          maxheight: "100%", background: "#7AA18A", 
+        }}
         item
         xs={false}
         sm={4}
         md={7}
         className={classes.image}
       />
+      <Grid item>
+            className={classes.image}
+              <img className={classes.img} alt="complex" src="/images/undraw_mobile_login_ikmv (2).svg" />
+          </Grid>
       <Grid
         style={{
           background: "#F5F8F6",

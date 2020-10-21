@@ -1,8 +1,7 @@
 import { Grid, Box, Button} from "@material-ui/core";
 import React from "react";
 
-
-import UserCard from "../Components/UserCard"
+import UserCard from "../Components/UserCard";
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -210,14 +209,13 @@ export default function UserPage() {
                         className = {styles.tabContainer}
                     >
                         <p className = {styles.tabHeaderText}>
-                            {view === 1 ? "Listings" : "Reviews"}
+                            {view === 1 && "Listings"}
+                            {view === 2 && "Reviews"}
                         </p>
                         
-                        {view === 1 ?
-                            <ListingList dataList = {dummyData} colSize = {3}/>
-                        :
-                            <ReviewList dataList = {dummyReview}/>
-                        }
+                        {view === 1 && <ListingList dataList = {dummyData} colSize = {3}/>}
+                        {view === 2 && <ReviewList dataList = {dummyReview}/>}
+
                     </Box>
                 </Grid>
             </Grid>
