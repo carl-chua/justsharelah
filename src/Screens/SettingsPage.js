@@ -9,8 +9,6 @@ import Box from '@material-ui/core/Box';
 
 import ProfileCard from "../Components/ProfileCard";
 import ChangePassword from "../Components/ChangePassword";
-import ListingList from "../Components/ListingList";
-
 
 
 function TabPanel(props) {
@@ -56,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     borderRight: `1px solid ${theme.palette.divider}`,
     paddingLeft: 10,
     minWidth: "18vw",
-    height: 190,
+    height: 180,
   },
   tabPanel: {
   },
@@ -99,8 +97,7 @@ export default function VerticalTabs() {
       >
         <Tab label="Edit Profile" {...a11yProps(0)} />
         <Tab label="Change Password" {...a11yProps(1)} />
-        <Tab label="History" {...a11yProps(2)} />
-        <Tab label="Settings" {...a11yProps(3)} />
+        <Tab label="Settings" {...a11yProps(2)} />
         
       </Tabs>
       <TabPanel value={value} index={0} className = {classes.tabPanel}>
@@ -124,16 +121,6 @@ export default function VerticalTabs() {
         </Box>
       </TabPanel>
       <TabPanel value={value} index={2} className = {classes.tabPanel}>
-      <Box
-            m = {1}
-            border = {1}
-            bgcolor = "background-paper"
-            className = {classes.tabContainer}
-            >
-            <ListingList dataList = {dummyData} colSize = {3}/>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={3} className = {classes.tabPanel}>
         Settings
       </TabPanel>
       
