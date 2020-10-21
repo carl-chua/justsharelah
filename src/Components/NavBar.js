@@ -1,28 +1,25 @@
 import React, { useState } from "react";
 import firebase from "../API/Firebase";
+import { useSelector, useDispatch } from "react-redux";
+import { reduxSetSearchString } from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/NavBar.css";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    color: theme.palette.text.primary,
-  },
-}));
-
 function NavBar({ history }) {
-  const [searchString, setSearchString] = useState("");
+  const [searchString, setSearchString] = useState(
+    useSelector((state) => state.searchString)
+  );
 
-  const classes = useStyles();
+  const dispatch = useDispatch();
 
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
-      if (searchString != null || searchString != "") {
-        alert(`Submitting search string ${searchString}`);
+      if (searchString != null && searchString != "") {
+        dispatch(reduxSetSearchString(searchString));
+        history.push("/search");
       }
     } else {
       history.push("/login");
@@ -32,6 +29,7 @@ function NavBar({ history }) {
   function handleClickOnName() {
     if (firebase.auth().currentUser != null) {
       history.push("/");
+      alert("Clicked on name!");
     } else {
       history.push("/login");
     }
@@ -40,7 +38,7 @@ function NavBar({ history }) {
   return (
     <div className="NavBar">
       <div className="NavBarTop">
-        <button onClick={handleClickOnName} className="Name">
+        <button type="button" onClick={handleClickOnName} className="Name">
           JustShareLah!
         </button>
         <form onSubmit={handleSearch}>
