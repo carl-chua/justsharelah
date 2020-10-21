@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import firebase from "../API/Firebase";
 import { loadUser } from "../API/CurrentUser";
-import { getAllListingsListener, getAllListings } from "../API/Listings";
+import { getAllListingsListener, getAllListings , addListing } from "../API/Listings";
 import Album from "./Album";
 import NavBar from "./NavBar";
 import { Redirect } from "react-router";
@@ -14,15 +14,17 @@ function HomePage({ history }) {
     loadUser(setCurrentUser);
   }
 
-  function loadCurrentListings() {
-    getAllListings(setListings);
-  }
+  // function loadCurrentListings() {
+  //   getAllListings();
+  // }
 
   React.useEffect(() => {
     loadCurrentUser();
   }, []);
 
-  React.useEffect(() => loadCurrentListings());
+  React.useEffect(() => {
+    setListings(getAllListings());
+  }, []);
 
   function signOut() {
     firebase.auth().signOut();
@@ -39,7 +41,7 @@ function HomePage({ history }) {
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
       <button onClick={signOut}>Sign out</button>
-      <Album props={currentListings} />
+      <Album listings={currentListings} />
     </div>
   );
 }

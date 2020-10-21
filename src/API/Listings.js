@@ -9,32 +9,47 @@ import firebase from "./Firebase.js";
 // When you set a listener, Cloud Firestore sends your listener an initial snapshot of the data, 
 // and then another snapshot each time the document changes.
 
-export function getAllListingsListener(setListings) {
-  const snapshot = firebase
-  .firestore()
-  .collection("listings")
-  .limit(9)
+// export function getAllListingsListener(setListings) {
+//   const query = firebase
+//   .firestore()
+//   .collection("listings")
+//   .limit(9);
 
-  const observer = snapshot.onSnapshot(docSnapshot => {
-      console.log("Received listings snapshot");
-      docSnapshot.forEach(doc => {
-          setListings(doc.data())
-      })
-  })
+//   const observer = query.onSnapshot(docSnapshot => {
+//     console.log("Received listings snapshot");
+//     docSnapshot.forEach(doc => {
+//       setListings(doc.data())
+//     });
+//   }, err => {
+//       console.log(`Encountered error: ${err}`);
+//   });
 
-  return observer;
-}
+//   return observer;
+// }
 
-export async function getAllListings(setListings) {
-  const snapshot = await firebase
-  .firestore()
-  .collection("listings")
-  .limit(9)
-  .get()
+const db = firebase.firestore().collection("listings");
 
+export const addListing = (listing) => {
+  return db.add(listing);
+};
+
+export const getListings = (size) => {
+  return db.limit(size).get();
+};
+
+export async function getAllListings() {
+  const snapshot = await db.get();
   snapshot.forEach(doc => {
-      console.log("Listings: " + JSON.stringify(doc.data()))
-      setListings(doc.data())
-  })
-  
-}
+    console.log(doc.name, '=>', doc.data());
+  });
+  return snapshot;
+
+};
+
+// export async const getAllListings = () => {
+//   const snapshot = await db.get();
+//   // snapshot.forEach(doc => {
+//   //   console.log(doc.name, '=>', doc.data());
+//   // });
+//   return snapshot;
+// };
