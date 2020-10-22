@@ -6,7 +6,16 @@ import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRo
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
+import { makeStyles } from '@material-ui/core/styles';
+import { IconButton} from "@material-ui/core";
+
 import "../Styles/NavBar.css";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    color: theme.palette.text.primary,
+  },
+}));
 
 function NavBar({ history }) {
   const [searchString, setSearchString] = useState(
@@ -14,6 +23,19 @@ function NavBar({ history }) {
   );
 
   const dispatch = useDispatch();
+
+  const userToken = useSelector(state => state.userToken)
+
+  const currentUser = useSelector(state => state.currentUser)
+
+
+  React.useEffect(() => {
+    if(userToken != null && currentUser != null) { 
+      console.log("LOGGED IN USERID: " + userToken);
+      console.log("LOGGED IN USERNAME: " + JSON.stringify(currentUser.username));
+    }
+  },[userToken, currentUser])
+
 
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
@@ -27,9 +49,21 @@ function NavBar({ history }) {
   }
 
   function handleClickOnName() {
+
     if (firebase.auth().currentUser != null) {
       history.push("/");
       alert("Clicked on name!");
+    } else {
+      history.push("/login");
+    }
+  }
+
+  function handleProfileClick() {
+
+    console.log("GOING TO PROFILE:")
+
+    if (firebase.auth().currentUser != null && currentUser != null)  {
+      history.push(`/user/${currentUser.username}`);
     } else {
       history.push("/login");
     }
@@ -55,23 +89,23 @@ function NavBar({ history }) {
           </div>
         </form>
         <div className="SideButtons">
-          <button>
+          <IconButton>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
               fontSize="large"
             />
-          </button>
+          </IconButton>
 
-          <button>
+          <IconButton>
             <LocalMallOutlinedIcon
               style={{ color: "white" }}
               fontSize="large"
             />
-          </button>
+          </IconButton>
 
-          <button>
+          <IconButton onClick={() => handleProfileClick()}>
             <PersonOutlineIcon style={{ color: "white" }} fontSize="large" />
-          </button>
+          </IconButton>
         </div>
       </div>
       <div className="NavBarBottom">

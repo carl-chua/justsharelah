@@ -16,6 +16,7 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import CardGiftcardOutlinedIcon from '@material-ui/icons/CardGiftcardOutlined';
+import NavBar from "./NavBar";
 
 
 const BootstrapInput = withStyles((theme) => ({
@@ -120,8 +121,14 @@ const CreateListing = () => {
     const handleShopLink = (event) => {
         setShopLink(event.target.value);
     };
-    const handleImg = (event) => {
-        //setImg(event.target.files[0]);
+    const handleImg = async (e) => {
+        const file = e.target.files[0];
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(file.name);
+        await fileRef.put(file);
+        console.log(typeof file.name);
+        //setImg(await fileRef.getDownloadURL());
+        alert("Image uploaded!");
     };
     const handleLocation = (event) => {
         setLocation(event.target.value);
@@ -164,6 +171,7 @@ const CreateListing = () => {
            location:location,
            desc:desc,
            shopLink:shopLink,
+           dateCreated : new Date(),
            //img:img
           })
           .then(() => {
@@ -174,7 +182,8 @@ const CreateListing = () => {
 
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
-            <h2>What would you like to list today? <CardGiftcardOutlinedIcon fontSize="medium"/></h2>
+            <NavBar style={{ position: "sticky" }}/>
+            <h2  style={{ textAlign: "center" }}>What would you like to list today? <CardGiftcardOutlinedIcon fontSize="medium"/></h2>
             <form onSubmit={handleSubmit} className={classes.root} noValidate autoComplete="off">
             <Grid container spacing={0}  justify="center" alignItems="Stretch">
                

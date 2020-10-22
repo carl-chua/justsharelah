@@ -15,7 +15,12 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/LogIn.css";
+
 import loginImage from "../Media/Capture.PNG";
+
+
+import { signIn, currentUser as currUser } from "../Redux/actions";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,6 +71,8 @@ const useStyles = makeStyles((theme) => ({
 const Login = ({ history }) => {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
@@ -74,6 +81,20 @@ const Login = ({ history }) => {
         await firebase
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
+
+        var user = firebase.auth().currentUser;
+        if(user) {
+          let userData = await firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .get();
+
+          dispatch(currUser(userData.data()));
+          dispatch(signIn(user.uid));
+
+        }
+
         history.push("/");
       } catch (error) {
         alert(error);

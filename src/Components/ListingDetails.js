@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-
+import NavBar from "./NavBar";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,7 +55,7 @@ const ListingDetails = () => {
     var [category, setCategory] = React.useState('');
     var [authorName, setAuthorName] = React.useState('');
     //enter listing id for doc
-    firebase.firestore().collection("listings").doc("Cni2bPQXL4VVpGgCYM4k").get().then(function(doc) {
+    firebase.firestore().collection("listings").doc("wFWMe3nwDnYRZ9Gfuf2F").get().then(function(doc) {
         if (doc.exists) {
             console.log("Document data:", doc.data());
             setListingTitle(doc.data().listingTitle);
@@ -87,7 +87,7 @@ const ListingDetails = () => {
     
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
-           
+           <NavBar style={{ position: "sticky" }}/>
         <Grid container spacing={2}>
         
             

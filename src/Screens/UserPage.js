@@ -1,4 +1,4 @@
-import { Grid, Box, Button} from "@material-ui/core";
+import { Grid, Box, Button, Modal} from "@material-ui/core";
 import React from "react";
 
 import UserCard from "../Components/UserCard";
@@ -6,9 +6,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 import ListingList from "../Components/ListingList";
-import { getUserByUsernameListener } from "../API/Users";
+import { getUserByUsername, getUserByUsernameListener } from "../API/Users";
 import { useParams } from "react-router";
 import ReviewList from "../Components/ReviewList";
+import UserList from "../Components/UserList";
 
 
 const useStyles = makeStyles({
@@ -140,20 +141,43 @@ export default function UserPage() {
 
     const styles = useStyles()
     
-    const[view, setView] = React.useState(2)
+    const[view, setView] = React.useState(1)
 
     const[user, setUser] = React.useState();
 
     let { username } = useParams();
 
-    React.useEffect(() => {
-        const unsubscribe = getUserByUsernameListener(username, setUser)
+    const[showFollowingModal, setShowFollowingModal] = React.useState(false);
+    const[showFollowersModal, setShowFollowersModal] = React.useState(false);
 
+    function openFollowingModal() {
+        setShowFollowingModal(true);
+    }
+
+    function closeFollowingModal() {
+        setShowFollowingModal(false);
+    }
+
+    function openFollowersModal() {
+        setShowFollowersModal(true);
+    }
+
+    function closeFollowersModal() {
+        setShowFollowersModal(false);
+    }
+
+    React.useEffect(() => {
+        const unsubscribe = getUserByUsernameListener(username, setUser) 
+        
         return unsubscribe
     },[])
 
+    React.useEffect(() => {
+        console.log(JSON.stringify(user))
+    },[user])
 
     return(
+        user ?
         <Box className = {styles.root}>
             <Grid
                 container
@@ -172,7 +196,12 @@ export default function UserPage() {
                         justifyContent = "center"
                         alignContent = "center"
                     >
-                        <UserCard user={user}/>
+                        <UserCard 
+                            user={user[1]} 
+                            userId={user[0]} 
+                            openFollowersModal = {openFollowersModal}
+                            openFollowingModal = {openFollowingModal}
+                        />
 
                     </Box>
                 </Grid>
@@ -219,6 +248,22 @@ export default function UserPage() {
                     </Box>
                 </Grid>
             </Grid>
+
+            <Modal
+                open={showFollowingModal}
+                onClose={closeFollowingModal}
+                style = {{
+                    position : 'absolute',
+                    width : "50%",
+                    height : "30%",
+                }}
+            >
+                <UserList dataList = {user[1].following} title = {"Following"}/>
+            </Modal>
         </Box>
+        :
+        <div className = {styles.root} style = {{justifyContent : "center", alignItems: "center", height: "80vh"}}>
+            <p>User {username} does not exist!</p>
+        </div>
     )
 }

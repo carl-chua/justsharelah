@@ -1,17 +1,17 @@
 import React from 'react'
 import { GridList, Box } from "@material-ui/core";
-import ReviewCard from "./ReviewCard";
+import ListingCard from "./ListingCard";
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import UserListCard from './UserListCard';
 
 const useStyles = makeStyles({
-    reviewList : {
+    listingList : {
         display : "flex",
         flexWrap : "wrap",
         overflow : "auto",
-        paddingLeft : "2.5%",
-        paddingRight : "2.5",
+        paddingLeft : "2.5%"
     },
     noListText : {
         display : "flex",
@@ -22,29 +22,29 @@ const useStyles = makeStyles({
     },
 })
 
-export default function ReviewList({dataList}) {
+export default function UserList({dataList, title}) {
     const styles = useStyles();
     const theme = useTheme();
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
-        dataList.length > 0 ?
+        dataList && dataList.length > 0  ?
         <GridList 
             cols = {1}
-            className = {styles.reviewList}
+            className = {styles.listingList}
             style = {{
                 justifyContent : `${isNotSmallScreen ? "start" : "center"}`,
             }}
         >
             {dataList.map(data => (
-                <ReviewCard key ={data.id} data = {data}/>
+                <UserListCard key={data} data={data}/>  
             ))}
         </GridList>
         :
         <Box
             className = {styles.noListText}
         >
-            <p>User has no Reviews</p>
+            <p>User has no {title}</p>
         </Box>
     )
 }

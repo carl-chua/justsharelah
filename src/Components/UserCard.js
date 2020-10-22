@@ -1,9 +1,12 @@
-import { Avatar, Card, Box, CardContent, CardActions, Button } from "@material-ui/core";
+import { Avatar, Card, Box, CardContent, CardActions, Button, Modal } from "@material-ui/core";
 
 import Rating from '@material-ui/lab/Rating';
 import React from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from "react-redux";
+import { followUser, unfollowUser } from "../API/Users";
+import UserList from "./UserList";
 
 
 const useStyles = makeStyles({
@@ -48,9 +51,25 @@ const useStyles = makeStyles({
     }
 })  
 
-export default function UserCard({user}) {
+export default function UserCard({user, userId, openFollowingModal, openFollowersModal}) {
 
     const styles = useStyles()
+
+    const currentUser = useSelector(state => state.currentUser)
+
+    const userToken = useSelector(state => state.userToken);
+
+    async function handleFollow() {
+        console.log("clicked")
+       var result = await followUser(userToken, userId);
+       console.log("FOLLOWED? : " + result)
+    }
+
+    async function handleUnfollow() {
+        console.log("unfollowing");
+        var result = await unfollowUser(userToken, userId);
+
+    }
 
     return (
         user ? 
@@ -95,13 +114,27 @@ export default function UserCard({user}) {
                             {user.ratingCount ? user.ratingCount : "0"}
                     </p>
                 </Box>
+                {user.username != currentUser.username ?
+                 (!user.followers.includes(userToken) ?
                 <Button 
                     size="small"
                     className = {styles.buttonPrimary}
-                    onClick = {() => console.log("clicked")}
+                    onClick = {handleFollow}
                 >
                     <span style = {{color:"white"}}>Follow</span>
                 </Button>
+                :
+                <Button 
+                    size="small"
+                    className = {styles.buttonPrimary}
+                    onClick = {handleUnfollow}
+                >
+                    <span style = {{color:"white"}}>Unfollow</span>
+                </Button>
+                )
+                :
+                null
+                }
                 <Box
                     display="flex"
                     flexDirection = "row"
@@ -118,10 +151,10 @@ export default function UserCard({user}) {
                             className = {styles.ratingBox}
                         >
                             <p className = {styles.subText}>Followers</p>
-                            <p className = {styles.subText}>{user.follwers ? user.follwers.length : 0}</p>
+                            <p className = {styles.subText}>{user.followers ? user.followers.length : 0}</p>
                         </Box>
                     </Button>
-                    <Button>
+                    <Button onClick={openFollowingModal}>
                         <Box
                             className = {styles.ratingBox}
                         >
@@ -137,3 +170,12 @@ export default function UserCard({user}) {
     )
 
 }
+
+/*
+                <Modal
+                open={showFollowingModal}
+                onClose={isFollowingModal(false)}
+            >
+                <UserList dataList = {null} title = {"Following"}/>
+            </Modal>
+            */

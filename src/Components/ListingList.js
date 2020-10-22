@@ -43,7 +43,7 @@ export default function ListingList({colSize, dataList}) {
         <Box
             className = {styles.noListText}
         >
-            <text>User has no Listings</text>
+            <p>User has no Listings</p>
         </Box>
     )
 }
