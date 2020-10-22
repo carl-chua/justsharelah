@@ -25,11 +25,9 @@ function HomePage({ history }) {
   // }, []);
 
   React.useEffect(() => {
-    searchListings(null, 9).then(querySnapshot => {
-      var temp = [];
-      querySnapshot.forEach(doc => temp.push([doc.id, doc.data()]));
-      setListings(temp);
-      });
+    searchListings(null, 9).then((querySnapshot) => {
+      setListings(querySnapshot.docs.map((doc) => doc.data()));
+    });
   }, []);
 
   // // testing
@@ -45,7 +43,6 @@ function HomePage({ history }) {
   //     return [];
   //   });
   // });
-
 
   function signOut() {
     firebase.auth().signOut();
