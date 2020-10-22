@@ -15,6 +15,7 @@ import UserPage from './Screens/UserPage';
 import SettingsPage from './Screens/SettingsPage';
 import { Container } from "@material-ui/core";
 import ListingDetails from "./Components/ListingDetails";
+import CreateListing from "./Components/CreateListing";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
             <Route exact path="/user/:username" component = {UserPage}/>
             <Route exact path="/settings/:username" component = {SettingsPage}/>
             <Route exact path="/chat" component = {Chat}/>
+            <Route exact path="/listingDetails" component = {ListingDetails}/>
+            <Route exact path="/createListing" component = {CreateListing}/>
 
           </div>
         </Router>
