@@ -43,40 +43,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Album({listings}) {
+export default function Album(data) {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       <CssBaseline />
       <main>
-        <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {listings.map((card, index) => (
-              <Grid item key={index} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {card.name}
-                    </Typography>
-                    <Typography>
-                      {card.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={() => "/listingDetails"} size="small" color="primary">
-                      View
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
+        <Card className={classes.card}>
+          <Typography gutterBottom variant="h4" align="left">
+            For you
+          </Typography>
+          <Container className={classes.cardGrid} maxWidth="md">
+            <Grid container spacing={4}>
+              {data.listings.map((listing) => (
+                <Grid item key={listing[0]} xs={12} sm={6} md={4}>
+                  <Card className={classes.card}>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image="https://source.unsplash.com/random"
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {listing[1].listingTitle}
+                      </Typography>
+                      <Typography>
+                        {listing[1].desc}
+                      </Typography>
+                      <Typography>
+                        Minimum Quantity: {listing[1].minQty}
+                      </Typography>
+                      <Typography>
+                        #{listing[1].listingTags}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button onClick={() => "/listingDetails"} size="small" color="primary">
+                        View
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Card>
       </main>
     </React.Fragment>
   );

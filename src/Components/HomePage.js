@@ -18,9 +18,17 @@ function HomePage({ history }) {
     loadCurrentUser();
   }, []);
 
+  // React.useEffect(() => {
+  //   searchListings(null, 9).then(querySnapshot => {
+  //     setListings(querySnapshot.docs.map(doc => doc.data()));
+  //     });
+  // }, []);
+
   React.useEffect(() => {
     searchListings(null, 9).then(querySnapshot => {
-      setListings(querySnapshot.docs.map(doc => doc.data()));
+      var temp = [];
+      querySnapshot.forEach(doc => temp.push([doc.id, doc.data()]));
+      setListings(temp);
       });
   }, []);
 
@@ -31,8 +39,7 @@ function HomePage({ history }) {
   //   });
   // });
 
-  // testing
-  // searchListings("test", 5).then(querySnapshot => {
+  // searchListings(null, 5).then(querySnapshot => {
   //   querySnapshot.docs.map(doc => {
   //     console.log(doc.data());
   //     return [];

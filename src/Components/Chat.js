@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { GiftedChat } from "react-web-gifted-chat";
-import firebase from "firebase";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import List from "@material-ui/core/List";
@@ -13,18 +12,19 @@ import Dialog from "@material-ui/core/Dialog";
 import Typography from "@material-ui/core/Typography";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import firebase from "../API/Firebase";
 
-const config = {
-  apiKey: "AIzaSyC9Hcq-eFBRGcC79SXtYp1NVDjsss3tEC8",
-  authDomain: "chat-16ee2.firebaseapp.com",
-  databaseURL: "https://chat-16ee2.firebaseio.com",
-  projectId: "chat-16ee2",
-  storageBucket: "chat-16ee2.appspot.com",
-  messagingSenderId: "703172176372",
-};
-if (!firebase.apps.length) {
-  firebase.initializeApp(config);
-}
+// const config = {
+//   apiKey: "AIzaSyC9Hcq-eFBRGcC79SXtYp1NVDjsss3tEC8",
+//   authDomain: "chat-16ee2.firebaseapp.com",
+//   databaseURL: "https://chat-16ee2.firebaseio.com",
+//   projectId: "chat-16ee2",
+//   storageBucket: "chat-16ee2.appspot.com",
+//   messagingSenderId: "703172176372",
+// };
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(config);
+// }
 
 class Chat extends Component {
   constructor() {
@@ -36,18 +36,18 @@ class Chat extends Component {
     };
   }
 
-  async signIn() {
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
-    try {
-      await firebase.auth().signInWithPopup(googleProvider);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async signIn() {
+  //   const googleProvider = new firebase.auth.GoogleAuthProvider();
+  //   try {
+  //     await firebase.auth().signInWithPopup(googleProvider);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
-  signOut() {
-    firebase.auth().signOut();
-  }
+  // signOut() {
+  //   firebase.auth().signOut();
+  // }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
@@ -106,13 +106,13 @@ class Chat extends Component {
   }
 
   saveMessage(message) {
-    return firebase
-      .database()
-      .ref("/messages/")
-      .push(message)
-      .catch(function(error) {
-        console.error("Error saving message to Database:", error);
-      });
+    return firebase.firestore().collection("messages").add(message);
+      // .database()
+      // .ref("/messages/")
+      // .push(message)
+      // .catch(function(error) {
+      //   console.error("Error saving message to Database:", error);
+      // });
   }
 
   renderSignOutButton() {
