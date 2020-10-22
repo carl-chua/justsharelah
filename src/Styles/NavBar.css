@@ -1,6 +1,5 @@
 .NavBar {
   position: sticky;
-  position: -webkit-sticky;
   top: 0;
 }
 
@@ -20,7 +19,6 @@
 }
 
 .NavBarTop .Name {
-  float: left;
   background-color: transparent;
   border: none;
   outline: none;

@@ -25,7 +25,7 @@ export function getAllListingsListener(setListings) {
   return observer;
 }
 
-export async function getAllListings(setListings) {
+/*export async function getAllListings(setListings) {
   const snapshot = await firebase
   .firestore()
   .collection("listings")
@@ -37,4 +37,46 @@ export async function getAllListings(setListings) {
       setListings(doc.data())
   })
   
-}
+}*/
+// export function getAllListingsListener(setListings) {
+//   const query = firebase
+//   .firestore()
+//   .collection("listings")
+//   .limit(9);
+
+//   const observer = query.onSnapshot(docSnapshot => {
+//     console.log("Received listings snapshot");
+//     docSnapshot.forEach(doc => {
+//       setListings(doc.data())
+//     });
+//   }, err => {
+//       console.log(`Encountered error: ${err}`);
+//   });
+
+//   return observer;
+// }
+
+const db = firebase.firestore().collection("listings");
+
+export const addListing = (listing) => {
+  db.add(listing);
+  console.log("Added listing: ", listing);
+};
+
+export const getListings = (size) => {
+  return db.limit(size).get();
+};
+
+export async function getAllListings() {
+  // get() is asynchronous
+  const snapshot = await db.get();
+  // snapshot.forEach(doc => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
+  return snapshot;
+};
+
+export const updateListing = (listing) => {
+  db.doc(listing.id).update(listing);
+  console.log("Updated listing: ", listing);
+};

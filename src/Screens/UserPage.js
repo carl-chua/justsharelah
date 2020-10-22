@@ -252,6 +252,11 @@ export default function UserPage() {
             <Modal
                 open={showFollowingModal}
                 onClose={closeFollowingModal}
+                style = {{
+                    position : 'absolute',
+                    width : "50%",
+                    height : "30%",
+                }}
             >
                 <UserList dataList = {user[1].following} title = {"Following"}/>
             </Modal>

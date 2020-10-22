@@ -1,0 +1,18 @@
+.SearchSideBar {
+  position: absolute;
+  top: 95px;
+  left: 0;
+  bottom: 0;
+}
+
+.SearchSideBar .Top {
+  padding-left: 20px;
+}
+
+.SearchSideBar p {
+  line-height: 5px;
+}
+
+.SearchSideBar .SeperatorDiv {
+  padding-right: 20px;
+}
