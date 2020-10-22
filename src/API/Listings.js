@@ -63,9 +63,15 @@ export const addListing = (listing) => {
   console.log("Added listing: ", listing);
 };
 
-export const getListings = (size) => {
-  return db.limit(size).get();
-};
+export async function searchListings(searchString, size) {
+  if (searchString == null) {
+    const snapshot = await db.limit(size).get();
+    return snapshot;
+  } else {
+    const snapshot = await db.where("listingTitle", ">=", searchString).where("listingTitle", "<=", searchString + "\uf8ff").limit(size).get();
+    return snapshot;
+  }
+}
 
 export async function getAllListings() {
   // get() is asynchronous

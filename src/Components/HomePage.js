@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import firebase from "../API/Firebase";
 import { loadUser } from "../API/CurrentUser";
-import { getAllListingsListener, getAllListings , addListing } from "../API/Listings";
+import { searchListings } from "../API/Listings";
 import Album from "./Album";
 import NavBar from "./NavBar";
 import { Redirect } from "react-router";
@@ -19,8 +19,7 @@ function HomePage({ history }) {
   }, []);
 
   React.useEffect(() => {
-    console.log("LOADING CURRENT LISTINGS")
-    getAllListings().then(querySnapshot => {
+    searchListings(null, 9).then(querySnapshot => {
       setListings(querySnapshot.docs.map(doc => doc.data()));
     });
 
@@ -32,6 +31,15 @@ function HomePage({ history }) {
   //     console.log(doc.data());
   //   });
   // });
+
+  // testing
+  // searchListings("test", 5).then(querySnapshot => {
+  //   querySnapshot.docs.map(doc => {
+  //     console.log(doc.data());
+  //     return [];
+  //   });
+  // });
+
 
   function signOut() {
     firebase.auth().signOut();
