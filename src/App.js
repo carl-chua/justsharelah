@@ -10,7 +10,7 @@ import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
-
+import Chat from "./Components/Chat";
 import UserPage from './Screens/UserPage';
 import SettingsPage from './Screens/SettingsPage';
 import { Container } from "@material-ui/core";
@@ -32,6 +32,8 @@ function App() {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component = {UserPage}/>
             <Route exact path="/settings/:username" component = {SettingsPage}/>
+            <Route exact path="/chat" component = {Chat}/>
+
           </div>
         </Router>
       </AuthProvider>

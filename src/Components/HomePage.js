@@ -8,23 +8,28 @@ import { Redirect } from "react-router";
 
 function HomePage({ history }) {
   const [currentUser, setCurrentUser] = React.useState({});
-  const [currentListings, setListings] = React.useState({});
+  const [currentListings, setListings] = React.useState([]);
 
   function loadCurrentUser() {
     loadUser(setCurrentUser);
   }
-
-  // function loadCurrentListings() {
-  //   getAllListings();
-  // }
 
   React.useEffect(() => {
     loadCurrentUser();
   }, []);
 
   React.useEffect(() => {
-    setListings(getAllListings());
+    getAllListings().then(querySnapshot => {
+      setListings(querySnapshot.docs.map(doc => doc.data()));
+      });
   }, []);
+
+  // // testing
+  // getAllListings().then(querySnapshot => {
+  //   querySnapshot.docs.map(doc => {
+  //     console.log(doc.data());
+  //   });
+  // });
 
   function signOut() {
     firebase.auth().signOut();

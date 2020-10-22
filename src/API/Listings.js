@@ -30,7 +30,8 @@ import firebase from "./Firebase.js";
 const db = firebase.firestore().collection("listings");
 
 export const addListing = (listing) => {
-  return db.add(listing);
+  db.add(listing);
+  console.log("Added listing: ", listing);
 };
 
 export const getListings = (size) => {
@@ -38,18 +39,15 @@ export const getListings = (size) => {
 };
 
 export async function getAllListings() {
+  // get() is asynchronous
   const snapshot = await db.get();
-  snapshot.forEach(doc => {
-    console.log(doc.name, '=>', doc.data());
-  });
+  // snapshot.forEach(doc => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
   return snapshot;
-
 };
 
-// export async const getAllListings = () => {
-//   const snapshot = await db.get();
-//   // snapshot.forEach(doc => {
-//   //   console.log(doc.name, '=>', doc.data());
-//   // });
-//   return snapshot;
-// };
+export const updateListing = (listing) => {
+  db.doc(listing.id).update(listing);
+  console.log("Updated listing: ", listing);
+};
