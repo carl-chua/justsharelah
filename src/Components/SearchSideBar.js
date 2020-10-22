@@ -5,11 +5,7 @@ import "../Styles/SearchSideBar.css";
 import "../Styles/SearchSideBarCustom.scss";
 import { useSelector, useDispatch } from "react-redux";
 
-function SearchSideBar({ filter, setFilter }) {
-  const [searchString, setSearchString] = useState(
-    useSelector((state) => state.searchString)
-  );
-
+function SearchSideBar({ filter, setFilter, searchString }) {
   function handleChangeFilterToAll() {
     if (filter != "ALL") {
       setFilter("ALL");
