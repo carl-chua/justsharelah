@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import firebase from "../API/Firebase";
+import { loadUser } from "../API/CurrentUser";
 
 // const config = {
 //   apiKey: "AIzaSyC9Hcq-eFBRGcC79SXtYp1NVDjsss3tEC8",
@@ -26,15 +27,20 @@ import firebase from "../API/Firebase";
 //   firebase.initializeApp(config);
 // }
 
-class Chat extends Component {
-  constructor() {
-    super();
-    this.state = {
-      messages: [],
-      user: {},
-      isAuthenticated: false,
-    };
-  }
+function Chat() {
+
+  const [currentUser, setCurrentUser] = React.useState({});
+  const [currentMessages, setMessages] = React.useState([]);
+  const [isAuthenticated, setAuthenticated] = React.useState(false);
+
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     messages: [],
+  //     user: {},
+  //     isAuthenticated: false,
+  //   };
+  // };
 
   // async signIn() {
   //   const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -48,19 +54,11 @@ class Chat extends Component {
   // signOut() {
   //   firebase.auth().signOut();
   // }
-
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setState({ isAuthenticated: true, user });
-        this.loadMessages();
-      } else {
-        this.setState({ isAuthenticated: false, user: {}, messages: [] });
-      }
-    });
+  function loadCurrentUser() {
+    loadUser(setCurrentUser);
   }
 
-  loadMessages() {
+  function loadMessages() {
     const callback = snap => {
       const message = snap.val();
       message.id = snap.key;
@@ -73,39 +71,61 @@ class Chat extends Component {
       .ref("/messages/")
       .limitToLast(12)
       .on("child_added", callback);
-  }
+  };
 
-  renderPopup() {
-    return (
-      <Dialog open={!this.state.isAuthenticated}>
-        <DialogTitle id="simple-dialog-title">Sign in</DialogTitle>
-        <div>
-          <List>
-            <ListItem button onClick={() => this.signIn()}>
-              <ListItemAvatar>
-                <Avatar style={{ backgroundColor: "#eee" }}>
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                    height="30"
-                    alt="G"
-                  />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Sign in with Google" />
-            </ListItem>
-          </List>
-        </div>
-      </Dialog>
-    );
-  }
+  React.useEffect(() => {
+    loadCurrentUser();
+  }, []);
 
-  onSend(messages) {
-    for (const message of messages) {
-      this.saveMessage(message);
-    }
-  }
+  React.useEffect(() => {
+      if (currentUser != null) {
+        setAuthenticated(true);
+        loadMessages();
+      } else {
+        setCurrentUser({});
+        setAuthenticated(false);
+        setMessages([]);
+      }
+  }, [currentUser]);
 
-  saveMessage(message) {
+  // componentDidMount() {
+  //   firebase.auth().onAuthStateChanged(user => {
+  //     if (user) {
+  //       this.setState({ isAuthenticated: true, user });
+  //       this.loadMessages();
+  //     } else {
+  //       this.setState({ isAuthenticated: false, user: {}, messages: [] });
+  //     }
+  //   });
+  // }
+
+ 
+
+  // renderPopup() {
+  //   return (
+  //     <Dialog open={!this.state.isAuthenticated}>
+  //       <DialogTitle id="simple-dialog-title">Sign in</DialogTitle>
+  //       <div>
+  //         <List>
+  //           <ListItem button onClick={() => this.signIn()}>
+  //             <ListItemAvatar>
+  //               <Avatar style={{ backgroundColor: "#eee" }}>
+  //                 <img
+  //                   src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+  //                   height="30"
+  //                   alt="G"
+  //                 />
+  //               </Avatar>
+  //             </ListItemAvatar>
+  //             <ListItemText primary="Sign in with Google" />
+  //           </ListItem>
+  //         </List>
+  //       </div>
+  //     </Dialog>
+  //   );
+  // };
+
+  function saveMessage(message) {
     return firebase.firestore().collection("messages").add(message);
       // .database()
       // .ref("/messages/")
@@ -115,24 +135,32 @@ class Chat extends Component {
       // });
   }
 
-  renderSignOutButton() {
-    if (this.state.isAuthenticated) {
-      return <Button onClick={() => this.signOut()}>Sign out</Button>;
+  function onSend(messages) {
+    for (const message of messages) {
+      saveMessage(message);
     }
-    return null;
   }
 
-  renderChat() {
+
+
+  // function renderSignOutButton() {
+  //   if (this.state.isAuthenticated) {
+  //     return <Button onClick={() => this.signOut()}>Sign out</Button>;
+  //   }
+  //   return null;
+  // }
+
+  function renderChat() {
     return (
       <GiftedChat
-        user={this.chatUser}
-        messages={this.state.messages.slice().reverse()}
-        onSend={messages => this.onSend(messages)}
+        user={currentUser}
+        messages={currentMessages}
+        onSend={currentMessages => onSend(currentMessages)}
       />
     );
   }
 
-  renderChannels() {
+  function renderChannels() {
     return (
       <List>
         <ListItem button>
@@ -145,7 +173,7 @@ class Chat extends Component {
     );
   }
 
-  renderChannelsHeader() {
+  function renderChannelsHeader() {
     return (
       <AppBar position="static" color="default">
         <Toolbar>
@@ -156,7 +184,8 @@ class Chat extends Component {
       </AppBar>
     );
   }
-  renderChatHeader() {
+  
+  function renderChatHeader() {
     return (
       <AppBar position="static" color="default">
         <Toolbar>
@@ -167,7 +196,7 @@ class Chat extends Component {
       </AppBar>
     );
   }
-  renderSettingsHeader() {
+  function renderSettingsHeader() {
     return (
       <AppBar position="static" color="default">
         <Toolbar>
@@ -179,21 +208,19 @@ class Chat extends Component {
     );
   }
 
-  render() {
+  function render() {
     return (
       <div style={styles.container}>
-        {this.renderPopup()}
         <div style={styles.channelList}>
-          {this.renderChannelsHeader()}
-          {this.renderChannels()}
+          {renderChannelsHeader()}
+          {renderChannels()}
         </div>
         <div style={styles.chat}>
-          {this.renderChatHeader()}
-          {this.renderChat()}
+          {renderChatHeader()}
+          {renderChat()}
         </div>
         <div style={styles.settings}>
-          {this.renderSettingsHeader()}
-          {this.renderSignOutButton()}
+          {renderSettingsHeader()}
         </div>
       </div>
     );

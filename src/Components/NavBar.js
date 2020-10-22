@@ -50,7 +50,6 @@ function NavBar({ history }) {
   function handleClickOnName() {
     if (firebase.auth().currentUser != null) {
       history.push("/");
-      alert("Clicked on name!");
     } else {
       history.push("/login");
     }

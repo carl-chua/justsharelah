@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
+import "../Styles/Album.css";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -25,9 +26,10 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
+    display: "flex",
+    justify: "center",
   },
   card: {
-    height: "100%",
     display: "flex",
     flexDirection: "column",
   },
