@@ -67,7 +67,7 @@ export default function ListingCard({data}) {
                             }}
                         >
                             <text className = {styles.mainText}>{data.title.substr(0,20)}</text>
-                            <text className = {styles.subText}>Min target : S${data.minOrder}</text>
+                            <text className = {styles.subText}>Min target : S${data.targetAmount}</text>
                             <text className = {styles.desText}>
                                 {data.description.length < 70 ? data.description : data.description.substr(0,70) + "..."}
                             </text>
@@ -78,7 +78,7 @@ export default function ListingCard({data}) {
                                 color : "black",
                             }}
                         >
-                            {data.buyers} Kuppers
+                            {data.members} Kuppers
                         </div>
                     </Box>
                 </CardContent>

@@ -25,6 +25,8 @@ export default function ListingList({colSize, dataList}) {
     const styles = useStyles();
     const theme = useTheme();
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('md'));
+    console.log(colSize);
+    console.log(dataList);
 
     return (
         dataList.length > 0 ?
@@ -36,7 +38,7 @@ export default function ListingList({colSize, dataList}) {
             }}
         >
             {dataList.map(data => (
-                <ListingCard key = {data.id} data = {data}/>
+                <ListingCard key = {data[0]} data = {data[1]}/>
             ))}
         </GridList>
         :

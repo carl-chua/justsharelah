@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Album(data) {
+export default function Album({listings}) {
   const classes = useStyles();
 
   return (
@@ -56,7 +56,7 @@ export default function Album(data) {
           </Typography>
           <Container className={classes.cardGrid} maxWidth="md">
             <Grid container spacing={4}>
-              {data.listings.map((listing) => (
+              {listings.map((listing) => (
                 <Grid item key={listing[0]} xs={12} sm={6} md={4}>
                   <Card className={classes.card}>
                     <CardMedia
@@ -65,13 +65,13 @@ export default function Album(data) {
                     />
                     <CardContent className={classes.cardContent}>
                       <Typography gutterBottom variant="h5" component="h2">
-                        {listing.listingTitle}
+                        {listing[1].title}
                       </Typography>
-                      <Typography>{listing.desc}</Typography>
+                      <Typography>{listing[1].description}</Typography>
                       <Typography>
-                        Minimum Quantity: {listing.minQty}
+                        Minimum Quantity: {listing[1].targetQuantity}
                       </Typography>
-                      <Typography>#{listing.listingTags}</Typography>
+                      <Typography>#{listing[1].tags}</Typography>
                     </CardContent>
                     <CardActions>
                       <Button

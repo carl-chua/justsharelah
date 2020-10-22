@@ -5,6 +5,8 @@ import { searchListings } from "../API/Listings";
 import Album from "./Album";
 import NavBar from "./NavBar";
 import { Redirect } from "react-router";
+import ListingCard from "./ListingCard";
+import ListingList from "./ListingList";
 
 function HomePage({ history }) {
   const [currentUser, setCurrentUser] = React.useState({});
@@ -18,26 +20,16 @@ function HomePage({ history }) {
     loadCurrentUser();
   }, []);
 
-  // React.useEffect(() => {
-  //   searchListings(null, 9).then(querySnapshot => {
-  //     setListings(querySnapshot.docs.map(doc => doc.data()));
-  //     });
-  // }, []);
-
   React.useEffect(() => {
-    searchListings(null, 9).then((querySnapshot) => {
-      setListings(querySnapshot.docs.map((doc) => doc.data()));
-    });
+    searchListings(null, 9).then(querySnapshot => {
+      var temp = [];
+      querySnapshot.forEach(doc => temp.push([doc.id, doc.data()]));
+      setListings(temp);
+      });
   }, []);
 
-  // // testing
-  // getAllListings().then(querySnapshot => {
-  //   querySnapshot.docs.map(doc => {
-  //     console.log(doc.data());
-  //   });
-  // });
-
-  // searchListings(null, 5).then(querySnapshot => {
+  // testing
+  // searchListings(null, 9).then(querySnapshot => {
   //   querySnapshot.docs.map(doc => {
   //     console.log(doc.data());
   //     return [];
@@ -59,7 +51,7 @@ function HomePage({ history }) {
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
       <button onClick={signOut}>Sign out</button>
-      <Album listings={currentListings} />
+      <ListingList colSize={3} dataList={currentListings}/>
     </div>
   );
 }
