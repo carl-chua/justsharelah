@@ -55,11 +55,11 @@ function HomePage({ history }) {
 
   return (
     <div className="HomePage">
-      <NavBar style={{ position: "sticky" }} history={history} />
+      <NavBar history={history} />
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
       <button onClick={signOut}>Sign out</button>
-      <Album listings={currentListings} />
+      <Album header="FOR YOU" listings={currentListings} />
     </div>
   );
 }
