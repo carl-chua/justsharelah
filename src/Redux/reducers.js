@@ -16,7 +16,7 @@ export default function reducers(state, {type, payload}) {
             return {
                 isLoading: false,
                 isSignout: false,
-                userToken: null,
+                userToken: payload,
             };
         case "CURRENT_USER": 
             return {

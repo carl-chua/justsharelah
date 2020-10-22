@@ -3,7 +3,7 @@ import "./App.css";
 import { demoListener, demoPost, demoFetch } from "./API/DemoAPI";
 import DemoPage from "./DemoPage";
 import { useSelector, useDispatch } from "react-redux";
-import { demoHeader } from "./Redux/actions";
+import { demoHeader, reSignIn, currentUser as currUser } from "./Redux/actions";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { AuthProvider } from "./Auth";
 import HomePage from "./Components/HomePage";
@@ -14,13 +14,10 @@ import SignUp from "./Components/SignUp";
 import UserPage from './Screens/UserPage';
 import SettingsPage from './Screens/SettingsPage';
 import { Container } from "@material-ui/core";
+import ListingDetails from "./Components/ListingDetails";
+
 
 function App() {
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    dispatch(demoHeader("R123124123"));
-  }, []);
 
   return (
     <div className="App">
@@ -32,6 +29,7 @@ function App() {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component = {UserPage}/>
             <Route exact path="/settings/:username" component = {SettingsPage}/>
+            <Route exact path="/listingDetails" component = {ListingDetails}/>
           </div>
         </Router>
       </AuthProvider>

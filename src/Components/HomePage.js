@@ -22,7 +22,10 @@ function HomePage({ history }) {
     loadCurrentUser();
   }, []);
 
-  React.useEffect(() => loadCurrentListings());
+  React.useEffect(() => {
+    console.log("LOADING CURRENT LISTINGS")
+    loadCurrentListings();
+  }, []);
 
   function signOut() {
     firebase.auth().signOut();

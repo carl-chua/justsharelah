@@ -164,6 +164,7 @@ const CreateListing = () => {
            location:location,
            desc:desc,
            shopLink:shopLink,
+           dateCreated : new Date(),
            //img:img
           })
           .then(() => {

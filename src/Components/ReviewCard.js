@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     },
 })
 
-export default function ListingCard({data}) {
+export default function ReviewCard({data}) {
 
 
     const styles = useStyles()

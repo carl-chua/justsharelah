@@ -33,7 +33,7 @@ export async function getAllListings(setListings) {
   .get()
 
   snapshot.forEach(doc => {
-      console.log("Listings: " + JSON.stringify(doc.data()))
+      //console.log("Listings: " + JSON.stringify(doc.data()))
       setListings(doc.data())
   })
   

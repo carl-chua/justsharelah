@@ -14,9 +14,9 @@ export const signOut = () => ({
     type: SIGN_OUT,
 });
   
-export const reSignIn = () => ({
+export const reSignIn = (userId) => ({
     type: RE_SIGN_IN,
-    payload: null,
+    payload: userId,
 });
   
 export const currentUser = (userData) => ({
