@@ -149,29 +149,30 @@ const CreateListing = () => {
         e.preventDefault();
         //save under user listings
         firebase.firestore().collection("users").doc(user.uid).collection("listings").add({
-            user:user.uid,
+            listingOwner:user.uid,
             category: category,
-            listingTitle: listingTitle,
-            listingTags: listingTags,
+            title: listingTitle,
+            tags: listingTags,
             targetOrderDate: targetOrderDate,
-            minQty: minQty,
+            targetAmount: minQty,
             location:location,
-            desc:desc,
-            shopLink:shopLink,
+            description:desc,
+            websiteLink:shopLink,
+            createdDate: new Date(),
             //img:img
            });
            //save under listings
         firebase.firestore().collection("listings").add({
-           user:user.uid,
-           category: category,
-           listingTitle: listingTitle,
-           listingTags: listingTags,
-           targetOrderDate: targetOrderDate,
-           minQty: minQty,
-           location:location,
-           desc:desc,
-           shopLink:shopLink,
-           dateCreated : new Date(),
+            listingOwner:user.uid,
+            category: category,
+            title: listingTitle,
+            tags: listingTags,
+            targetOrderDate: targetOrderDate,
+            targetAmount: minQty,
+            location:location,
+            description:desc,
+            websiteLink:shopLink,
+            createdDate: new Date(),
            //img:img
           })
           .then(() => {
