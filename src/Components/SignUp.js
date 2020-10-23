@@ -15,6 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/SignUp.css";
 import loginImage from "../Media/Capture.PNG";
+import { useAlert } from "react-alert";
 
 const useStyles = makeStyles((theme) => ({
   root: { height: "100vh", overflow: "hidden" },
@@ -69,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUp = ({ history }) => {
   const classes = useStyles();
+  const alert = useAlert();
 
   const handleSignUp = useCallback(
     async (event) => {
@@ -81,18 +83,14 @@ const SignUp = ({ history }) => {
         country,
         city,
       } = event.target.elements;
-      console.log(username.value);
-      console.log(email.value);
-      console.log(password.value);
-      console.log(country.value);
-      console.log(city.value);
-      console.log(phoneNumber.value);
       try {
+        console.log("1");
         await firebase
           .auth()
           .createUserWithEmailAndPassword(email.value, password.value);
-
+        console.log("2");
         let user = firebase.auth().currentUser;
+        console.log("3");
         if (user) {
           // User is signed in.
           try {
@@ -102,20 +100,26 @@ const SignUp = ({ history }) => {
               phoneNumber: phoneNumber.value,
               country: country.value,
               city: city.value,
+              photo: null,
+              followers: [],
+              following: [],
+              userReviews: [],
+              listingsAsMember: [],
+              listingsAsOP: [],
+              orderRecords: [],
             });
             history.push("/");
-            //const alert = Alert.alert("You have successfully signed up.");
+            alert.show("You have successfully signed up.");
           } catch (error) {
-            //const alert = Alert.alert(`An error occured while signing up`);
+            alert.show(`An error occured while signing up`);
             console.log("ERROR : ", error);
             await user.delete();
           }
         }
       } catch (error) {
-        /*const alert = Alert.alert(
+        alert.show(
           `This email has been taken. Please use another email for sign-up.`
-        );*/
-        console.log("ERROR : ", error);
+        );
       }
     },
     [history]
@@ -216,7 +220,7 @@ const SignUp = ({ history }) => {
               id="username"
               label="Username"
               name="username"
-              autofocus
+              autoFocus
             />
             <TextField
               variant="outlined"
@@ -227,7 +231,7 @@ const SignUp = ({ history }) => {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autofocus
+              autoFocus
             />
             <TextField
               variant="outlined"
@@ -238,7 +242,7 @@ const SignUp = ({ history }) => {
               label="Password"
               type="password"
               id="password"
-              autofocus
+              autoFocus
             />
             <TextField
               variant="outlined"
@@ -248,7 +252,7 @@ const SignUp = ({ history }) => {
               name="country"
               label="Country"
               id="country"
-              autofocus
+              autoFocus
             />
             <TextField
               variant="outlined"
@@ -258,7 +262,7 @@ const SignUp = ({ history }) => {
               name="city"
               label="City"
               id="city"
-              autofocus
+              autoFocus
             />
             <TextField
               variant="outlined"
@@ -269,7 +273,7 @@ const SignUp = ({ history }) => {
               label="Mobile Number"
               type="number"
               id="phoneNumber"
-              autofocus
+              autoFocus
             />
             <Button
               type="submit"
