@@ -1,0 +1,19 @@
+.UserSearchResult {
+  background-color: white;
+  border-radius: 10px;
+  padding-top: 0.1px;
+  padding-left: 22px;
+  padding-right: 22px;
+  padding-bottom: 18px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.UserSearchResult h1 {
+  text-align: left;
+}
+
+.UserSearchResult p {
+  text-align: left;
+  color: gray;
+  margin-top: 0;
+}

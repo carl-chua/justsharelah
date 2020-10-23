@@ -1,0 +1,17 @@
+.Album {
+  margin: auto;
+  background-color: transparent;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.Album h1 {
+  line-height: 0px;
+  padding-top: 10px;
+  margin-bottom: 0px;
+}
+
+.Album .Card {
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}

@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import NavBar from "./NavBar";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,20 +55,22 @@ const ListingDetails = () => {
     var [location, setLocation] = React.useState('');
     var [category, setCategory] = React.useState('');
     var [authorName, setAuthorName] = React.useState('');
+    
     //enter listing id for doc
-    firebase.firestore().collection("listings").doc("Cni2bPQXL4VVpGgCYM4k").get().then(function(doc) {
+    firebase.firestore().collection("listings").doc("mreWT8rB7FYFa3uuVaPl").get().then(function(doc) {
         if (doc.exists) {
             console.log("Document data:", doc.data());
-            setListingTitle(doc.data().listingTitle);
+            setListingTitle(doc.data().title);
             setCategory(doc.data().category);
-            setListingTags(doc.data().listingTags);
+            setListingTags(doc.data().tags);
             setLocation(doc.data().location);
-            setMinQty(doc.data().minQty);
-            setDesc(doc.data().desc);
+            setMinQty(doc.data().targetAmount);
+            setDesc(doc.data().description);
             setTargetOrderDate(doc.data().targetOrderDate);
-            setShopLink(doc.data().shopLink);
+            setShopLink(doc.data().websiteLink);
+            
             //get username of post author
-            firebase.firestore().collection("users").doc(doc.data().user).get().then(function(doc) {
+            firebase.firestore().collection("users").doc(doc.data().listingOwner).get().then(function(doc) {
                 if (doc.exists) {
                    setAuthorName(doc.data().username);
                 } else {
@@ -87,7 +90,7 @@ const ListingDetails = () => {
     
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
-           
+           <NavBar style={{ position: "sticky" }}/>
         <Grid container spacing={2}>
         
             
@@ -141,7 +144,7 @@ const ListingDetails = () => {
                 <Typography variant="h7" fontWeight="fontWeightBold">
                     {desc}
                 </Typography>
-            
+
             </Paper>
             </Grid>
         

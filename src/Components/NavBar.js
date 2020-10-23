@@ -6,8 +6,8 @@ import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRo
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
-import { makeStyles } from '@material-ui/core/styles';
-import { IconButton} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { IconButton } from "@material-ui/core";
 
 import "../Styles/NavBar.css";
 
@@ -24,23 +24,22 @@ function NavBar({ history }) {
 
   const dispatch = useDispatch();
 
-  const userToken = useSelector(state => state.userToken)
+  const userToken = useSelector((state) => state.userToken);
 
-  const currentUser = useSelector(state => state.currentUser)
-
+  const currentUser = useSelector((state) => state.currentUser);
 
   React.useEffect(() => {
-    if(userToken != null && currentUser != null) { 
+    if (userToken != null && currentUser != null) {
       console.log("LOGGED IN USERID: " + userToken);
-      console.log("LOGGED IN USERNAME: " + JSON.stringify(currentUser.username));
+      console.log(
+        "LOGGED IN USERNAME: " + JSON.stringify(currentUser.username)
+      );
     }
-  },[userToken, currentUser])
-
+  }, [userToken, currentUser]);
 
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
       if (searchString != null && searchString != "") {
-        dispatch(reduxSetSearchString(searchString));
         history.push("/search");
       }
     } else {
@@ -49,20 +48,17 @@ function NavBar({ history }) {
   }
 
   function handleClickOnName() {
-
     if (firebase.auth().currentUser != null) {
       history.push("/");
-      alert("Clicked on name!");
     } else {
       history.push("/login");
     }
   }
 
   function handleProfileClick() {
+    console.log("GOING TO PROFILE:");
 
-    console.log("GOING TO PROFILE:")
-
-    if (firebase.auth().currentUser != null && currentUser != null)  {
+    if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/user/${currentUser.username}`);
     } else {
       history.push("/login");
@@ -81,9 +77,15 @@ function NavBar({ history }) {
               type="text"
               value={searchString}
               placeholder="Search for item or user..."
-              onChange={(e) => setSearchString(e.target.value)}
+              onChange={(e) => {
+                setSearchString(e.target.value);
+                dispatch(reduxSetSearchString(e.target.value));
+              }}
             />
-            <button type="submit">
+            <button
+              disabled={searchString == null || searchString == ""}
+              type="submit"
+            >
               <SearchIcon />
             </button>
           </div>

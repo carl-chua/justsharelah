@@ -11,10 +11,12 @@ import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
 import Chat from "./Components/Chat";
-import UserPage from './Screens/UserPage';
-import SettingsPage from './Screens/SettingsPage';
+import UserPage from "./Screens/UserPage";
+import SettingsPage from "./Screens/SettingsPage";
 import { Container } from "@material-ui/core";
 import ListingDetails from "./Components/ListingDetails";
+import CreateListing from "./Components/CreateListing";
+import SearchResultsPage from "./Screens/SearchResultsPage";
 
 function App() {
   return (
@@ -25,10 +27,12 @@ function App() {
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/user/:username" component = {UserPage}/>
-            <Route exact path="/settings/:username" component = {SettingsPage}/>
-            <Route exact path="/chat" component = {Chat}/>
-
+            <Route exact path="/user/:username" component={UserPage} />
+            <Route exact path="/settings/:username" component={SettingsPage} />
+            <Route exact path="/chat" component={Chat} />
+            <Route exact path="/listingDetails" component={ListingDetails} />
+            <Route exact path="/createListing" component={CreateListing} />
+            <Route exact path="/search" component={SearchResultsPage} />
           </div>
         </Router>
       </AuthProvider>
