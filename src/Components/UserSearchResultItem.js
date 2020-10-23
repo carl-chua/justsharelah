@@ -3,7 +3,6 @@ import {
   Card,
   Box,
   CardContent,
-  CardMedia,
   CardActionArea,
 } from "@material-ui/core";
 import React from "react";
@@ -12,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   root: {
     minWidth: 250,
+    width: "100%",
     textAlign: "start",
     marginBottom: "1%",
     borderBottom: "5",
@@ -45,28 +45,30 @@ export default function UserSearchResultItem({ user }) {
   return (
     <div className="UserSearchResultItem">
       <Card borderBottom={1} className={styles.root}>
-        <CardContent>
-          <Box display="flex" flexDirection="row" alignItems="center">
-            <Avatar
-              src={user.imageUrl}
-              style={{
-                width: 60,
-                height: 60,
-              }}
-            >
-              <span style={{ fontSize: "150%" }}>
-                {user.username.charAt(0).toUpperCase()}
-              </span>
-            </Avatar>
-            <Box display="flex" flexDirection="column">
-              <p className={styles.nameText}>{user.username}</p>
-              <p className={styles.desText}>{user.location}</p>
-              <p className={styles.desText}>
-                {user.numListings} Listings created
-              </p>
+        <CardActionArea onClick={() => console.log("clicked listingcard")}>
+          <CardContent>
+            <Box display="flex" flexDirection="row" alignItems="center">
+              <Avatar
+                src={user.imageUrl}
+                style={{
+                  width: 60,
+                  height: 60,
+                }}
+              >
+                <span style={{ fontSize: "150%" }}>
+                  {user.username.charAt(0).toUpperCase()}
+                </span>
+              </Avatar>
+              <Box display="flex" flexDirection="column">
+                <p className={styles.nameText}>{user.username}</p>
+                <p className={styles.desText}>{user.country}</p>
+                <p className={styles.desText}>
+                  {user.listingsAsOP.length} Listings created
+                </p>
+              </Box>
             </Box>
-          </Box>
-        </CardContent>
+          </CardContent>
+        </CardActionArea>
       </Card>
     </div>
   );

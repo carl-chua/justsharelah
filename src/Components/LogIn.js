@@ -18,7 +18,6 @@ import "../Styles/LogIn.css";
 
 import loginImage from "../Media/Capture.PNG";
 
-
 import { signIn, currentUser as currUser } from "../Redux/actions";
 import { useDispatch } from "react-redux";
 
@@ -83,7 +82,7 @@ const Login = ({ history }) => {
           .signInWithEmailAndPassword(email.value, password.value);
 
         var user = firebase.auth().currentUser;
-        if(user) {
+        if (user) {
           let userData = await firebase
             .firestore()
             .collection("users")
@@ -92,7 +91,6 @@ const Login = ({ history }) => {
 
           dispatch(currUser(userData.data()));
           dispatch(signIn(user.uid));
-
         }
 
         history.push("/");

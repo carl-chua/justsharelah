@@ -13,10 +13,17 @@ import "../Styles/UserSearchResult.css";
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 250,
+    width: "100%",
     textAlign: "start",
     marginBottom: "0.2%",
     borderBottom: "5",
+  },
+  noUserText: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "80%",
+    color: "grey",
   },
 });
 
@@ -28,9 +35,10 @@ export default function UserSearchResult({ users }) {
       <h1>Users</h1>
       <Box display="flex" flexDirection="column">
         {users.map((data) => (
-          <UserSearchResultItem key={data} user={data} />
+          <UserSearchResultItem key={data[0]} user={data[1]} />
         ))}
       </Box>
+      {users.length == 0 ? <p>No such user found!</p> : ""}
     </div>
   );
 }

@@ -14,15 +14,24 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/SignUp.css";
+import loginImage from "../Media/Capture.PNG";
 
 const useStyles = makeStyles((theme) => ({
-  root: { height: "100vh" },
+  root: { height: "100vh", overflow: "hidden" },
   image: {
-    width: "630",
+    backgroundImage: `url(${loginImage})`,
+    backgroundColor: "#7AA18A",
+    backgroundRepeat: "no-repeat",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   },
   img: {
-    margin: 'auto',
-    display: 'block',
+    margin: "auto",
+    display: "block",
     maxWidth: "70%",
   },
   paper: {
@@ -32,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     vericalAlign: "middle",
     alignItems: "center",
     background: "#F5F8F6",
+    height: "100vh",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -156,8 +166,8 @@ const SignUp = ({ history }) => {
     >
       <CssBaseline />
       <Grid
-        style={{ 
-          maxheight: "100%", background: "#7AA18A", 
+        style={{
+          background: "#7AA18A",
         }}
         item
         xs={false}
@@ -165,13 +175,11 @@ const SignUp = ({ history }) => {
         md={7}
         className={classes.image}
       />
-      <Grid item>
-            className={classes.image}
-              <img className={classes.img} alt="complex" src="/images/undraw_mobile_login_ikmv (2).svg" />
-          </Grid>
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid
         style={{
           background: "#F5F8F6",
+          height: "100vh",
         }}
         item
         xs={12}
@@ -186,7 +194,7 @@ const SignUp = ({ history }) => {
             position: "relative",
             bottom: "100px",
             overflow: "hidden",
-            maxheight: "100%",
+            height: "100vh",
           }}
           className={classes.paper}
         >

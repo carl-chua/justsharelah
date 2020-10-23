@@ -11,3 +11,9 @@
 .UserSearchResult h1 {
   text-align: left;
 }
+
+.UserSearchResult p {
+  text-align: left;
+  color: gray;
+  margin-top: 0;
+}

@@ -21,11 +21,11 @@ function HomePage({ history }) {
   }, []);
 
   React.useEffect(() => {
-    searchListings(null, 9).then(querySnapshot => {
+    searchListings(null, 9).then((querySnapshot) => {
       var temp = [];
-      querySnapshot.forEach(doc => temp.push([doc.id, doc.data()]));
+      querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
       setListings(temp);
-      });
+    });
   }, []);
 
   // testing
@@ -51,7 +51,7 @@ function HomePage({ history }) {
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
       <button onClick={signOut}>Sign out</button>
-      <ListingList colSize={3} dataList={currentListings}/>
+      <ListingList colSize={3} dataList={currentListings} />
       {/* <Album header="FOR YOU" listings={currentListings} /> */}
     </div>
   );
