@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar({ history }) {
+function NavBar({history}) {
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );

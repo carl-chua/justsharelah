@@ -24,10 +24,16 @@ export async function getUserByUsername(username, setUser) {
     .limit(1)
     .get();
 
+  if(snapshot.empty) {
+    return false;
+  }
+
   snapshot.forEach((doc) => {
     console.log("USERDATA: " + JSON.stringify(doc.data()));
-    setUser(doc.data());
+    setUser([doc.id,doc.data()]);
   });
+
+  return true;
 }
 
 export function getUserByIdListener(userId, setUser) {

@@ -89,7 +89,7 @@ export default function ListingCard({ data }) {
                 color: "black",
               }}
             >
-              {data.members.length} Kuppers
+              {data.members ? data.members.length : 0} Kuppers
             </div>
           </Box>
         </CardContent>

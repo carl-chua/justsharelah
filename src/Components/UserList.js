@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
 })
 
-export default function UserList({dataList, title}) {
+export default function UserList({dataList, title, handleClose}) {
     const styles = useStyles();
     const theme = useTheme();
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -37,7 +37,7 @@ export default function UserList({dataList, title}) {
             }}
         >
             {dataList.map(data => (
-                <UserListCard key={data} data={data}/>  
+                <UserListCard key={data} data={data} handleClose = {handleClose ? handleClose : null}/>  
             ))}
         </GridList>
         :

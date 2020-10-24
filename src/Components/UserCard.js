@@ -115,7 +115,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                     </p>
                 </Box>
                 {user.username != currentUser.username ?
-                 (!user.followers.includes(userToken) ?
+                 (user.followers == null || !user.followers.includes(userToken) ?
                 <Button 
                     size="small"
                     className = {styles.buttonPrimary}
@@ -146,7 +146,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                         paddingBottom : "10%",
                     }}
                 >
-                    <Button>
+                    <Button onClick={openFollowersModal}>
                         <Box
                             className = {styles.ratingBox}
                         >

@@ -10,6 +10,8 @@ import { getUserByUsername, getUserByUsernameListener } from "../API/Users";
 import { useParams } from "react-router";
 import ReviewList from "../Components/ReviewList";
 import UserList from "../Components/UserList";
+import Loading from "../Components/Loading";
+import FollowModal from "../Components/FollowModal";
 
 
 const useStyles = makeStyles({
@@ -56,16 +58,14 @@ const useStyles = makeStyles({
 })
 
 const dummyData = [
-    {
-        id : 1,
+    [1, {
         title: "First Listing",
         description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
         date : new Date(),
         minOrder : 200,
         buyers : 3,
-        
-    },
-    {
+    }],
+    [2,{
         id : 2,
         title: "2 Listing",
         description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
@@ -73,25 +73,23 @@ const dummyData = [
         minOrder : 200,
         buyers : 3,
         
-    },
-    {
-        id : 2,
+    }],
+    [3, {
         title: "3 Listing",
         description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
         date : new Date(),
         minOrder : 200,
         buyers : 3,
         
-    },
-    {
-        id : 4,
+    }],
+    [4,{
         title: "4 Listing",
         description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
         date : new Date(),
         minOrder : 200,
         buyers : 3,
         
-    }
+    }]
 ]
 
 const dummyReview = [
@@ -137,7 +135,7 @@ const dummyReview = [
     },
 ]
 
-export default function UserPage() {
+export default function UserPage({history}) {
 
     const styles = useStyles()
     
@@ -149,6 +147,8 @@ export default function UserPage() {
 
     const[showFollowingModal, setShowFollowingModal] = React.useState(false);
     const[showFollowersModal, setShowFollowersModal] = React.useState(false);
+
+    const[userExists, setUserExists] = React.useState(true)
 
     function openFollowingModal() {
         setShowFollowingModal(true);
@@ -167,10 +167,21 @@ export default function UserPage() {
     }
 
     React.useEffect(() => {
+        setUser(null);
+        async function fetchData() {
+            setUserExists(await getUserByUsername(username, setUser));
+        }
+        fetchData();
+    },[username])
+
+    React.useEffect(() => {
+        setUser(null);
         const unsubscribe = getUserByUsernameListener(username, setUser) 
         
         return unsubscribe
-    },[])
+    },[username])
+
+    
 
     React.useEffect(() => {
         console.log(JSON.stringify(user))
@@ -248,22 +259,48 @@ export default function UserPage() {
                     </Box>
                 </Grid>
             </Grid>
-
-            <Modal
-                open={showFollowingModal}
-                onClose={closeFollowingModal}
-                style = {{
-                    position : 'absolute',
-                    width : "50%",
-                    height : "30%",
-                }}
-            >
-                <UserList dataList = {user[1].following} title = {"Following"}/>
-            </Modal>
+            
+            <FollowModal 
+                dataList={user[1].following} 
+                title="Following" 
+                show={showFollowingModal} 
+                handleClose={closeFollowingModal}
+            />
+            <FollowModal 
+                dataList={user[1].followers} 
+                title="Followers" 
+                show={showFollowersModal} 
+                handleClose={closeFollowersModal}
+            />
+            
         </Box>
+        :
+        (userExists ? <Loading/>
         :
         <div className = {styles.root} style = {{justifyContent : "center", alignItems: "center", height: "80vh"}}>
             <p>User {username} does not exist!</p>
         </div>
+        )
     )
 }
+
+
+/*
+<Modal
+                open={showFollowingModal}
+                onClose={closeFollowingModal}
+                style = {{
+                    position : 'absolute',
+                    width : "20%",
+                    maxHeight : "60%",
+                    top: "20%",
+                    left: "40%", 
+                }}
+            >
+                <div style={{display : "flex", width: "100%", maxHeight : "90%", flexDirection: "column", justifyContent : "center", textAlign : "center", alignItems : "center", background: "#FFD076", borderRadius: "8%", paddingBottom : '8%'}}>
+                    <div style ={{ display : "flex", height : "20%", justifyContent : "center", alignItems : "center"}}>
+                        <h2>{user[1].following.length} Following</h2>
+                    </div>
+                        <UserList dataList = {user[1].following} title = {"Following"}/>
+                </div>
+            </Modal>*/

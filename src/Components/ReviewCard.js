@@ -8,6 +8,7 @@ import { getUserByUsername } from "../API/Users";
 import Rating from '@material-ui/lab/Rating';
 
 import moment from 'moment';
+import { Link, NavLink } from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
     },
 })
 
-export default function ReviewCard({data}) {
+export default function ReviewCard({data, history}) {
 
 
     const styles = useStyles()
@@ -52,79 +53,82 @@ export default function ReviewCard({data}) {
         }
     },[reviewer])
 
+    function handleOnClick() {
+        history.push("/")
+    }
     return (
         reviewer ? 
         <Card className = {styles.root}>
-            <CardContent>
-                <Box
-                    display = "flex"
-                    flexDirection = "column"
-                    style = {{
-                        display : "flex",
-                        flexDirection : "column",
-                        justifyContent : "space-between",
-                        paddingTop : "1.5%",
-                    }}
-                >
-                    
-                    <Box
-                        display = "flex"
-                        flexDirection = "row"
-                        alignItems = "center"
-                        
-                    >
-                        <Avatar 
-                        src = {reviewer.imageUrl} 
-                        style = {{
-                            width:45,
-                            height:45,
-                            }}
-                        >
-                            <span style = {{fontSize:"100%"}}>{reviewer.username.charAt(0).toUpperCase()}</span>
-                        </Avatar>
-                        <Box
-                            display = "flex"
-                            flexDirection = "row"
-                            alignItems = "center"
-                            justifyContent = "space-between"
-                            style = {{
-                                width : "100%",
-                            }}
-                        >
-                            <Box
-                                display = "flex"
-                                flexDirection = "column"
-                                style = {{
-                                    marginTop : 15,
-                                    marginLeft : 10,
-                                }}
-                            >
-                            <p className = {styles.nameText}>{reviewer.username}</p>
-                            <Rating 
-                                value = {data.numStar}
-                                readOnly = {true}
-                                precision = {0.5}
-                                size = "small"
-                            />
-                            </Box>
-                            
-                            <p className = {styles.desText}>{moment(data.date).format("DD MMM YYYY")}</p>
-                        </Box>
-                       
-                    </Box>
+                <CardContent>
                     <Box
                         display = "flex"
                         flexDirection = "column"
                         style = {{
-                            marginTop : "1.5%",
-                            marginLeft : 55,
+                            display : "flex",
+                            flexDirection : "column",
+                            justifyContent : "space-between",
+                            paddingTop : "1.5%",
                         }}
                     >
                         
-                        <p className = {styles.desText}>{data.message}</p>
+                        <Box
+                            display = "flex"
+                            flexDirection = "row"
+                            alignItems = "center"
+                            
+                        >
+                            <Avatar 
+                            src = {reviewer.imageUrl} 
+                            style = {{
+                                width:45,
+                                height:45,
+                                }}
+                            >
+                                <span style = {{fontSize:"100%"}}>{reviewer.username.charAt(0).toUpperCase()}</span>
+                            </Avatar>
+                            <Box
+                                display = "flex"
+                                flexDirection = "row"
+                                alignItems = "center"
+                                justifyContent = "space-between"
+                                style = {{
+                                    width : "100%",
+                                }}
+                            >
+                                <Box
+                                    display = "flex"
+                                    flexDirection = "column"
+                                    style = {{
+                                        marginTop : 15,
+                                        marginLeft : 10,
+                                    }}
+                                >
+                                <p className = {styles.nameText}>{reviewer.username}</p>
+                                <Rating 
+                                    value = {data.numStar}
+                                    readOnly = {true}
+                                    precision = {0.5}
+                                    size = "small"
+                                />
+                                </Box>
+                                
+                                <p className = {styles.desText}>{moment(data.date).format("DD MMM YYYY")}</p>
+                            </Box>
+                        
+                        </Box>
+                        <Box
+                            display = "flex"
+                            flexDirection = "column"
+                            style = {{
+                                marginTop : "1.5%",
+                                marginLeft : 55,
+                            }}
+                        >
+                            
+                            <p className = {styles.desText}>{data.message}</p>
+                        </Box>
                     </Box>
-                </Box>
-            </CardContent>
+                </CardContent>
         </Card>
         : null
     )
