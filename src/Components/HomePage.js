@@ -51,8 +51,8 @@ function HomePage({ history }) {
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
       <button onClick={signOut}>Sign out</button>
-      <ListingList colSize={3} dataList={currentListings}/>
-      {/* <Album header="FOR YOU" listings={currentListings} /> */}
+      {/* <ListingList colSize={3} dataList={currentListings}/> */}
+      <Album header="FOR YOU" listings={currentListings} />
     </div>
   );
 }
