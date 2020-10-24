@@ -4,8 +4,10 @@ import SearchSideBar from "../Components/SearchSideBar";
 import Album from "../Components/Album";
 import UserSearchResult from "../Components/UserSearchResult";
 import { getAllListings, searchListings } from "../API/Listings";
+import { getAllUsers } from "../API/Users";
 import { useSelector, useDispatch } from "react-redux";
 import "../Styles/SearchResultsPage.css";
+import ListingSearchResult from "../Components/ListingSearchResult";
 
 function SearchResultsPage({ history }) {
   const [searchString, setSearchString] = useState(
@@ -16,31 +18,30 @@ function SearchResultsPage({ history }) {
   const [userResults, setUserResults] = useState([]);
 
   useEffect(() => {
-    getAllListings().then((querySnapshot) => {
-      setListingResults(querySnapshot.docs.map((doc) => doc.data()));
+    getAllUsers().then((querySnapshot) => {
+      let temp = [];
+      querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
+      setUserResults(
+        temp.filter(function (e) {
+          return e[1].username
+            .toLowerCase()
+            .includes(searchString.toLowerCase());
+        })
+      );
     });
-    setListingResults(
-      listingResults.filter(function (e) {
-        return (
-          e.listingTitle.includes(searchString) ||
-          e.desc.includes(searchString) ||
-          e.location.includes(searchString)
-        );
-      })
-    );
   }, []);
 
-  const user1 = {
-    username: "Max",
-    numListings: 5,
-    location: "Singapore",
-  };
-  const user2 = {
-    username: "Natalie",
-    numListings: 10,
-    location: "Singapore",
-  };
-  const users = [user1, user2];
+  useEffect(() => {
+    getAllListings().then((querySnapshot) => {
+      let temp = [];
+      querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
+      setListingResults(
+        temp.filter(function (e) {
+          return e[1].title.toLowerCase().includes(searchString.toLowerCase());
+        })
+      );
+    });
+  }, []);
 
   return (
     <div className="SearchResultsPage">
@@ -53,11 +54,21 @@ function SearchResultsPage({ history }) {
             setFilter={setFilter}
           />
         </div>
-        <div className="UserResults">
-          <UserSearchResult users={users} />
-        </div>
-        <div className="ListingResults">
-          <Album listings={listingResults} />
+        <div className="Results">
+          <div className="UserResults">
+            {filter == "ALL" || filter == "USERS" ? (
+              <UserSearchResult users={userResults} />
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="ListingResults">
+            {filter == "ALL" || filter == "LISTINGS" ? (
+              <ListingSearchResult colSize={3} dataList={listingResults} />
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,19 +1,20 @@
 .SearchResultsPage .ListingResults {
-  margin-left: 300px;
-  margin-right: 30px;
+  margin-left: 330px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: calc(100vw - 388px);
 }
 
 .SearchResultsPage .UserResults {
-  margin-left: 300px;
-  margin-right: 30px;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 330px;
 }
 
-.searchResultsPage .SearchSideBar {
+.SearchResultsPage .SearchSideBar {
   width: 270px;
 }
 
-.searchResultsPage .Content {
+.SearchResultsPage .Content {
   display: flex;
   flex-direction: row;
 }
