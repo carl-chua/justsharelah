@@ -17,6 +17,7 @@ import { Container } from "@material-ui/core";
 import ListingDetails from "./Components/ListingDetails";
 import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
+import UsersListingsPage from "./Screens/UsersListingsPage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route exact path="/listingDetails" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
+            <Route exact path="/usersListingsPage" component={UsersListingsPage} />
           </div>
         </Router>
       </AuthProvider>
