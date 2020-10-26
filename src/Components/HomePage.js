@@ -7,10 +7,15 @@ import NavBar from "./NavBar";
 import { Redirect } from "react-router";
 import ListingCard from "./ListingCard";
 import ListingList from "./ListingList";
+import { useDispatch } from "react-redux";
+
+import { signOut as logOut } from "../Redux/actions"
 
 function HomePage({ history }) {
   const [currentUser, setCurrentUser] = React.useState({});
   const [currentListings, setListings] = React.useState([]);
+
+  const dispatch = useDispatch();
 
   function loadCurrentUser() {
     loadUser(setCurrentUser);
@@ -38,6 +43,7 @@ function HomePage({ history }) {
 
   function signOut() {
     firebase.auth().signOut();
+    dispatch(logOut());
     history.push("/login");
   }
 
@@ -47,7 +53,6 @@ function HomePage({ history }) {
 
   return (
     <div className="HomePage">
-      <NavBar history={history} />
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
       <button onClick={signOut}>Sign out</button>

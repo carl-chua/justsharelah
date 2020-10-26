@@ -1,4 +1,4 @@
-import { Grid, Box, Button, Modal} from "@material-ui/core";
+import { Grid, Box, Button, Modal, Card} from "@material-ui/core";
 import React from "react";
 
 import UserCard from "../Components/UserCard";
@@ -9,9 +9,12 @@ import ListingList from "../Components/ListingList";
 import { getUserByUsername, getUserByUsernameListener } from "../API/Users";
 import { useParams } from "react-router";
 import ReviewList from "../Components/ReviewList";
-import UserList from "../Components/UserList";
 import Loading from "../Components/Loading";
 import FollowModal from "../Components/FollowModal";
+import { getUserListing, getUserListingListener } from "../API/Listings";
+import { useSelector } from "react-redux";
+import CreateReviewModal from "../Components/CreateReviewModal";
+import { getReviews, getReviewsListener } from "../API/Reviews";
 
 
 const useStyles = makeStyles({
@@ -22,7 +25,7 @@ const useStyles = makeStyles({
         marginRight : "5%",
     },
     tabContainer : {
-        height: "80vh", 
+        height: "70vh", 
         overflow: "auto",
         borderRadius : 16,
         borderColor : "#BEBEBE",
@@ -55,85 +58,14 @@ const useStyles = makeStyles({
         height : "80%",
         color : "grey",
     },
+    tabContainerTitle : {
+        display: "flex", 
+        flexDirection : "row", 
+        justifyContent: "space-between", 
+        width : "100%", 
+        alignItems : "center",
+    }
 })
-
-const dummyData = [
-    [1, {
-        title: "First Listing",
-        description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
-        date : new Date(),
-        minOrder : 200,
-        buyers : 3,
-    }],
-    [2,{
-        id : 2,
-        title: "2 Listing",
-        description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
-        date : new Date(),
-        minOrder : 200,
-        buyers : 3,
-        
-    }],
-    [3, {
-        title: "3 Listing",
-        description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
-        date : new Date(),
-        minOrder : 200,
-        buyers : 3,
-        
-    }],
-    [4,{
-        title: "4 Listing",
-        description : "Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood Lai come buy pls, asos cheapcheap goodgood",
-        date : new Date(),
-        minOrder : 200,
-        buyers : 3,
-        
-    }]
-]
-
-const dummyReview = [
-    {
-        id : 1,
-        numStar : 5,
-        message : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-        reviewer : "test123",
-        reviewee : "Max",
-        date : new Date()
-    },
-    {
-        id : 2,
-        numStar : 4,
-        message : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-        reviewer : "test123",
-        reviewee : "Max",
-        date : new Date()
-    },
-    {
-        id : 3,
-        numStar : 3,
-        message : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-        reviewer : "test123",
-        reviewee : "Max",
-        date : new Date()
-    },
-    {
-        id : 4,
-        numStar : 2,
-        message : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-        reviewer : "test123",
-        reviewee : "Max",
-        date : new Date()
-    },
-    {
-        id : 5,
-        numStar : 1,
-        message : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-        reviewer : "test123",
-        reviewee : "Max",
-        date : new Date()
-    },
-]
 
 export default function UserPage({history}) {
 
@@ -148,7 +80,14 @@ export default function UserPage({history}) {
     const[showFollowingModal, setShowFollowingModal] = React.useState(false);
     const[showFollowersModal, setShowFollowersModal] = React.useState(false);
 
+    const[userListing, setUserListing] = React.useState([]);
+    const[userReview, setUserReview] = React.useState([]);
+
     const[userExists, setUserExists] = React.useState(true)
+
+    const userToken = useSelector(state => state.userToken);
+
+    const[showReviewModal, setShowReviewModal] = React.useState(false);
 
     function openFollowingModal() {
         setShowFollowingModal(true);
@@ -166,8 +105,17 @@ export default function UserPage({history}) {
         setShowFollowersModal(false);
     }
 
+    function openReviewModal() {
+        setShowReviewModal(true);
+    }
+
+    function closeReviewModal() {
+        setShowReviewModal(false);
+    }
+
     React.useEffect(() => {
         setUser(null);
+        setUserExists(true);
         async function fetchData() {
             setUserExists(await getUserByUsername(username, setUser));
         }
@@ -176,16 +124,40 @@ export default function UserPage({history}) {
 
     React.useEffect(() => {
         setUser(null);
+        setUserExists(true);
         const unsubscribe = getUserByUsernameListener(username, setUser) 
         
         return unsubscribe
     },[username])
 
-    
+    React.useEffect(() => {
+        if(user) {
+            const unsubscribe = getUserListingListener(user[0], setUserListing);
+
+            return unsubscribe;
+        } else {
+            setUserListing([]);
+        }
+    },[user])
 
     React.useEffect(() => {
-        console.log(JSON.stringify(user))
+        if(user) {
+            const unsubscribe = getReviewsListener(user[0], setUserReview);
+
+            return unsubscribe;
+        } else {
+            setUserReview([]);
+        }
     },[user])
+
+    React.useEffect(() => {
+        if(userReview.length > 0) {
+            setUserReview(userReview.sort((a,b) => b[1].date.toDate() - a[1].date.toDate()))
+        }
+    },[userReview])
+
+ 
+
 
     return(
         user ?
@@ -212,6 +184,7 @@ export default function UserPage({history}) {
                             userId={user[0]} 
                             openFollowersModal = {openFollowersModal}
                             openFollowingModal = {openFollowingModal}
+                            reviews = {userReview}
                         />
 
                     </Box>
@@ -248,13 +221,24 @@ export default function UserPage({history}) {
                         bgcolor = "background-paper"
                         className = {styles.tabContainer}
                     >
-                        <p className = {styles.tabHeaderText}>
-                            {view === 1 && "Listings"}
-                            {view === 2 && "Reviews"}
-                        </p>
+                        <div className = {styles.tabContainerTitle}>
+                            <p className = {styles.tabHeaderText}>
+                                {view === 1 && "Listings"}
+                                {view === 2 && "Reviews"}
+                            </p>
+                            {view == 2 && userToken != user[0] && 
+                            <Button 
+                                size="small" 
+                                style={{height : "1%", marginRight : "2%"}}
+                                onClick={openReviewModal}
+                            >
+                                <span style={{fontSize : 30}}>+</span>
+                            </Button>}
+                        </div>
                         
-                        {view === 1 && <ListingList dataList = {dummyData} colSize = {3}/>}
-                        {view === 2 && <ReviewList dataList = {dummyReview}/>}
+                        
+                        {view === 1 && <ListingList dataList = {userListing} colSize = {3}/>}
+                        {view === 2 && <ReviewList dataList = {userReview}/>}
 
                     </Box>
                 </Grid>
@@ -272,7 +256,11 @@ export default function UserPage({history}) {
                 show={showFollowersModal} 
                 handleClose={closeFollowersModal}
             />
-            
+            <CreateReviewModal
+                show={showReviewModal}
+                handleClose={closeReviewModal}
+                user = {user}    
+            />
         </Box>
         :
         (userExists ? <Loading/>

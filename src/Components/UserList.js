@@ -11,7 +11,6 @@ const useStyles = makeStyles({
         display : "flex",
         flexWrap : "wrap",
         overflow : "auto",
-        paddingLeft : "2.5%"
     },
     noListText : {
         display : "flex",
@@ -28,7 +27,7 @@ export default function UserList({dataList, title, handleClose}) {
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
-        dataList && dataList.length > 0  ?
+        dataList.length > 0  ?
         <GridList 
             cols = {1}
             className = {styles.listingList}

@@ -12,13 +12,13 @@ import UserList from "./UserList";
 const useStyles = makeStyles({
     root: {
         background : 'linear-gradient(to bottom, #FFD076 30%, white 20%, white)',
-            //minWidth : 220,
-            paddingLeft : "5%",
-            paddingRight : "5%",
-            maxHeight : "auto",
-            borderRadius : "8%",
-            border : "1px solid #BEBEBE",
-            boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)"
+        //minWidth : 220,
+        paddingLeft : "5%",
+        paddingRight : "5%",
+        maxHeight : "auto",
+        borderRadius : "8%",
+        border : "1px solid #BEBEBE",
+        boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)"
     },
     cardContent : {
         display : "flex",
@@ -51,13 +51,15 @@ const useStyles = makeStyles({
     }
 })  
 
-export default function UserCard({user, userId, openFollowingModal, openFollowersModal}) {
+export default function UserCard({user, userId, openFollowingModal, openFollowersModal, reviews}) {
 
     const styles = useStyles()
 
     const currentUser = useSelector(state => state.currentUser)
 
     const userToken = useSelector(state => state.userToken);
+
+    const [rating, setRating] = React.useState(0.0);
 
     async function handleFollow() {
         console.log("clicked")
@@ -70,6 +72,20 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
         var result = await unfollowUser(userToken, userId);
 
     }
+
+    React.useEffect(() => {
+        let total = 0.0;
+        console.log("REVIEWS: " + JSON.stringify(reviews))
+        console.log("REVIEWS TYPE: " + typeof reviews);
+        if(reviews.length > 0) {
+            total = reviews.reduce((a,b) => a + b[1].numStars, 0.0)/reviews.length;
+        }
+
+       setRating(total)
+    },[reviews])
+
+
+
 
     return (
         user ? 
@@ -103,15 +119,15 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                 >
                     
                     <p>
-                        ({user.rating ? user.rating.toFixed(1) : "0.0"})
+                        ({rating.toFixed(1)})
                     </p>
                         <Rating 
-                            value = {user.rating}
+                            value = {rating}
                             readOnly = {true}
                             precision = {0.5}
                         />
                     <p className = {styles.subText}>
-                            {user.ratingCount ? user.ratingCount : "0"}
+                            {reviews ? reviews.length : "0"}
                     </p>
                 </Box>
                 {user.username != currentUser.username ?

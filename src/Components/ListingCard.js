@@ -44,6 +44,7 @@ export default function ListingCard({ data }) {
   const styles = useStyles();
 
   return (
+    data ?
     <Card className={styles.root}>
       <CardActionArea onClick={() => console.log("clicked listingcard")}>
         <CardMedia
@@ -95,5 +96,6 @@ export default function ListingCard({ data }) {
         </CardContent>
       </CardActionArea>
     </Card>
+    : null
   );
 }

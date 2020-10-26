@@ -17,13 +17,20 @@ import { Container } from "@material-ui/core";
 import ListingDetails from "./Components/ListingDetails";
 import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
+import NavBar from "./Components/NavBar";
+
+
 
 function App() {
+
+  const userToken = useSelector(state => state.userToken);
+
   return (
-    <div className="App">
+    <div className="App" style={{height : "100vh"}}>
       <AuthProvider>
         <Router>
-          <div style={{ height: "100vh" }}>
+        {userToken && <NavBar/>}
+          <div>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />

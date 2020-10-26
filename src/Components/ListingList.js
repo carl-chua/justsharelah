@@ -25,10 +25,9 @@ export default function ListingList({ colSize, dataList }) {
   const styles = useStyles();
   const theme = useTheme();
   const isNotSmallScreen = useMediaQuery(theme.breakpoints.up("md"));
-  console.log(colSize);
-  console.log(dataList);
 
-  return dataList.length > 0 ? (
+
+  return dataList && dataList.length > 0 ? (
     <GridList
       cols={colSize}
       className={styles.listingList}
