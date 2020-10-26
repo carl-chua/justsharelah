@@ -8,7 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import NavBar from "./NavBar";
-
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
       },
     },
+    media: {
+        height: 500,
+      },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'left',
@@ -55,9 +60,10 @@ const ListingDetails = () => {
     var [location, setLocation] = React.useState('');
     var [category, setCategory] = React.useState('');
     var [authorName, setAuthorName] = React.useState('');
-    
+    var [photo, setPhoto] = React.useState('');
+    var [imgUrl, setImgUrl] = React.useState('')
     //enter listing id for doc
-    firebase.firestore().collection("listings").doc("mreWT8rB7FYFa3uuVaPl").get().then(function(doc) {
+    firebase.firestore().collection("listings").doc("9DmKXT7KoqsHjCXfKj0j").get().then(function(doc) {
         if (doc.exists) {
             console.log("Document data:", doc.data());
             setListingTitle(doc.data().title);
@@ -68,7 +74,42 @@ const ListingDetails = () => {
             setDesc(doc.data().description);
             setTargetOrderDate(doc.data().targetOrderDate);
             setShopLink(doc.data().websiteLink);
+            setPhoto(doc.data().photo);
+
+            // Create a reference to the file we want to download
+            const storageRef = firebase.storage().ref();
+            var photoRef = storageRef.child('image').child(photo);
+
+            // Get the download URL
+            photoRef.getDownloadURL().then(function(url) {
+              setImgUrl(url);
             
+            }).catch(function(error) {
+
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+                case 'storage/object-not-found':
+                // File doesn't exist
+                alert("File doesn't exist");
+                break;
+
+                case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                alert("User doesn't have permission to access the object");
+                break;
+
+                case 'storage/canceled':
+                // User canceled the upload
+                alert("User canceled the upload");
+                break;
+
+                case 'storage/unknown':
+                // Unknown error occurred, inspect the server response
+                //alert("Unknown error occurred");
+                break;
+            }
+            });
             //get username of post author
             firebase.firestore().collection("users").doc(doc.data().listingOwner).get().then(function(doc) {
                 if (doc.exists) {
@@ -94,13 +135,18 @@ const ListingDetails = () => {
         <Grid container spacing={2}>
         
             
-            <Grid item xs={6}
-                style={{ maxheight: "100%" }}
-                item
-                xs={6}
-                className={classes.image}
+            <Grid item xs={6}>
 
-            />  
+                <Card className={classes.root}>
+                    <CardActionArea>
+                        <CardMedia
+                        className={classes.media}
+                        image= {imgUrl}
+                        title="Listing photo"
+                        />
+                    </CardActionArea>
+                </Card>
+            </Grid>
             
             
             <Grid item xs={6}>
@@ -110,13 +156,15 @@ const ListingDetails = () => {
                          Join chat
                         </Button>
                 </Typography>
-              
+                
                 <Typography variant="h4" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
+                
                 <Typography variant="link" href={shopLink} style={{ color: "#4db6ac" }}>
                     {shopLink}
                 </Typography>
+                
                 <Typography variant="h6" style={{ color: "#212121" }}>
                     Target order date:
                 </Typography>
@@ -124,20 +172,21 @@ const ListingDetails = () => {
                 <Typography variant="h7">
                     {targetOrderDate}
                 </Typography>
-
+                
                 <Typography variant="h6" style={{ color: "#212121" }}>
                     Target amount: 
                 </Typography>
                 <Typography variant="h7" fontWeight="fontWeightBold">
                     {minQty}
                 </Typography>
+                
                 <Typography variant="h6" style={{ color: "#212121" }}>
                     Location: 
                 </Typography>
                 <Typography variant="h7" fontWeight="fontWeightBold">
                      {location}
                 </Typography>
-
+                
                 <Typography variant="h6" style={{ color: "#212121" }}>
                     Details:
                 </Typography>
