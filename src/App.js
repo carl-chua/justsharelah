@@ -20,6 +20,7 @@ import SearchResultsPage from "./Screens/SearchResultsPage";
 import NavBar from "./Components/NavBar";
 
 
+import UsersListingsPage from "./Screens/UsersListingsPage";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
             <Route exact path="/listingDetails" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
+            <Route exact path="/usersListingsPage" component={UsersListingsPage} />
           </div>
         </Router>
       </AuthProvider>
