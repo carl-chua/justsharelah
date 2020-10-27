@@ -177,7 +177,7 @@ const ListingDetails = () => {
                     Target amount: 
                 </Typography>
                 <Typography variant="h7" fontWeight="fontWeightBold">
-                    {minQty}
+                   $ {minQty}
                 </Typography>
                 
                 <Typography variant="h6" style={{ color: "#212121" }}>

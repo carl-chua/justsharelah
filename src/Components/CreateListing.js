@@ -285,7 +285,7 @@ const CreateListing = () => {
                         <TextField
                             required
                             id="outlined-number"
-                            label="Minimum quantity to proceed with order"
+                            label="Target amount to proceed with order"
                             type="number"
                             InputLabelProps={{
                             shrink: true,
