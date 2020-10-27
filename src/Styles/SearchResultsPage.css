@@ -1,0 +1,20 @@
+.SearchResultsPage .ListingResults {
+  margin-left: 330px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: calc(100vw - 388px);
+}
+
+.SearchResultsPage .UserResults {
+  margin-top: 20px;
+  margin-left: 330px;
+}
+
+.SearchResultsPage .SearchSideBar {
+  width: 270px;
+}
+
+.SearchResultsPage .Content {
+  display: flex;
+  flex-direction: row;
+}

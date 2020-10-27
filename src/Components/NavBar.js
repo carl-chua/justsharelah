@@ -6,19 +6,44 @@ import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRo
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
-import "../Styles/NavBar.css";
+import { makeStyles } from "@material-ui/core/styles";
+import { IconButton } from "@material-ui/core";
 
-function NavBar({ history }) {
+import "../Styles/NavBar.css";
+import { useHistory } from "react-router";
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    color: theme.palette.text.primary,
+  },
+}));
+
+function NavBar() {
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
 
   const dispatch = useDispatch();
 
+  const userToken = useSelector((state) => state.userToken);
+
+  const currentUser = useSelector((state) => state.currentUser);
+  
+  const history = useHistory();
+
+  React.useEffect(() => {
+    if (userToken != null && currentUser != null) {
+      console.log("LOGGED IN USERID: " + userToken);
+      console.log(
+        "LOGGED IN USERNAME: " + JSON.stringify(currentUser.username)
+      );
+    }
+  }, [userToken, currentUser]);
+
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
       if (searchString != null && searchString != "") {
-        dispatch(reduxSetSearchString(searchString));
         history.push("/search");
       }
     } else {
@@ -29,7 +54,16 @@ function NavBar({ history }) {
   function handleClickOnName() {
     if (firebase.auth().currentUser != null) {
       history.push("/");
-      alert("Clicked on name!");
+    } else {
+      history.push("/login");
+    }
+  }
+
+  function handleProfileClick() {
+    console.log("GOING TO PROFILE:");
+
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push(`/user/${currentUser.username}`);
     } else {
       history.push("/login");
     }
@@ -47,31 +81,37 @@ function NavBar({ history }) {
               type="text"
               value={searchString}
               placeholder="Search for item or user..."
-              onChange={(e) => setSearchString(e.target.value)}
+              onChange={(e) => {
+                setSearchString(e.target.value);
+                dispatch(reduxSetSearchString(e.target.value));
+              }}
             />
-            <button type="submit">
+            <button
+              disabled={searchString == null || searchString == ""}
+              type="submit"
+            >
               <SearchIcon />
             </button>
           </div>
         </form>
         <div className="SideButtons">
-          <button>
+          <IconButton>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
               fontSize="large"
             />
-          </button>
+          </IconButton>
 
-          <button>
+          <IconButton>
             <LocalMallOutlinedIcon
               style={{ color: "white" }}
               fontSize="large"
             />
-          </button>
+          </IconButton>
 
-          <button>
+          <IconButton onClick={() => handleProfileClick()}>
             <PersonOutlineIcon style={{ color: "white" }} fontSize="large" />
-          </button>
+          </IconButton>
         </div>
       </div>
       <div className="NavBarBottom">

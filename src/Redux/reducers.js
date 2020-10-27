@@ -10,7 +10,7 @@ export default function reducers(state, { type, payload }) {
       return {
         isSignout: true,
         userToken: null,
-        user: null,
+        currentUser: null,
       };
     case "RE_SIGN_IN":
       return {

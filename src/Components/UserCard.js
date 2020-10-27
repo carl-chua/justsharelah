@@ -1,21 +1,24 @@
-import { Avatar, Card, Box, CardContent, CardActions, Button } from "@material-ui/core";
+import { Avatar, Card, Box, CardContent, CardActions, Button, Modal } from "@material-ui/core";
 
 import Rating from '@material-ui/lab/Rating';
 import React from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from "react-redux";
+import { followUser, unfollowUser } from "../API/Users";
+import UserList from "./UserList";
 
 
 const useStyles = makeStyles({
     root: {
         background : 'linear-gradient(to bottom, #FFD076 30%, white 20%, white)',
-            //minWidth : 220,
-            paddingLeft : "5%",
-            paddingRight : "5%",
-            maxHeight : "auto",
-            borderRadius : "8%",
-            border : "1px solid #BEBEBE",
-            boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)"
+        //minWidth : 220,
+        paddingLeft : "5%",
+        paddingRight : "5%",
+        maxHeight : "auto",
+        borderRadius : "8%",
+        border : "1px solid #BEBEBE",
+        boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)"
     },
     cardContent : {
         display : "flex",
@@ -48,9 +51,41 @@ const useStyles = makeStyles({
     }
 })  
 
-export default function UserCard({user}) {
+export default function UserCard({user, userId, openFollowingModal, openFollowersModal, reviews}) {
 
     const styles = useStyles()
+
+    const currentUser = useSelector(state => state.currentUser)
+
+    const userToken = useSelector(state => state.userToken);
+
+    const [rating, setRating] = React.useState(0.0);
+
+    async function handleFollow() {
+        console.log("clicked")
+       var result = await followUser(userToken, userId);
+       console.log("FOLLOWED? : " + result)
+    }
+
+    async function handleUnfollow() {
+        console.log("unfollowing");
+        var result = await unfollowUser(userToken, userId);
+
+    }
+
+    React.useEffect(() => {
+        let total = 0.0;
+        console.log("REVIEWS: " + JSON.stringify(reviews))
+        console.log("REVIEWS TYPE: " + typeof reviews);
+        if(reviews.length > 0) {
+            total = reviews.reduce((a,b) => a + b[1].numStars, 0.0)/reviews.length;
+        }
+
+       setRating(total)
+    },[reviews])
+
+
+
 
     return (
         user ? 
@@ -84,24 +119,38 @@ export default function UserCard({user}) {
                 >
                     
                     <p>
-                        ({user.rating ? user.rating.toFixed(1) : "0.0"})
+                        ({rating.toFixed(1)})
                     </p>
                         <Rating 
-                            value = {user.rating}
+                            value = {rating}
                             readOnly = {true}
                             precision = {0.5}
                         />
                     <p className = {styles.subText}>
-                            {user.ratingCount ? user.ratingCount : "0"}
+                            {reviews ? reviews.length : "0"}
                     </p>
                 </Box>
+                {user.username != currentUser.username ?
+                 (user.followers == null || !user.followers.includes(userToken) ?
                 <Button 
                     size="small"
                     className = {styles.buttonPrimary}
-                    onClick = {() => console.log("clicked")}
+                    onClick = {handleFollow}
                 >
                     <span style = {{color:"white"}}>Follow</span>
                 </Button>
+                :
+                <Button 
+                    size="small"
+                    className = {styles.buttonPrimary}
+                    onClick = {handleUnfollow}
+                >
+                    <span style = {{color:"white"}}>Unfollow</span>
+                </Button>
+                )
+                :
+                null
+                }
                 <Box
                     display="flex"
                     flexDirection = "row"
@@ -113,15 +162,15 @@ export default function UserCard({user}) {
                         paddingBottom : "10%",
                     }}
                 >
-                    <Button>
+                    <Button onClick={openFollowersModal}>
                         <Box
                             className = {styles.ratingBox}
                         >
                             <p className = {styles.subText}>Followers</p>
-                            <p className = {styles.subText}>{user.follwers ? user.follwers.length : 0}</p>
+                            <p className = {styles.subText}>{user.followers ? user.followers.length : 0}</p>
                         </Box>
                     </Button>
-                    <Button>
+                    <Button onClick={openFollowingModal}>
                         <Box
                             className = {styles.ratingBox}
                         >
@@ -137,3 +186,12 @@ export default function UserCard({user}) {
     )
 
 }
+
+/*
+                <Modal
+                open={showFollowingModal}
+                onClose={isFollowingModal(false)}
+            >
+                <UserList dataList = {null} title = {"Following"}/>
+            </Modal>
+            */
