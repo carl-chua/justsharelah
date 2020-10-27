@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Button} from "@material-ui/core";
+import {Box} from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -27,13 +27,6 @@ const useStyles = makeStyles({
     textfield: {
         minWidth: "50vw",
         margin: "3%",
-    },
-    button: {
-        backgroundColor: "#CC7F5D",
-        color: "white",
-        width: "15vw",
-        minHeight: "6vh",
-        marginBottom: "2%",
     }
 })
 
@@ -49,7 +42,6 @@ export default function Profile({data}) {
                 display : "flex",
                 flexDirection : "column",
                 justifyContent : "space-between",
-                alignItems: "center"
             }}
         >
             <form className={classes.form} noValidate autoComplete="off">
@@ -82,12 +74,6 @@ export default function Profile({data}) {
                     />
                 </div>
                 </form>
-                <Button 
-                    variant="contained" 
-                    className = {classes.button}
-                    >
-                    Confirm
-                </Button>   
         </Box>
     )
 }

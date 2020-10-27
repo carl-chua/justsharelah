@@ -1,7 +1,12 @@
-import React from 'react'
-import {Box} from "@material-ui/core";
+import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Box, Avatar, Button } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import { connect } from 'react-redux';
+import { useSelector } from "react-redux";
 
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -26,6 +31,10 @@ const useStyles = makeStyles({
         margin: "2%",
         width: "60vw",
     },
+    avatar: {
+      marginBottom : "2%",
+      marginLeft: "10%",
+    },
     textfield: {
         minWidth: "50vw",
         margin: "3%",
@@ -35,6 +44,13 @@ const useStyles = makeStyles({
         minWidth: '50vw',
         textAlign: "start"
     },
+    button: {
+      backgroundColor: "#CC7F5D",
+      color: "white",
+      width: "15vw",
+      minHeight: "6vh",
+      marginBottom: "2%",
+    }
 })
 
 const countries = [
@@ -50,33 +66,55 @@ const countries = [
       value: 'INDO',
       label: 'Indonesia',
     },
+    {
+      value: 'HK',
+      label: 'Hong Kong',
+    },
   ];
 
-export default function Profile({data}) {
+export default function Profile({user}) {
 
     const classes = useStyles()
-    const [country, setCountry] = React.useState('EUR');
+
+    const currentUser = useSelector(state => state.currentUser)
+
+    const userToken = useSelector(state => state.userToken)
+
+    const [country, setCountry] = React.useState('SG');
     
     const handleChange = (event) => {
     setCountry(event.target.value);
   };
 
     return (
+      user ?
         <Box
             display = "flex"
             flexDirection = "column"
             style = {{
                 display : "flex",
                 flexDirection : "column",
-                justifyContent : "space-between",
+                justifyContent : "center",
+                alignItems: "center",
             }}
         >
             <form className={classes.form} noValidate autoComplete="off">
+                <Avatar 
+                    src = {user.imageUrl} 
+                    className = {classes.avatar}
+                    style = {{
+                        width:120,
+                        height:120,
+                        backgroundColor: '#7AA18A',
+                        }}
+                    >
+                        <span style = {{fontSize:"300%"}}>{user.name.charAt(0).toUpperCase()}</span>
+                </Avatar>
                 <div>
                     <TextField
                     label="Name"
                     id="outlined-size-small"
-                    defaultValue= {data.name}
+                    defaultValue= {user.name}
                     variant="outlined"
                     size="small"
                     className = {classes.textfield}
@@ -86,7 +124,7 @@ export default function Profile({data}) {
                     <TextField
                     label="Mobile Number"
                     id="outlined-size-small"
-                    defaultValue= {data.mobileNum}
+                    defaultValue= {user.mobileNum}
                     variant="outlined"
                     size="small"
                     className = {classes.textfield}
@@ -97,7 +135,7 @@ export default function Profile({data}) {
                     id="outlined-select-currency-native"
                     select
                     label="Country"
-                    defaultValue= {data.country}
+                    defaultValue= {user.country}
                     onChange={handleChange}
                     SelectProps={{
                       native: true,
@@ -114,6 +152,13 @@ export default function Profile({data}) {
                     
                 </div>
             </form>
+            <Button 
+              variant="contained" 
+              className = {classes.button}
+            >
+              Save Changes
+            </Button>
         </Box>
+        : null
     )
 }

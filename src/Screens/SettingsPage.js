@@ -10,6 +10,9 @@ import Box from '@material-ui/core/Box';
 import ProfileCard from "../Components/ProfileCard";
 import ChangePassword from "../Components/ChangePassword";
 
+import NavBar from "../Components/NavBar";
+
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -47,14 +50,19 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
+    margin: "5%",
+    display: "inline",
+    padding: 0,
+    margin: 0,
+  },
+  content: {
     display: 'flex',
-    margin: "5%"
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     paddingLeft: 10,
     minWidth: "18vw",
-    height: 180,
+    height: 120,
   },
   tabPanel: {
   },
@@ -88,42 +96,42 @@ export default function VerticalTabs() {
   return (
 
     <div className={classes.root}>
-      <Tabs
-        orientation="vertical"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        className={classes.tabs}
-      >
-        <Tab label="Edit Profile" {...a11yProps(0)} />
-        <Tab label="Change Password" {...a11yProps(1)} />
-        <Tab label="Settings" {...a11yProps(2)} />
-        
-      </Tabs>
-      <TabPanel value={value} index={0} className = {classes.tabPanel}>
+      <div>
+        <NavBar style={{ position: "sticky" }} />
+      </div>
+      <div className = {classes.content}>
+        <Tabs
+          orientation="vertical"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          className={classes.tabs}
+        >
+          <Tab label="Edit Profile" {...a11yProps(0)} />
+          <Tab label="Change Password" {...a11yProps(1)} />
+          
+        </Tabs>
+        <TabPanel value={value} index={0} className = {classes.tabPanel}>
+          <Box
+              m = {1}
+              border = {1}
+              bgcolor = "background-paper"
+              className = {classes.tabContainer}
+              >
+              <ProfileCard data = {dummyData}/>
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={1} className = {classes.tabPanel}>
         <Box
-            m = {1}
-            border = {1}
-            bgcolor = "background-paper"
-            className = {classes.tabContainer}
-            >
-            <ProfileCard data = {dummyData}/>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={1} className = {classes.tabPanel}>
-      <Box
-            m = {1}
-            border = {1}
-            bgcolor = "background-paper"
-            className = {classes.tabContainer}
-            >
-            <ChangePassword data = {dummyData}/>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={2} className = {classes.tabPanel}>
-        Settings
-      </TabPanel>
-      
+              m = {1}
+              border = {1}
+              bgcolor = "background-paper"
+              className = {classes.tabContainer}
+              >
+              <ChangePassword data = {dummyData}/>
+          </Box>
+        </TabPanel>
+      </div>
     </div>
   );
 }
