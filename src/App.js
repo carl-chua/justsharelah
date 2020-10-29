@@ -18,6 +18,7 @@ import ListingDetails from "./Components/ListingDetails";
 import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
 import UsersListingsPage from "./Screens/UsersListingsPage";
+import Chat2 from "./Components/Chat2";
 
 function App() {
   return (
@@ -30,11 +31,15 @@ function App() {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component={UserPage} />
             <Route exact path="/settings/:username" component={SettingsPage} />
-            <Route exact path="/chat" component={Chat} />
+            <Route exact path="/chat/:username" component={Chat2} />
             <Route exact path="/listingDetails" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
-            <Route exact path="/usersListingsPage" component={UsersListingsPage} />
+            <Route
+              exact
+              path="/usersListingsPage"
+              component={UsersListingsPage}
+            />
           </div>
         </Router>
       </AuthProvider>
