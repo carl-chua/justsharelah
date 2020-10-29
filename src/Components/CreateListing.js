@@ -18,7 +18,6 @@ import Grid from '@material-ui/core/Grid';
 import CardGiftcardOutlinedIcon from '@material-ui/icons/CardGiftcardOutlined';
 import NavBar from "./NavBar";
 
-
 const BootstrapInput = withStyles((theme) => ({
     root: {
       'label + &': {
@@ -121,15 +120,30 @@ const CreateListing = () => {
     const handleShopLink = (event) => {
         setShopLink(event.target.value);
     };
-    const handleImg = async (e) => {
+
+    const [photoId, setPhotoId] = React.useState('');
+
+    // const handleImg = async (e) => {
+    function useHandleImg (e) {
+        //generate random string for reference to image stored in storage
+        var imgId = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < 8; i++ ) {
+           imgId += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        
+        setPhotoId(imgId);
         const file = e.target.files[0];
         const storageRef = firebase.storage().ref();
-        const fileRef = storageRef.child(file.name);
-        await fileRef.put(file);
-        console.log(typeof file.name);
-        //setImg(await fileRef.getDownloadURL());
+        const fileRef = storageRef.child('image');
+        fileRef.child(imgId).put(file);
+        //console.log(typeof file.name);
         alert("Image uploaded!");
+
     };
+
+
     const handleLocation = (event) => {
         setLocation(event.target.value);
     };
@@ -159,7 +173,7 @@ const CreateListing = () => {
             description:desc,
             websiteLink:shopLink,
             createdDate: new Date(),
-            //img:img
+            photo: photoId,
            });
            //save under listings
         firebase.firestore().collection("listings").add({
@@ -173,10 +187,10 @@ const CreateListing = () => {
             description:desc,
             websiteLink:shopLink,
             createdDate: new Date(),
-           //img:img
+            photo: photoId,
           })
           .then(() => {
-              alert("Listing created!")
+              alert("Listing created!");
           });
           
     };
@@ -271,7 +285,7 @@ const CreateListing = () => {
                         <TextField
                             required
                             id="outlined-number"
-                            label="Minimum quantity to proceed with order"
+                            label="Target amount to proceed with order"
                             type="number"
                             InputLabelProps={{
                             shrink: true,
@@ -343,7 +357,7 @@ const CreateListing = () => {
                             type="file"
                             label="Upload photos"
                             value={img}
-                            onChange={handleImg}
+                            onChange={useHandleImg}
                            
                             />
                             <label htmlFor="contained-button-file">
@@ -351,7 +365,7 @@ const CreateListing = () => {
                                 Upload
                             </Button>
                             </label>
-                            <input accept="image/*" className={classes.input} id="icon-button-file" type="file" value={img} onChange={handleImg}/>
+                            <input accept="image/*" className={classes.input} id="icon-button-file" type="file" value={img} onChange={useHandleImg}/>
                             <label htmlFor="icon-button-file">
                             <IconButton color="primary" aria-label="upload picture" component="span">
                                 <PhotoCamera />

@@ -10,6 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 
 import "../Styles/NavBar.css";
+import { useHistory } from "react-router";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar({history}) {
+function NavBar() {
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
@@ -25,8 +27,9 @@ function NavBar({history}) {
   const dispatch = useDispatch();
 
   const userToken = useSelector((state) => state.userToken);
-
   const currentUser = useSelector((state) => state.currentUser);
+  
+  const history = useHistory();
 
   React.useEffect(() => {
     if (userToken != null && currentUser != null) {
@@ -48,7 +51,7 @@ function NavBar({history}) {
   }
 
   function handleClickOnName() {
-    if (firebase.auth().currentUser != null) {
+    if (firebase.auth().currentUser != null && currentUser != null) {
       history.push("/");
     } else {
       history.push("/login");
@@ -56,10 +59,16 @@ function NavBar({history}) {
   }
 
   function handleProfileClick() {
-    console.log("GOING TO PROFILE:");
-
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/user/${currentUser.username}`);
+    } else {
+      history.push("/login");
+    }
+  }
+
+  function handleChatClick() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push(`/chat/${currentUser.username}`);
     } else {
       history.push("/login");
     }
@@ -91,7 +100,7 @@ function NavBar({history}) {
           </div>
         </form>
         <div className="SideButtons">
-          <IconButton>
+          <IconButton onClick={() => handleChatClick()}>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
               fontSize="large"
