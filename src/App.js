@@ -18,6 +18,8 @@ import ListingDetails from "./Components/ListingDetails";
 import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
 import UsersListingsPage from "./Screens/UsersListingsPage";
+import UsersListingsPage2 from "./Screens/UsersListingsPage2";
+import UsersListingPage from "./Screens/UsersListingPage";
 
 function App() {
   return (
@@ -34,7 +36,21 @@ function App() {
             <Route exact path="/listingDetails" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
-            <Route exact path="/usersListingsPage" component={UsersListingsPage} />
+            <Route
+              exact
+              path="/usersListingsPage"
+              component={UsersListingsPage}
+            />
+            <Route
+              exact
+              path="/usersListingsPage2"
+              component={UsersListingsPage2}
+            />
+            <Route
+              exact
+              path="/usersListingPage"
+              component={UsersListingPage}
+            />
           </div>
         </Router>
       </AuthProvider>

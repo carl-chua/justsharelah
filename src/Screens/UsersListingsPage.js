@@ -50,6 +50,10 @@ export default function UsersListingsPage({ history }) {
     setValue(newValue);
   };
 
+  const handleClick = () => {
+    alert("hi");
+  };
+
   function createData(a, b, c, d, e) {
     return { a, b, c, d, e };
   }
@@ -87,45 +91,81 @@ export default function UsersListingsPage({ history }) {
       <h2>My Listings</h2>
 
       <Container maxWidth="lg">
-        <AppBar position="static">
-          <Tabs value={value} onChange={handleChange}>
-            <Tab label="Ongoing" />
-            <Tab label="Past" />
-          </Tabs>
-        </AppBar>
+        <Paper>
+          <form>
+            <input type="text" placeholder="Search" />
+            <button type="submit">Search</button>
+          </form>
 
-        <TabPanel value={value} index={0}>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-              <TableHead>
-                <TableRow className={classes.head}>
-                  <TableCell>Listing Title</TableCell>
-                  <TableCell align="right">Date</TableCell>
-                  <TableCell align="right">Number of Orders</TableCell>
-                  <TableCell align="right">Payments Received</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                      {row.a}
-                    </TableCell>
-                    <TableCell align="right">{row.b}</TableCell>
-                    <TableCell align="right">{row.c}</TableCell>
-                    <TableCell align="right">{row.d}</TableCell>
-                    <TableCell align="right">{row.e}</TableCell>
+          <AppBar position="static">
+            <Tabs value={value} onChange={handleChange}>
+              <Tab label="Ongoing" />
+              <Tab label="Past" />
+            </Tabs>
+          </AppBar>
+
+          <TabPanel value={value} index={0}>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow className={classes.head}>
+                    <TableCell>Listing Title</TableCell>
+                    <TableCell align="right">Date</TableCell>
+                    <TableCell align="right">Number of Orders</TableCell>
+                    <TableCell align="right">Payments Received</TableCell>
+                    <TableCell align="right">Actions</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </TabPanel>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      hover
+                      onClick={() => alert("redirecting...")}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.a}
+                      </TableCell>
+                      <TableCell align="right">{row.b}</TableCell>
+                      <TableCell align="right">{row.c}</TableCell>
+                      <TableCell align="right">{row.d}</TableCell>
+                      <TableCell align="right">{row.e}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </TabPanel>
 
-        <TabPanel value={value} index={1}>
-          Past Table
-        </TabPanel>
+          <TabPanel value={value} index={1}>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow className={classes.head}>
+                    <TableCell>Listing Title</TableCell>
+                    <TableCell align="right">Date</TableCell>
+                    <TableCell align="right">Number of Orders</TableCell>
+                    <TableCell align="right">Payments Received</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.name} hover>
+                      <TableCell component="th" scope="row">
+                        {row.a}
+                      </TableCell>
+                      <TableCell align="right">{row.b}</TableCell>
+                      <TableCell align="right">{row.c}</TableCell>
+                      <TableCell align="right">{row.d}</TableCell>
+                      <TableCell align="right">{row.e}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </TabPanel>
+        </Paper>
       </Container>
     </div>
   );
