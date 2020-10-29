@@ -57,6 +57,8 @@ export async function getUserById(userId, setUser) {
     .doc(userId)
     .get();
 
+  console.log(snapshot.data());
+
   setUser(snapshot.data());
 }
 

@@ -37,7 +37,7 @@ export default function ReviewList({dataList}) {
             }}
         >
             {dataList.map(data => (
-                <ReviewCard key ={data.id} data = {data}/>
+                <ReviewCard key ={data[0]} data = {data[1]}/>
             ))}
         </GridList>
         :

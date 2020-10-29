@@ -10,6 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 
 import "../Styles/NavBar.css";
+import { useHistory } from "react-router";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar({history}) {
+function NavBar() {
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
@@ -26,6 +28,8 @@ function NavBar({history}) {
 
   const userToken = useSelector((state) => state.userToken);
   const currentUser = useSelector((state) => state.currentUser);
+  
+  const history = useHistory();
 
   React.useEffect(() => {
     if (userToken != null && currentUser != null) {

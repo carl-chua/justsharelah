@@ -3,12 +3,12 @@ import { Avatar, Card, Box, CardContent, CardMedia, CardActionArea } from "@mate
 import React from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
-import { getUserByUsername } from "../API/Users";
+import { getUserById, getUserByUsername } from "../API/Users";
 
 import Rating from '@material-ui/lab/Rating';
 
 import moment from 'moment';
-import { Link, NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -37,29 +37,37 @@ const useStyles = makeStyles({
     },
 })
 
-export default function ReviewCard({data, history}) {
+export default function ReviewCard({data}) {
 
 
     const styles = useStyles()
     const[reviewer,setReviewer] = React.useState()
+
+    let history = useHistory();
     
     React.useEffect(() => {
-        getUserByUsername(data.reviewer,setReviewer);
+        getUserById(data.reviewer,setReviewer);
     },[])
 
     React.useEffect(() => {
         if(reviewer) {
+            //console.log("REVIEWER IS: " + JSON.stringify(reviewer))
             setReviewer(reviewer);
         }
     },[reviewer])
 
     function handleOnClick() {
-        history.push("/")
+        history.push(`/user/${reviewer.username}`)
     }
+
+    React.useEffect(() => {
+        console.log(data.message)
+    },[data])
     return (
         reviewer ? 
         <Card className = {styles.root}>
-                <CardContent>
+            <CardActionArea onClick={handleOnClick}>
+                <CardContent >
                     <Box
                         display = "flex"
                         flexDirection = "column"
@@ -105,14 +113,14 @@ export default function ReviewCard({data, history}) {
                                 >
                                 <p className = {styles.nameText}>{reviewer.username}</p>
                                 <Rating 
-                                    value = {data.numStar}
+                                    value = {data.numStars}
                                     readOnly = {true}
                                     precision = {0.5}
                                     size = "small"
                                 />
                                 </Box>
                                 
-                                <p className = {styles.desText}>{moment(data.date).format("DD MMM YYYY")}</p>
+                                <p className = {styles.desText}>{moment(data.date.toDate()).format("DD MMM YYYY")}</p>
                             </Box>
                         
                         </Box>
@@ -129,6 +137,7 @@ export default function ReviewCard({data, history}) {
                         </Box>
                     </Box>
                 </CardContent>
+            </CardActionArea>
         </Card>
         : null
     )

@@ -86,3 +86,77 @@ export const updateListing = (listing) => {
   db.doc(listing.id).update(listing);
   console.log("Updated listing: ", listing);
 };
+
+
+export async function getUserListing(userId, setUserListing) {
+  const snapshot = await firebase
+    .firestore()
+    .collection("listings")
+    .where("listingOwner", "==", userId)
+    .get();
+
+  var temp = []
+
+  snapshot.forEach((doc) => {
+    temp.push([doc.id, doc.data()])
+  });
+
+  setUserListing(temp);
+}
+
+export function getUserListingListener(userId, setUserListing) {
+  const unsubscribe = firebase
+  .firestore()
+  .collection("listings")
+  .where("listingOwner", "==", userId)
+  .onSnapshot(function (querySnapshot) {
+    querySnapshot.docChanges().forEach(function (changes) {
+      if (changes.type === "added") {
+        setUserListing((prevData) => {
+          if (prevData.some((data) => data[0] === changes.doc.id)) {
+            return prevData;
+          } else {
+            return setUserListing([...prevData, [changes.doc.id,changes.doc.data()]]);
+          }
+        });
+      } else if (changes.type === "modified") {
+        //console.log('chats modified :', changes.doc.data())
+        setUserListing((prevData) =>
+          prevData.map((data) => {
+            //console.log('UPDATING?', message)
+            if (data[0] === changes.doc.id) {
+              return [changes.doc.id,changes.doc.data()];
+            } else {
+              return data;
+            }
+          })
+        );
+      } else if (changes.type === "removed") {
+        setUserListing((prevData) => 
+          prevData.map((data) => {
+            if(data[0] !== changes.doc.id) {
+              return data;
+            }
+          })
+        );
+      }
+    });
+  });
+
+return unsubscribe;
+}
+
+export async function addReview(data) {
+  await firebase
+    .firestore()
+    .collection("reviews")
+    .add({
+        reviewer : data.reviewer,
+        reviewee : data.reviewee,
+        message : data.message,
+        numStars : data.numStars,
+        date : new Date(),
+
+    })
+  return true;
+}
