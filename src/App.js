@@ -39,7 +39,7 @@ function App() {
             <Route exact path="/user/:username" component={UserPage} />
             <Route exact path="/settings/:username" component={SettingsPage} />
             <Route exact path="/chat/:username" component={Chat2} />
-            <Route exact path="/listingDetails" component={ListingDetails} />
+            <Route exact path="/listingDetails/:id" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
             <Route
