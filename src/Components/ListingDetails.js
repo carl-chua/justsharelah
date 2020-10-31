@@ -11,6 +11,7 @@ import NavBar from "./NavBar";
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
+import { useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,9 +62,83 @@ const ListingDetails = () => {
     var [category, setCategory] = React.useState('');
     var [authorName, setAuthorName] = React.useState('');
     var [photo, setPhoto] = React.useState('');
-    var [imgUrl, setImgUrl] = React.useState('')
+    var [imgUrl, setImgUrl] = React.useState('');
+    var [members, setMembers] = React.useState('');
+    var [kuppers, setKuppers] = React.useState('');
+    var [membersArray, setMembersArray] = React.useState([]);
+    var [chatGroup, setChatGroup] = React.useState('');
+
+    let user = firebase.auth().currentUser;
+    //get listing id from params
+    let { id } = useParams();
+    var listingId = id; 
+
+    async function handleLeave() {
+        
+        //const index = membersArray.indexOf(user.uid);
+        //remove user id from members
+        //if (index > -1) {
+         // membersArray.splice(index, 1);
+        //}
+        //console.log(membersArray);
+        //update db
+        //var listingRef = firebase.firestore().collection("listings").doc(id);
+        //return listingRef.update({
+            //members: firebase.firestore.FieldValue.arrayRemove(user.uid),
+        //})
+        var listingRef = firebase.firestore().collection("listings").doc(id);
+        var chatGroupRef = firebase.firestore().collection("chatGroups").doc(chatGroup);
+        try {
+            await firebase.firestore().runTransaction(async (tn) => {
+
+                tn.update(listingRef, {
+                members: firebase.firestore.FieldValue.arrayRemove(user.uid),
+                });
+                tn.update(chatGroupRef, {
+                    members: firebase.firestore.FieldValue.arrayRemove(user.uid),
+                });
+                alert("Left listing!");
+                return true;
+            });
+        } catch (err) {
+            console.log("TRANSACTION FAILED");
+            console.log(err);
+            return false;
+        }
+    }
+    
+
+    async function handleJoin() {
+        //membersArray.push(user.uid);
+        
+        //update db
+        //var listingRef = firebase.firestore().collection("listings").doc(id);
+        //return listingRef.update({
+            //members: firebase.firestore.FieldValue.arrayUnion(user.uid),
+        //})
+        var listingRef = firebase.firestore().collection("listings").doc(id);
+        var chatGroupRef = firebase.firestore().collection("chatGroups").doc(chatGroup);
+        try {
+            await firebase.firestore().runTransaction(async (tn) => {
+
+                tn.update(listingRef, {
+                members: firebase.firestore.FieldValue.arrayUnion(user.uid),
+                });
+                tn.update(chatGroupRef, {
+                    members: firebase.firestore.FieldValue.arrayUnion(user.uid),
+                });
+                alert("Joined listing!");
+                return true;
+            });
+        } catch (err) {
+            console.log("TRANSACTION FAILED");
+            console.log(err);
+            return false;
+        }
+    }
+
     //enter listing id for doc
-    firebase.firestore().collection("listings").doc("9DmKXT7KoqsHjCXfKj0j").get().then(function(doc) {
+    firebase.firestore().collection("listings").doc(id).onSnapshot(function(doc) {
         if (doc.exists) {
             console.log("Document data:", doc.data());
             setListingTitle(doc.data().title);
@@ -73,9 +148,12 @@ const ListingDetails = () => {
             setMinQty(doc.data().targetAmount);
             setDesc(doc.data().description);
             setTargetOrderDate(doc.data().targetOrderDate);
-            setShopLink(doc.data().websiteLink);
+            setShopLink("https://" + doc.data().websiteLink);
             setPhoto(doc.data().photo);
-
+            setMembers(doc.data().members.length);
+            setKuppers(doc.data().kuppers.length);
+            setMembersArray(doc.data().members);
+            setChatGroup(doc.data().chatGroup);
             // Create a reference to the file we want to download
             const storageRef = firebase.storage().ref();
             var photoRef = storageRef.child('image').child(photo);
@@ -117,16 +195,17 @@ const ListingDetails = () => {
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
+                    alert("No such document!");
                 }
             }).catch(function(error) {
                 console.log("Error getting document:", error);
+                alert("Error getting document");
             });
         } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
+            alert("No such document!");
         }
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
     });
     
     return (
@@ -148,49 +227,92 @@ const ListingDetails = () => {
                 </Card>
             </Grid>
             
-            
+        
             <Grid item xs={6}>
             <Paper className={classes.paper}>
-                <Typography variant="h4" style={{ color: "#212121" }}>
-                    {authorName}<Button className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>
-                         Join chat
-                        </Button>
-                </Typography>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h4" style={{ color: "#212121" }}>
+                        {authorName} 
+                    </Typography>
+                    &nbsp;
+                    &nbsp;
+                    <div>
+                        {membersArray.includes(user.uid) ? (
+                            <Button  onClick = {handleLeave} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Leave Listing</Button>
+                        ) : (
+                            <Button  onClick = {handleJoin} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Join Listing</Button>
+                        )}
+                    </div>
+                </div>
                 
                 <Typography variant="h4" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
-                
-                <Typography variant="link" href={shopLink} style={{ color: "#4db6ac" }}>
-                    {shopLink}
-                </Typography>
-                
-                <Typography variant="h6" style={{ color: "#212121" }}>
-                    Target order date:
-                </Typography>
 
-                <Typography variant="h7">
-                    {targetOrderDate}
-                </Typography>
+                <a href={shopLink} target="_blank">{shopLink}</a>
+
+                <br></br>
+                <br></br>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h6" style={{ color: "#212121" }}>
+                        Target order date:
+                    </Typography>
+                    &nbsp;
+                    &nbsp;
+                    <Typography variant="h6">
+                        {targetOrderDate}
+                    </Typography>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h6" style={{ color: "#212121" }}>
+                        Target amount:
+                    </Typography>
+                    &nbsp;
+                    &nbsp;
+                    <Typography variant="h6">
+                    $ {minQty}
+                    </Typography>
+                </div>
                 
-                <Typography variant="h6" style={{ color: "#212121" }}>
-                    Target amount: 
-                </Typography>
-                <Typography variant="h7" fontWeight="fontWeightBold">
-                   $ {minQty}
-                </Typography>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h6" style={{ color: "#212121" }}>
+                        Location:
+                    </Typography>
+                    &nbsp;
+                    &nbsp;
+                    <Typography variant="h6">
+                        {location}
+                    </Typography>
+                </div>
+               
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h6" style={{ color: "#212121" }}>
+                        Number of members:
+                    </Typography>
+                    &nbsp;
+                    &nbsp;
+                    <Typography variant="h6">
+                        {members}
+                    </Typography>
+                </div>
                 
-                <Typography variant="h6" style={{ color: "#212121" }}>
-                    Location: 
-                </Typography>
-                <Typography variant="h7" fontWeight="fontWeightBold">
-                     {location}
-                </Typography>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Typography variant="h6" style={{ color: "#212121" }}>
+                        Number of kuppers:
+                    </Typography>
+                    &nbsp;
+                    &nbsp;
+                    <Typography variant="h6">
+                        {kuppers}
+                    </Typography>
+                </div>
+                
                 
                 <Typography variant="h6" style={{ color: "#212121" }}>
                     Details:
                 </Typography>
-                <Typography variant="h7" fontWeight="fontWeightBold">
+                <Typography variant="p" fontWeight="fontWeightBold">
                     {desc}
                 </Typography>
 
