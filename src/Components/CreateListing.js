@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import CardGiftcardOutlinedIcon from '@material-ui/icons/CardGiftcardOutlined';
 import NavBar from "./NavBar";
+import { Redirect } from "react-router";
 
 const BootstrapInput = withStyles((theme) => ({
     root: {
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
   const listingButtonStyle = {
-    background: '#8d6e63',
+    background: '#cc7f5d',
     borderRadius: 3,
     border: 0,
     color: 'white',
@@ -96,7 +97,8 @@ const useStyles = makeStyles((theme) => ({
     
   };
 
-const CreateListing = () => {
+//const CreateListing = () => {
+function CreateListing({ history }) {
     const classes = useStyles();
     const [category, setCategory] = React.useState('');
     const handleChange = (event) => {
@@ -139,7 +141,7 @@ const CreateListing = () => {
         const fileRef = storageRef.child('image');
         fileRef.child(imgId).put(file);
         //console.log(typeof file.name);
-        alert("Image uploaded!");
+        alert("Image saved!");
 
     };
 
@@ -147,6 +149,8 @@ const CreateListing = () => {
     const handleLocation = (event) => {
         setLocation(event.target.value);
     };
+
+    
     const [listingTitle, setListingTitle] = React.useState('');
     const [listingTags, setListingTags] = React.useState('');
     const [targetOrderDate, setTargetOrderDate] = React.useState('');
@@ -155,27 +159,16 @@ const CreateListing = () => {
     const [shopLink, setShopLink] = React.useState('');
     const [img, setImg] = React.useState('');
     const [location, setLocation] = React.useState('');
+    const [listingId, setListingId] = React.useState('');
+    const [chatGroup, setChatGroup] = React.useState('');
 
     let user = firebase.auth().currentUser;
     //.collection("users").doc(user.uid)
   
     const handleSubmit = (e) => {
         e.preventDefault();
-        //save under user listings
-        firebase.firestore().collection("users").doc(user.uid).collection("listings").add({
-            listingOwner:user.uid,
-            category: category,
-            title: listingTitle,
-            tags: listingTags,
-            targetOrderDate: targetOrderDate,
-            targetAmount: minQty,
-            location:location,
-            description:desc,
-            websiteLink:shopLink,
-            createdDate: new Date(),
-            photo: photoId,
-           });
-           //save under listings
+        
+        //save under listings
         firebase.firestore().collection("listings").add({
             listingOwner:user.uid,
             category: category,
@@ -188,11 +181,47 @@ const CreateListing = () => {
             websiteLink:shopLink,
             createdDate: new Date(),
             photo: photoId,
+            members: [],
+            kuppers: [],
+            joinRequesters: [],
+            orderRecords: [],
+            chatGroup: "",
           })
-          .then(() => {
-              alert("Listing created!");
-          });
-          
+        .then(function(docRef) {
+            //get id of the listing created
+            console.log("Document written with ID: ", docRef.id);
+            setListingId(docRef.id);
+            var listing = docRef.id;
+              //create and initialise chatgroup entity in database
+              firebase.firestore().collection("chatGroups").add({
+                groupName: listingTitle,
+                photo: photoId,
+                listing: listing,
+                members: [],
+                messages: [],
+            })
+            .then(function(docRef) {
+                console.log("chatGroup Document written with ID: ", docRef.id);
+                setChatGroup(docRef.id);
+                var chat = docRef.id;
+                var listingRef = firebase.firestore().collection("listings").doc(listing);
+                // update the chatGroup id in listing
+                return listingRef.update({
+                    chatGroup: chat,
+                })
+                .then(function() {
+                    console.log("Document successfully updated!");
+                    alert("Listing created! Click ok to view listing");
+                    //redirect to listing details page
+                    history.push(`/listingDetails/${listing}`);
+                })
+            })
+        })
+        .catch(function(error) {
+            console.error("Error adding document: ", error);
+            alert("Error adding document to database");
+        });
+        
     };
 
     return (
@@ -347,7 +376,7 @@ const CreateListing = () => {
                 </Grid>
                 <Grid item md={8} >
                     <Paper className={classes.paper}>
-                        <h4>Upload photos</h4>
+                        <h4>Upload a photo of your listing</h4>
                         <div className={classes.root}>
                             <input
                             accept="image/*"
@@ -355,7 +384,7 @@ const CreateListing = () => {
                             id="contained-button-file"
                             multiple
                             type="file"
-                            label="Upload photos"
+                            label="Upload a photo of your listing"
                             value={img}
                             onChange={useHandleImg}
                            
