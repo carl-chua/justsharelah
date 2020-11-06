@@ -25,8 +25,6 @@ export async function sendMessage(message, selectedChat) {
 
 // I need a function that retrieves messages of a ChatGroup and listens
 export function messagesListener(selectedChat, setMessages) {
-  console.log("calling listener");
-  console.log(selectedChat);
   const unsubscribe = firebase
     .firestore()
     .collection("messages")

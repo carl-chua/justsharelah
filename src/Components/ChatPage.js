@@ -17,6 +17,7 @@ import ChatBox from "./ChatBox";
 import { getChatGroups } from "../API/Chat";
 import "../Styles/Chat.css";
 import Loading from "./Loading";
+import CreateOrderModal from "../Components/CreateOrderModal";
 
 const styles = {
   container: {
@@ -59,6 +60,16 @@ function Chat({ history }) {
 
   const userToken = useSelector((state) => state.userToken);
   const currentUser = useSelector((state) => state.currentUser);
+
+  const [showCreateOrderModal, setShowCreateOrderModal] = useState(false);
+
+  function openCreateOrderModal() {
+    setShowCreateOrderModal(true);
+  }
+
+  function closeCreateOrderModal() {
+    setShowCreateOrderModal(false);
+  }
 
   const chatUser = {
     id: userToken,
@@ -121,7 +132,6 @@ function Chat({ history }) {
 
   return (
     <div className="Chat">
-      <NavBar history={history} />
       <div style={styles.container}>
         <div className="ChannelList" style={styles.channelList}>
           {renderChannelsHeader()}
@@ -129,7 +139,20 @@ function Chat({ history }) {
         </div>
         <div style={styles.chat}>
           {selectedChat.length != 0 ? (
-            <ChatBox selectedChat={selectedChat} chatUser={chatUser} />
+            <>
+              <ChatBox
+                selectedChat={selectedChat}
+                chatUser={chatUser}
+                showCreateOrderModal={showCreateOrderModal}
+                openCreateOrderModal={openCreateOrderModal}
+                closeCreateOrderModal={closeCreateOrderModal}
+              />
+              <CreateOrderModal
+                show={showCreateOrderModal}
+                handleClose={closeCreateOrderModal}
+                listingId={selectedChat[1].listing}
+              />
+            </>
           ) : (
             <Loading />
           )}

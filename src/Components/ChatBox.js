@@ -6,6 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { sendMessage, messagesListener } from "../API/Chat";
 import { getUserByIdForChat } from "../API/Users";
 import { DateSeparator } from "stream-chat-react";
+import "../Styles/ChatBox.css";
 
 const styles = {
   chat: {
@@ -19,13 +20,28 @@ const styles = {
   },
 };
 
-function ChatBox({ selectedChat, chatUser }) {
+function ChatBox({
+  selectedChat,
+  chatUser,
+  showCreateOrderModal,
+  openCreateOrderModal,
+  closeCreateOrderModal,
+}) {
   const [messages, setMessages] = useState([]);
   const [tempMessages, setTempMessages] = useState([]);
 
   useEffect(() => {
-    messagesListener(selectedChat[0], setTempMessages);
-  }, []);
+    console.log(selectedChat[0]);
+
+    setTempMessages([]);
+
+    const unsubscribe = messagesListener(selectedChat[0], setTempMessages);
+
+    const test = () => {
+      return unsubscribe();
+    };
+    return test;
+  }, [selectedChat]);
 
   useEffect(() => {
     setMessages(
@@ -95,10 +111,13 @@ function ChatBox({ selectedChat, chatUser }) {
   function renderChatHeader() {
     return (
       <AppBar position="static" color="default">
-        <Toolbar>
+        <Toolbar className="ToolBar">
           <Typography variant="h6" color="inherit">
             {selectedChat[1].groupName}
           </Typography>
+          <button className="OrderButton" onClick={openCreateOrderModal}>
+            Order
+          </button>
         </Toolbar>
       </AppBar>
     );
@@ -116,7 +135,7 @@ function ChatBox({ selectedChat, chatUser }) {
 
   return (
     <div className="ChatBox" style={styles.chat}>
-      {renderChatHeader()}
+      <div className="ChatHeader">{renderChatHeader()}</div>
       {renderChat()}
     </div>
   );
