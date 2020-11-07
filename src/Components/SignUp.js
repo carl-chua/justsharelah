@@ -84,13 +84,10 @@ const SignUp = ({ history }) => {
         city,
       } = event.target.elements;
       try {
-        console.log("1");
         await firebase
           .auth()
           .createUserWithEmailAndPassword(email.value, password.value);
-        console.log("2");
         let user = firebase.auth().currentUser;
-        console.log("3");
         if (user) {
           // User is signed in.
           try {
@@ -112,7 +109,6 @@ const SignUp = ({ history }) => {
             alert.show("You have successfully signed up.");
           } catch (error) {
             alert.show(`An error occured while signing up`);
-            console.log("ERROR : ", error);
             await user.delete();
           }
         }

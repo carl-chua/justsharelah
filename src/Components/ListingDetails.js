@@ -12,6 +12,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import { useParams } from "react-router";
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +46,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundSize: "cover",
         backgroundPosition: "center",
       },
+
+      desText : {
+        fontSize: 16,
+        color:"gray", 
+        margin:0,
+    },
    
   }));
 
@@ -67,6 +74,7 @@ const ListingDetails = () => {
     var [kuppers, setKuppers] = React.useState('');
     var [membersArray, setMembersArray] = React.useState([]);
     var [chatGroup, setChatGroup] = React.useState('');
+    var [createdDate, setCreatedDate] = React.useState(new Date());
 
     let user = firebase.auth().currentUser;
     //get listing id from params
@@ -154,6 +162,7 @@ const ListingDetails = () => {
             setKuppers(doc.data().kuppers.length);
             setMembersArray(doc.data().members);
             setChatGroup(doc.data().chatGroup);
+            setCreatedDate(doc.data().createdDate);
             // Create a reference to the file we want to download
             const storageRef = firebase.storage().ref();
             var photoRef = storageRef.child('image').child(photo);
@@ -248,10 +257,14 @@ const ListingDetails = () => {
                 <Typography variant="h4" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
-
-                <a href={shopLink} target="_blank">{shopLink}</a>
-
+                <Typography variant="p" style={{ color: "#4db6ac" }}>
+                    Category: {category}
+                    
+                </Typography>
                 <br></br>
+                <a href={shopLink} target="_blank" rel="noopener noreferrer">{shopLink}</a>
+                
+                
                 <br></br>
                 <div style={{ display: "flex", alignItems: "baseline" }}>
                     <Typography variant="h6" style={{ color: "#212121" }}>

@@ -1,0 +1,29 @@
+.ChatBox {
+  margin-left: 350px;
+}
+
+.ChatBox .ChatHeader {
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}
+
+.ChatBox .ToolBar {
+  width: calc(100vw - 423px);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ChatBox .OrderButton {
+  background-color: #cc7f5d;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  font-size: 15px;
+  height: 40px;
+  width: 100px;
+  border-radius: 5px;
+}

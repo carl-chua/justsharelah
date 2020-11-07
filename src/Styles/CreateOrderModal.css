@@ -1,0 +1,50 @@
+.CreateOrderModalForm .Item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.CreateOrderModalForm .Item .RemoveItemButton {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  width: fit-content;
+  height: fit-content;
+}
+
+.CreateOrderModalForm .AddItemButton {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  width: fit-content;
+  height: fit-content;
+}
+
+.CreateOrderModalForm .ConfirmButtonDiv {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.CreateOrderModalForm .ConfirmButtonDiv .ConfirmButton {
+  background-color: #cc7f5d;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  height: 50px;
+  width: 288px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

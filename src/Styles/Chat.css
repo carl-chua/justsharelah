@@ -1,3 +1,8 @@
+.Chat {
+  overflow-x: hidden;
+}
+
 .Chat .ChannelList {
-  position: sticky;
+  position: fixed;
+  top: 95px;
 }

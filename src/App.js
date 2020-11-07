@@ -22,7 +22,7 @@ import NavBar from "./Components/NavBar";
 import UsersListingsPage from "./Screens/UsersListingsPage";
 import UsersListingsPage2 from "./Screens/UsersListingsPage2";
 import UsersListingPage from "./Screens/UsersListingPage";
-import Chat2 from "./Components/Chat2";
+import ChatPage from "./Components/ChatPage";
 
 function App() {
   const userToken = useSelector((state) => state.userToken);
@@ -38,8 +38,12 @@ function App() {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component={UserPage} />
             <Route exact path="/settings/:username" component={SettingsPage} />
-            <Route exact path="/chat/:username" component={Chat2} />
-            <Route exact path="/listingDetails/:id" component={ListingDetails} />
+            <Route exact path="/chat/:username" component={ChatPage} />
+            <Route
+              exact
+              path="/listingDetails/:id"
+              component={ListingDetails}
+            />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
             <Route
