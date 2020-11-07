@@ -1,5 +1,7 @@
 import firebase from "./Firebase.js";
 
+const db = firebase.firestore().collection("orderRecords");
+
 export async function addOrder(itemList, quantityList, listingId) {
   const newOrder = await firebase.firestore().collection("orderRecords").add({
     itemList: itemList,
@@ -24,4 +26,9 @@ export async function addOrder(itemList, quantityList, listingId) {
     .update({
       orderRecords: firebase.firestore.FieldValue.arrayUnion(newOrder.id),
     });
+}
+
+export async function getOrderRecordById(id) {
+  const snapshot = await db.doc(id).get();
+  return snapshot;
 }

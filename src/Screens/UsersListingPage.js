@@ -29,7 +29,6 @@ export default function UsersListingPage({ history }) {
   const classes = useStyles();
 
   const [currentUser, setCurrentUser] = React.useState({});
-  const [value, setValue] = React.useState(0);
 
   function loadCurrentUser() {
     loadUser(setCurrentUser);

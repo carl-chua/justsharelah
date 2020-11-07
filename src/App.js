@@ -4,7 +4,7 @@ import { demoListener, demoPost, demoFetch } from "./API/DemoAPI";
 import DemoPage from "./DemoPage";
 import { useSelector, useDispatch } from "react-redux";
 import { demoHeader, reSignIn, currentUser as currUser } from "./Redux/actions";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { AuthProvider } from "./Auth";
 import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
@@ -20,7 +20,6 @@ import SearchResultsPage from "./Screens/SearchResultsPage";
 import NavBar from "./Components/NavBar";
 
 import UsersListingsPage from "./Screens/UsersListingsPage";
-import UsersListingsPage2 from "./Screens/UsersListingsPage2";
 import UsersListingPage from "./Screens/UsersListingPage";
 import ChatPage from "./Components/ChatPage";
 
@@ -53,12 +52,7 @@ function App() {
             />
             <Route
               exact
-              path="/usersListingsPage2"
-              component={UsersListingsPage2}
-            />
-            <Route
-              exact
-              path="/usersListingPage"
+              path="/usersListingPage/:listing"
               component={UsersListingPage}
             />
           </div>

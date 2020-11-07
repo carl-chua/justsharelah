@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router";
-import { loadUser } from "../API/CurrentUser";
-import NavBar from "../Components/NavBar";
+import { Redirect, useHistory } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -18,6 +16,9 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 
+import { useSelector } from "react-redux";
+import { getUserListing } from "../API/Listings";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -28,23 +29,26 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UsersListingsPage({ history }) {
+export default function UsersListingsPage() {
   const classes = useStyles();
+  let history = useHistory();
 
-  const [currentUser, setCurrentUser] = React.useState({});
+  const userToken = useSelector((state) => state.userToken);
+  const currentUser = useSelector((state) => state.currentUser);
+
   const [value, setValue] = React.useState(0);
+  const [usersListings, setUsersListings] = React.useState([]);
 
-  function loadCurrentUser() {
-    loadUser(setCurrentUser);
-  }
+  // console.log(userToken);
+  // console.log(currentUser);
 
   React.useEffect(() => {
-    loadCurrentUser();
-  }, []);
+    getUserListing(userToken).then((listings) => {
+      setUsersListings(listings);
+    });
+  }, [userToken]);
 
-  if (currentUser === {}) {
-    return <Redirect to="/login" />;
-  }
+  console.log(usersListings);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -53,17 +57,6 @@ export default function UsersListingsPage({ history }) {
   const handleClick = () => {
     alert("hi");
   };
-
-  function createData(a, b, c, d, e) {
-    return { a, b, c, d, e };
-  }
-
-  const rows = [
-    createData("Food delivery", "23/10/20", 10, 5, 0),
-    createData("Clothes delivery", "23/10/20", 10, 5, 0),
-    createData("Shoes delivery", "23/10/20", 10, 5, 0),
-    createData("Food delivery", "23/10/20", 10, 5, 0),
-  ];
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -86,8 +79,7 @@ export default function UsersListingsPage({ history }) {
   }
 
   return (
-    <div className="HomePage">
-      <NavBar history={history} />
+    <div>
       <h2>My Listings</h2>
 
       <Container maxWidth="lg">
@@ -113,23 +105,31 @@ export default function UsersListingsPage({ history }) {
                     <TableCell align="right">Date</TableCell>
                     <TableCell align="right">Number of Orders</TableCell>
                     <TableCell align="right">Payments Received</TableCell>
-                    <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {usersListings.map((listing) => (
                     <TableRow
-                      key={row.name}
+                      key={listing[0]}
                       hover
-                      onClick={() => alert("redirecting...")}
+                      onClick={() => {
+                        history.push("/usersListingPage/" + listing[0]);
+                      }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.a}
+                        {listing[1].title}
                       </TableCell>
-                      <TableCell align="right">{row.b}</TableCell>
-                      <TableCell align="right">{row.c}</TableCell>
-                      <TableCell align="right">{row.d}</TableCell>
-                      <TableCell align="right">{row.e}</TableCell>
+                      <TableCell align="right">
+                        {new Date(
+                          1000 * listing[1].createdDate.seconds
+                        ).toDateString()}
+                      </TableCell>
+                      <TableCell align="right">
+                        {listing[1].orderRecords.length}
+                      </TableCell>
+                      <TableCell align="right">
+                        {listing[1].orderRecords.length}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -146,19 +146,29 @@ export default function UsersListingsPage({ history }) {
                     <TableCell align="right">Date</TableCell>
                     <TableCell align="right">Number of Orders</TableCell>
                     <TableCell align="right">Payments Received</TableCell>
-                    <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.name} hover>
+                  {usersListings.map((listing) => (
+                    <TableRow
+                      key={listing[0]}
+                      hover
+                      onClick={() => alert("redirecting...")}
+                    >
                       <TableCell component="th" scope="row">
-                        {row.a}
+                        {listing[1].title}
                       </TableCell>
-                      <TableCell align="right">{row.b}</TableCell>
-                      <TableCell align="right">{row.c}</TableCell>
-                      <TableCell align="right">{row.d}</TableCell>
-                      <TableCell align="right">{row.e}</TableCell>
+                      <TableCell align="right">
+                        {new Date(
+                          1000 * listing[1].createdDate.seconds
+                        ).toDateString()}
+                      </TableCell>
+                      <TableCell align="right">
+                        {listing[1].orderRecords.length}
+                      </TableCell>
+                      <TableCell align="right">
+                        {listing[1].orderRecords.length}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
