@@ -2,6 +2,7 @@ import firebase from "./Firebase.js";
 
 export async function addOrder(itemList, quantityList, listingId) {
   const newOrder = await firebase.firestore().collection("orderRecords").add({
+    listingId: listingId,
     itemList: itemList,
     quantityList: quantityList,
     hasPaid: false,
