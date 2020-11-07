@@ -11,6 +11,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./theme";
+
 const options = {
   // you can also just use 'bottom center'
   position: positions.BOTTOM_CENTER,
@@ -25,7 +28,9 @@ ReactDOM.render(
     <React.StrictMode>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <App />
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
         </PersistGate>
       </Provider>
     </React.StrictMode>

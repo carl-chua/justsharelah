@@ -45,7 +45,6 @@ function SearchResultsPage({ history }) {
 
   return (
     <div className="SearchResultsPage">
-      <NavBar history={history} />
       <div className="Content">
         <div className="SearchSideBar">
           <SearchSideBar

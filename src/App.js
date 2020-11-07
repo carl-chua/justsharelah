@@ -19,29 +19,44 @@ import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
 import NavBar from "./Components/NavBar";
 
-
 import UsersListingsPage from "./Screens/UsersListingsPage";
+import UsersListingsPage2 from "./Screens/UsersListingsPage2";
+import UsersListingPage from "./Screens/UsersListingPage";
+import Chat2 from "./Components/Chat2";
 
 function App() {
-
-  const userToken = useSelector(state => state.userToken);
+  const userToken = useSelector((state) => state.userToken);
 
   return (
-    <div className="App" style={{height : "100vh"}}>
+    <div className="App" style={{ height: "100vh" }}>
       <AuthProvider>
         <Router>
-        {userToken && <NavBar/>}
+          {userToken && <NavBar />}
           <div>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component={UserPage} />
             <Route exact path="/settings/:username" component={SettingsPage} />
-            <Route exact path="/chat" component={Chat} />
-            <Route exact path="/listingDetails" component={ListingDetails} />
+            <Route exact path="/chat/:username" component={Chat2} />
+            <Route exact path="/listingDetails/:id" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
-            <Route exact path="/usersListingsPage" component={UsersListingsPage} />
+            <Route
+              exact
+              path="/usersListingsPage"
+              component={UsersListingsPage}
+            />
+            <Route
+              exact
+              path="/usersListingsPage2"
+              component={UsersListingsPage2}
+            />
+            <Route
+              exact
+              path="/usersListingPage"
+              component={UsersListingPage}
+            />
           </div>
         </Router>
       </AuthProvider>

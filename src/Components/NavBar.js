@@ -61,7 +61,7 @@ function NavBar() {
   }
 
   function handleClickOnName() {
-    if (firebase.auth().currentUser != null) {
+    if (firebase.auth().currentUser != null && currentUser != null) {
       history.push("/");
     } else {
       history.push("/login");
@@ -69,10 +69,16 @@ function NavBar() {
   }
 
   function handleProfileClick() {
-    console.log("GOING TO PROFILE:");
-
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/user/${currentUser.username}`);
+    } else {
+      history.push("/login");
+    }
+  }
+
+  function handleChatClick() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push(`/chat/${currentUser.username}`);
     } else {
       history.push("/login");
     }
@@ -104,7 +110,7 @@ function NavBar() {
           </div>
         </form>
         <div className="SideButtons">
-          <IconButton>
+          <IconButton onClick={() => handleChatClick()}>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
               fontSize="large"

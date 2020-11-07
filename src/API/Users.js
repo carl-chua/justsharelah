@@ -62,6 +62,16 @@ export async function getUserById(userId, setUser) {
   setUser(snapshot.data());
 }
 
+export async function getUserByIdForChat(userId) {
+  const snapshot = await firebase
+    .firestore()
+    .collection("users")
+    .doc(userId)
+    .get();
+
+  return snapshot.data();
+}
+
 export async function followUser(user1Id, user2Id) {
   console.log("STARTING TRANSACTION");
 
