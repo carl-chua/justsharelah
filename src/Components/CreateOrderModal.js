@@ -111,7 +111,8 @@ function CreateOrderModal({ show, handleClose, listingId }) {
     })();
   }
 
-  function handleSubmit(evt) {
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     var itemList = [];
     var quantityList = [];
 
@@ -120,11 +121,33 @@ function CreateOrderModal({ show, handleClose, listingId }) {
       quantityList.push(item.itemQty);
     });
 
-    addOrder(itemList, quantityList, listingId);
+    console.log("SUBMITTED");
+
+    async function createOrder() {
+      addOrder(items, listingId);
+      let result = await addOrder(items, listingId);
+      console.log("RESULT IS: " + result);
+      //history.push(`/chat/${currentUser.username}`);
+      if (result) {
+        alert.show("Order added successfully!");
+        history.push("/");
+      } else {
+        console.log("TFAILED TO ADD ORDER");
+      }
+    }
+
+    createOrder();
+    //addOrder(items, listingId);
+    //let result = await addOrder(items, listingId);
+    //console.log("RESULT IS: " + result)
     //history.push(`/chat/${currentUser.username}`);
-    alert.show("Order added successfully!");
-    history.push("/");
-  }
+    /*if(result) {
+      alert.show("Order added successfully!");
+      history.push("/");
+    } else {
+      console.log("TFAILED TO ADD ORDER")
+    }*/
+  };
 
   function handleAddItem() {
     setItems(items.concat([{ itemName: "", itemQty: "" }]));

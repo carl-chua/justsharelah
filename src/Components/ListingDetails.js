@@ -148,7 +148,7 @@ const ListingDetails = () => {
     //enter listing id for doc
     firebase.firestore().collection("listings").doc(id).onSnapshot(function(doc) {
         if (doc.exists) {
-            console.log("Document data:", doc.data());
+            //console.log("Document data:", doc.data());
             setListingTitle(doc.data().title);
             setCategory(doc.data().category);
             setListingTags(doc.data().tags);
