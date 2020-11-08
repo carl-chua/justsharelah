@@ -33,3 +33,8 @@ export async function getOrderRecordsByListingId(listingId) {
   const snapshot = await db.where("listingId", "==", listingId).get();
   return snapshot;
 }
+
+export async function getItemsFromOrderRecord(orderRecord) {
+  const snapshot = await db.doc(orderRecord).collection("items").get();
+  return snapshot;
+}
