@@ -62,6 +62,7 @@ function Chat({ history }) {
   const currentUser = useSelector((state) => state.currentUser);
 
   const [showCreateOrderModal, setShowCreateOrderModal] = useState(false);
+  const [showEditOrderModal, setShowEditOrderModal] = useState(false);
 
   function openCreateOrderModal() {
     setShowCreateOrderModal(true);
@@ -69,6 +70,14 @@ function Chat({ history }) {
 
   function closeCreateOrderModal() {
     setShowCreateOrderModal(false);
+  }
+
+  function openEditOrderModal() {
+    setShowEditOrderModal(true);
+  }
+
+  function closeEditOrderModal() {
+    setShowEditOrderModal(false);
   }
 
   const chatUser = {
@@ -146,6 +155,9 @@ function Chat({ history }) {
                 showCreateOrderModal={showCreateOrderModal}
                 openCreateOrderModal={openCreateOrderModal}
                 closeCreateOrderModal={closeCreateOrderModal}
+                showEditOrderModal={showEditOrderModal}
+                openEditOrderModal={openEditOrderModal}
+                closeEditOrderModal={closeEditOrderModal}
               />
               <CreateOrderModal
                 show={showCreateOrderModal}
