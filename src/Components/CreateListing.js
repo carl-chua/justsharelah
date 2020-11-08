@@ -16,7 +16,6 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import CardGiftcardOutlinedIcon from '@material-ui/icons/CardGiftcardOutlined';
-import NavBar from "./NavBar";
 import { Redirect } from "react-router";
 
 const BootstrapInput = withStyles((theme) => ({
@@ -183,7 +182,7 @@ function CreateListing({ history }) {
             photo: photoId,
             members: [],
             kuppers: [],
-            joinRequesters: [],
+            isClosed: false,
             orderRecords: [],
             chatGroup: "",
           })
@@ -197,7 +196,7 @@ function CreateListing({ history }) {
                 groupName: listingTitle,
                 photo: photoId,
                 listing: listing,
-                members: [],
+                members: [user.uid],
                 messages: [],
             })
             .then(function(docRef) {
@@ -226,7 +225,7 @@ function CreateListing({ history }) {
 
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
-            <NavBar style={{ position: "sticky" }}/>
+            
             <h2  style={{ textAlign: "center" }}>What would you like to list today? <CardGiftcardOutlinedIcon fontSize="medium"/></h2>
             <form onSubmit={handleSubmit} className={classes.root} noValidate autoComplete="off">
             <Grid container spacing={0}  justify="center" alignItems="Stretch">
