@@ -8,6 +8,8 @@ import firebase from "./Firebase.js";
 // When you set a listener, Cloud Firestore sends your listener an initial snapshot of the data,
 // and then another snapshot each time the document changes.
 
+const db = firebase.firestore().collection("listings");
+
 export function getAllListingsListener(setListings) {
   const snapshot = firebase.firestore().collection("listings").limit(9);
 
@@ -20,39 +22,6 @@ export function getAllListingsListener(setListings) {
 
   return observer;
 }
-
-/*export async function getAllListings(setListings) {
-  const snapshot = await firebase
-  .firestore()
-  .collection("listings")
-  .limit(9)
-  .get()
-
-  snapshot.forEach(doc => {
-      //console.log("Listings: " + JSON.stringify(doc.data()))
-      setListings(doc.data())
-  })
-  
-}*/
-// export function getAllListingsListener(setListings) {
-//   const query = firebase
-//   .firestore()
-//   .collection("listings")
-//   .limit(9);
-
-//   const observer = query.onSnapshot(docSnapshot => {
-//     console.log("Received listings snapshot");
-//     docSnapshot.forEach(doc => {
-//       setListings(doc.data())
-//     });
-//   }, err => {
-//       console.log(`Encountered error: ${err}`);
-//   });
-
-//   return observer;
-// }
-
-const db = firebase.firestore().collection("listings");
 
 export const addListing = (listing) => {
   db.add(listing);
@@ -76,9 +45,6 @@ export async function searchListings(searchString, size) {
 export async function getAllListings() {
   // get() is asynchronous
   const snapshot = await db.get();
-  // snapshot.forEach((doc) => {
-  // console.log(doc.id, "=>", doc.data());
-  // });
   return snapshot;
 }
 
@@ -88,11 +54,7 @@ export const updateListing = (listing) => {
 };
 
 export async function getUserListing(userId) {
-  const snapshot = await firebase
-    .firestore()
-    .collection("listings")
-    .where("listingOwner", "==", userId)
-    .get();
+  const snapshot = await db.where("listingOwner", "==", userId).get();
 
   var temp = [];
 
@@ -101,6 +63,12 @@ export async function getUserListing(userId) {
   });
 
   return temp;
+}
+
+export async function getListingById(listingId) {
+  const snapshot = await db.doc(listingId).get();
+
+  return snapshot;
 }
 
 export function getUserListingListener(userId, setUserListing) {

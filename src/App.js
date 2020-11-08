@@ -52,7 +52,7 @@ function App() {
             />
             <Route
               exact
-              path="/usersListingPage/:listing"
+              path="/usersListingPage/:listingId"
               component={UsersListingPage}
             />
           </div>

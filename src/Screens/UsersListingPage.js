@@ -1,8 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Redirect } from "react-router";
-import { loadUser } from "../API/CurrentUser";
-import NavBar from "../Components/NavBar";
+import { Redirect, useHistory, useParams } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,6 +11,12 @@ import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Box from "@material-ui/core/Box";
+
+import { useSelector } from "react-redux";
+import { getListingById } from "../API/Listings";
+import { getOrderRecordsByListingId } from "../API/OrderRecord";
+import OrderDialog from "../Components/OrderDialog";
 
 const useStyles = makeStyles({
   table: {
@@ -25,78 +28,99 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UsersListingPage({ history }) {
+export default function UsersListingPage() {
   const classes = useStyles();
+  const history = useHistory();
+  const { listingId } = useParams();
 
-  const [currentUser, setCurrentUser] = React.useState({});
+  const userToken = useSelector((state) => state.userToken);
+  const currentUser = useSelector((state) => state.currentUser);
 
-  function loadCurrentUser() {
-    loadUser(setCurrentUser);
-  }
+  const [listing, setListing] = React.useState({});
+  const [orderRecords, setOrderRecords] = React.useState([]);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   React.useEffect(() => {
-    loadCurrentUser();
-  }, []);
+    getListingById(listingId).then((listing) => {
+      setListing(listing.data());
+    });
+  }, [listingId]);
 
-  if (currentUser === {}) {
-    return <Redirect to="/login" />;
-  }
+  React.useEffect(() => {
+    getOrderRecordsByListingId(listingId).then((querySnapshot) => {
+      var temp = [];
+      querySnapshot.forEach((orderRecord) => {
+        temp.push(orderRecord.data());
+      });
+      setOrderRecords(temp);
+    });
+  }, [listingId]);
 
-  function createData(a, b, c, d, e) {
-    return { a, b, c, d, e };
-  }
+  console.log(orderRecords);
 
-  const rows = [
-    createData("John", "23/10/20", 10, 5, 0),
-    createData("Joseph", "23/10/20", 10, 5, 0),
-    createData("Rachel", "23/10/20", 10, 5, 0),
-    createData("Tan", "23/10/20", 10, 5, 0),
-  ];
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   return (
     <div>
-      <NavBar history={history} />
-      <Link
-        underline="hover"
-        component="button"
-        variant="body2"
-        onClick={() => {
-          alert("redirecting back to users listings page");
-        }}
-      >
-        <ArrowBackIcon />
-        Food Delivery
-      </Link>
-
       <Container maxWidth="lg">
+        <Box align="left">
+          <Link
+            underline="hover"
+            component="button"
+            variant="body2"
+            onClick={() => {
+              history.push("/usersListingsPage/");
+            }}
+          >
+            <ArrowBackIcon />
+            Back
+          </Link>
+        </Box>
         <Paper>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
               <TableHead>
                 <TableRow className={classes.head}>
-                  <TableCell>Buyer</TableCell>
+                  <TableCell>Kuppers</TableCell>
                   <TableCell align="right">Date</TableCell>
-                  <TableCell align="right"> Orders</TableCell>
-                  <TableCell align="right">Payment</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell align="right">Payment Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    hover
-                    onClick={() => alert("redirecting...")}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.a}
-                    </TableCell>
-                    <TableCell align="right">{row.b}</TableCell>
-                    <TableCell align="right">{row.c}</TableCell>
-                    <TableCell align="right">{row.d}</TableCell>
-                    <TableCell align="right">{row.e}</TableCell>
-                  </TableRow>
-                ))}
+                {orderRecords.length > 0 ? (
+                  React.Children.toArray(
+                    orderRecords.map((orderRecord) => (
+                      <>
+                        <TableRow hover onClick={() => handleOpen()}>
+                          <TableCell component="th" scope="row">
+                            {orderRecord.user}
+                          </TableCell>
+                          <TableCell align="right">
+                            {new Date(
+                              1000 * orderRecord.date.seconds
+                            ).toDateString()}
+                          </TableCell>
+                          <TableCell align="right">
+                            {orderRecord.paymentStatus}
+                          </TableCell>
+                        </TableRow>
+                        <OrderDialog
+                          open={isOpen}
+                          handleClose={handleClose}
+                          orderRecord={orderRecord}
+                        />
+                      </>
+                    ))
+                  )
+                ) : (
+                  <p>There are no kuppers at the moment!</p>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
