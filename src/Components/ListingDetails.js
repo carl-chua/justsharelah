@@ -7,12 +7,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import NavBar from "./NavBar";
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import { useParams } from "react-router";
 import moment from 'moment';
+import Loading from "../Components/Loading";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -105,7 +105,9 @@ const ListingDetails = () => {
                 tn.update(chatGroupRef, {
                     members: firebase.firestore.FieldValue.arrayRemove(user.uid),
                 });
+               
                 alert("Left listing!");
+                
                 return true;
             });
         } catch (err) {
@@ -135,7 +137,9 @@ const ListingDetails = () => {
                 tn.update(chatGroupRef, {
                     members: firebase.firestore.FieldValue.arrayUnion(user.uid),
                 });
+                
                 alert("Joined listing!");
+                
                 return true;
             });
         } catch (err) {
@@ -145,10 +149,11 @@ const ListingDetails = () => {
         }
     }
 
+    function loadData() {
     //enter listing id for doc
     firebase.firestore().collection("listings").doc(id).onSnapshot(function(doc) {
         if (doc.exists) {
-            //console.log("Document data:", doc.data());
+            //alert("getting data once");
             setListingTitle(doc.data().title);
             setCategory(doc.data().category);
             setListingTags(doc.data().tags);
@@ -156,7 +161,7 @@ const ListingDetails = () => {
             setMinQty(doc.data().targetAmount);
             setDesc(doc.data().description);
             setTargetOrderDate(doc.data().targetOrderDate);
-            setShopLink("https://" + doc.data().websiteLink);
+            setShopLink(doc.data().websiteLink);
             setPhoto(doc.data().photo);
             setMembers(doc.data().members.length);
             setKuppers(doc.data().kuppers.length);
@@ -165,12 +170,11 @@ const ListingDetails = () => {
             setCreatedDate(doc.data().createdDate);
             // Create a reference to the file we want to download
             const storageRef = firebase.storage().ref();
-            var photoRef = storageRef.child('image').child(photo);
-
+            var photoRef = storageRef.child('image').child(doc.data().photo);
+            
             // Get the download URL
             photoRef.getDownloadURL().then(function(url) {
               setImgUrl(url);
-            
             }).catch(function(error) {
 
             // A full list of error codes is available at
@@ -193,7 +197,7 @@ const ListingDetails = () => {
 
                 case 'storage/unknown':
                 // Unknown error occurred, inspect the server response
-                //alert("Unknown error occurred");
+                alert("Unknown error occurred");
                 break;
             }
             });
@@ -216,22 +220,31 @@ const ListingDetails = () => {
             alert("No such document!");
         }
     });
+}
+
+
+React.useEffect(() => {
+    loadData();
+  }, []);
+
     
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
-           <NavBar style={{ position: "sticky" }}/>
         <Grid container spacing={2}>
         
             
             <Grid item xs={6}>
 
                 <Card className={classes.root}>
+
                     <CardActionArea>
+                    
                         <CardMedia
-                        className={classes.media}
-                        image= {imgUrl}
-                        title="Listing photo"
+                            className={classes.media}
+                            image= {imgUrl}
+                            title="Listing photo"
                         />
+                        
                     </CardActionArea>
                 </Card>
             </Grid>
