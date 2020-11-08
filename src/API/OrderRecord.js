@@ -86,8 +86,8 @@ export async function addOrder(items, listingId) {
   }
 }
 
-export async function getOrderRecordById(id) {
-  const snapshot = await db.doc(id).get();
+export async function getOrderRecordsByListingId(listingId) {
+  const snapshot = await db.where("listingId", "==", listingId).get();
   return snapshot;
 }
 

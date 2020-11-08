@@ -10,7 +10,6 @@ import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
-import Chat from "./Components/Chat";
 import UserPage from "./Screens/UserPage";
 import SettingsPage from "./Screens/SettingsPage";
 import { Container } from "@material-ui/core";
@@ -53,7 +52,7 @@ function App() {
             />
             <Route
               exact
-              path="/usersListingPage/:listing"
+              path="/usersListingPage/:listingId"
               component={UsersListingPage}
             />
             <Route

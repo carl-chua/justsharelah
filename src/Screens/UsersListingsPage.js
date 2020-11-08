@@ -39,23 +39,14 @@ export default function UsersListingsPage() {
   const [value, setValue] = React.useState(0);
   const [usersListings, setUsersListings] = React.useState([]);
 
-  // console.log(userToken);
-  // console.log(currentUser);
-
   React.useEffect(() => {
     getUserListing(userToken).then((listings) => {
       setUsersListings(listings);
     });
   }, [userToken]);
 
-  console.log(usersListings);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleClick = () => {
-    alert("hi");
   };
 
   function TabPanel(props) {
@@ -84,11 +75,6 @@ export default function UsersListingsPage() {
 
       <Container maxWidth="lg">
         <Paper>
-          <form>
-            <input type="text" placeholder="Search" />
-            <button type="submit">Search</button>
-          </form>
-
           <AppBar position="static">
             <Tabs value={value} onChange={handleChange}>
               <Tab label="Ongoing" />
@@ -101,38 +87,48 @@ export default function UsersListingsPage() {
               <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow className={classes.head}>
-                    <TableCell>Listing Title</TableCell>
-                    <TableCell align="right">Date</TableCell>
-                    <TableCell align="right">Number of Orders</TableCell>
-                    <TableCell align="right">Payments Received</TableCell>
+                    <TableCell>Listing</TableCell>
+                    <TableCell align="right">Created</TableCell>
+                    <TableCell align="right">Orders</TableCell>
+                    <TableCell align="right">Kuppers</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {usersListings.map((listing) => (
-                    <TableRow
-                      key={listing[0]}
-                      hover
-                      onClick={() => {
-                        history.push("/usersListingPage/" + listing[0]);
-                      }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {listing[1].title}
-                      </TableCell>
-                      <TableCell align="right">
-                        {new Date(
-                          1000 * listing[1].createdDate.seconds
-                        ).toDateString()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {listing[1].orderRecords.length}
-                      </TableCell>
-                      <TableCell align="right">
-                        {listing[1].orderRecords.length}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                {usersListings.length > 0 ? (
+                  <TableBody>
+                    {usersListings.map(
+                      (listing) =>
+                        !listing[1].isClosed && (
+                          <TableRow
+                            key={listing[0]}
+                            hover
+                            onClick={() => {
+                              history.push("/usersListingPage/" + listing[0]);
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {listing[1].title}
+                            </TableCell>
+                            <TableCell align="right">
+                              {new Date(
+                                1000 * listing[1].createdDate.seconds
+                              ).toDateString()}
+                            </TableCell>
+                            <TableCell align="right">
+                              {listing[1].orderRecords.length}
+                            </TableCell>
+                            <TableCell align="right">
+                              {listing[1].kuppers.length}
+                            </TableCell>
+                          </TableRow>
+                        )
+                    )}
+                  </TableBody>
+                ) : (
+                  <p>
+                    You do not have any ongoing listings at the moment. Create
+                    one now!
+                  </p>
+                )}
               </Table>
             </TableContainer>
           </TabPanel>
@@ -142,36 +138,48 @@ export default function UsersListingsPage() {
               <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow className={classes.head}>
-                    <TableCell>Listing Title</TableCell>
-                    <TableCell align="right">Date</TableCell>
-                    <TableCell align="right">Number of Orders</TableCell>
-                    <TableCell align="right">Payments Received</TableCell>
+                    <TableCell>Listing</TableCell>
+                    <TableCell align="right">Created</TableCell>
+                    <TableCell align="right">Orders</TableCell>
+                    <TableCell align="right">Kuppers</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {usersListings.map((listing) => (
-                    <TableRow
-                      key={listing[0]}
-                      hover
-                      onClick={() => alert("redirecting...")}
-                    >
-                      <TableCell component="th" scope="row">
-                        {listing[1].title}
-                      </TableCell>
-                      <TableCell align="right">
-                        {new Date(
-                          1000 * listing[1].createdDate.seconds
-                        ).toDateString()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {listing[1].orderRecords.length}
-                      </TableCell>
-                      <TableCell align="right">
-                        {listing[1].orderRecords.length}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                {usersListings.length > 0 ? (
+                  <TableBody>
+                    {usersListings.map(
+                      (listing) =>
+                        listing[1].isClosed && (
+                          <TableRow
+                            key={listing[0]}
+                            hover
+                            onClick={() => {
+                              history.push("/usersListingPage/" + listing[0]);
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {listing[1].title}
+                            </TableCell>
+                            <TableCell align="right">
+                              {new Date(
+                                1000 * listing[1].createdDate.seconds
+                              ).toDateString()}
+                            </TableCell>
+                            <TableCell align="right">
+                              {listing[1].orderRecords.length}
+                            </TableCell>
+                            <TableCell align="right">
+                              {listing[1].kuppers.length}
+                            </TableCell>
+                          </TableRow>
+                        )
+                    )}
+                  </TableBody>
+                ) : (
+                  <p>
+                    You do not have any past listings at the moment. Create one
+                    now!
+                  </p>
+                )}
               </Table>
             </TableContainer>
           </TabPanel>
