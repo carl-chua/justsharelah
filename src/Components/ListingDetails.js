@@ -11,8 +11,8 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import { useParams } from "react-router";
-import moment from 'moment';
-import Loading from "../Components/Loading";
+import Rating from '@material-ui/lab/Rating';
+import { getReviews} from "../API/Reviews";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     joinChatButton: {
-        margin: theme.spacing(6),
+        margin: theme.spacing(3),
     },
 
     image: {
@@ -73,9 +73,13 @@ const ListingDetails = () => {
     var [members, setMembers] = React.useState('');
     var [kuppers, setKuppers] = React.useState('');
     var [membersArray, setMembersArray] = React.useState([]);
+    var [kuppersArray, setKuppersArray] = React.useState([]);
     var [chatGroup, setChatGroup] = React.useState('');
     var [createdDate, setCreatedDate] = React.useState(new Date());
-
+    var [rating, setRating] = React.useState(0.0);
+    var [listingOwner, setListingOwner] = React.useState('');
+    var [reviews, setReviews] = React.useState([]);
+    var [button, setButton] = React.useState();
     let user = firebase.auth().currentUser;
     //get listing id from params
     let { id } = useParams();
@@ -166,8 +170,10 @@ const ListingDetails = () => {
             setMembers(doc.data().members.length);
             setKuppers(doc.data().kuppers.length);
             setMembersArray(doc.data().members);
+            setKuppersArray(doc.data().kuppers);
             setChatGroup(doc.data().chatGroup);
             setCreatedDate(doc.data().createdDate);
+            setListingOwner(doc.data().listingOwner);
             // Create a reference to the file we want to download
             const storageRef = firebase.storage().ref();
             var photoRef = storageRef.child('image').child(doc.data().photo);
@@ -197,7 +203,7 @@ const ListingDetails = () => {
 
                 case 'storage/unknown':
                 // Unknown error occurred, inspect the server response
-                alert("Unknown error occurred");
+                alert("Unknown error occurred/no listing photo uploaded");
                 break;
             }
             });
@@ -205,6 +211,7 @@ const ListingDetails = () => {
             firebase.firestore().collection("users").doc(doc.data().listingOwner).get().then(function(doc) {
                 if (doc.exists) {
                    setAuthorName(doc.data().username);
+                 
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
@@ -220,13 +227,44 @@ const ListingDetails = () => {
             alert("No such document!");
         }
     });
+        
 }
 
 
-React.useEffect(() => {
-    loadData();
-  }, []);
 
+    React.useEffect(() => {
+        loadData();
+    }, []);
+
+    React.useEffect(() => {
+        getReviews(listingOwner,setReviews);
+        let total = 0.0;
+       
+        if(reviews.length > 0) {
+            total = reviews.reduce((a,b) => a + b[1].numStars, 0.0)/reviews.length;
+        }
+
+        setRating(total)
+    },[reviews])
+
+    //not working
+    function loadButton() {
+        
+        //listingOwner wont see join or leave listing buttons
+        if (user.uid !== listingOwner) {
+            let button1;
+            //kuppers cant leave
+            if (kuppersArray.includes(user.uid)){
+                button1 = <Button  disabled= "true" className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Leave Listing</Button>
+            }else if (membersArray.includes(user.uid)) {
+                button1 = <Button  onClick = {handleLeave} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Leave Listing</Button>
+            } else {
+                button1 = <Button  onClick = {handleJoin} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Join Listing</Button>
+            }
+            setButton(button1);
+        }
+    }
+  
     
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
@@ -259,14 +297,31 @@ React.useEffect(() => {
                     &nbsp;
                     &nbsp;
                     <div>
-                        {membersArray.includes(user.uid) ? (
+                        {(user.uid !== listingOwner) && (membersArray.includes(user.uid)) && (!kuppersArray.includes(user.uid))? (
                             <Button  onClick = {handleLeave} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Leave Listing</Button>
                         ) : (
-                            <Button  onClick = {handleJoin} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Join Listing</Button>
+                            ""
+                        )}
+                        {(user.uid !== listingOwner) && (!membersArray.includes(user.uid)) && (!kuppersArray.includes(user.uid)) ? (
+                             <Button  onClick = {handleJoin} className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#4db6ac" }}>Join Listing</Button>
+                        ) : (
+                           ""
+                        )}
+                        {(user.uid !== listingOwner) && (kuppersArray.includes(user.uid))? (
+                            <Button  disabled="true" className={classes.joinChatButton} variant="contained" color="primary" style={{ background: "#A9A9A9" }}>Leave Listing</Button>
+                        ) : (
+                            ""
                         )}
                     </div>
                 </div>
                 
+                <Rating 
+                    value = {rating}
+                    readOnly = {true}
+                    precision = {0.5}
+                />
+                <br></br>
+                <br></br>
                 <Typography variant="h4" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
