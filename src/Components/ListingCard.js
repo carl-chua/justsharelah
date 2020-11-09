@@ -45,7 +45,7 @@ export default function ListingCard({ key, data }) {
   const styles = useStyles();
 
   const history = useHistory();
-  console.log("DATA IN LISTINGCARD :" + JSON.stringify(data))
+  //console.log("DATA IN LISTINGCARD :" + JSON.stringify(data))
 
   function handleNavigate() {
     history.push(`/listingDetails/${data[0]}`);

@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from "react-redux";
 import { followUser, unfollowUser } from "../API/Users";
 import UserList from "./UserList";
+import FollowButton from "./FollowButton";
 
 
 const useStyles = makeStyles({
@@ -60,18 +61,6 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
     const userToken = useSelector(state => state.userToken);
 
     const [rating, setRating] = React.useState(0.0);
-
-    async function handleFollow() {
-        console.log("clicked")
-       var result = await followUser(userToken, userId);
-       console.log("FOLLOWED? : " + result)
-    }
-
-    async function handleUnfollow() {
-        console.log("unfollowing");
-        var result = await unfollowUser(userToken, userId);
-
-    }
 
     React.useEffect(() => {
         let total = 0.0;
@@ -130,27 +119,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                             {reviews ? reviews.length : "0"}
                     </p>
                 </Box>
-                {user.username != currentUser.username ?
-                 (user.followers == null || !user.followers.includes(userToken) ?
-                <Button 
-                    size="small"
-                    className = {styles.buttonPrimary}
-                    onClick = {handleFollow}
-                >
-                    <span style = {{color:"white"}}>Follow</span>
-                </Button>
-                :
-                <Button 
-                    size="small"
-                    className = {styles.buttonPrimary}
-                    onClick = {handleUnfollow}
-                >
-                    <span style = {{color:"white"}}>Unfollow</span>
-                </Button>
-                )
-                :
-                null
-                }
+                <FollowButton user = {user} userId = {userId}/>
                 <Box
                     display="flex"
                     flexDirection = "row"

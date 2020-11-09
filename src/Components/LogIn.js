@@ -78,7 +78,7 @@ export default function Login() {
   async function handleLogin(e) {
     e.preventDefault()
     let {email, password} = e.target.elements;
-    signIn({email : email.value, password : password.value});
+    await signIn({email : email.value, password : password.value});
 
   }
 

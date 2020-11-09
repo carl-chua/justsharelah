@@ -14,6 +14,8 @@ function HomePage({ history }) {
 
   const dispatch = useDispatch();
 
+  console.log("IN HOME PAGE: " + JSON.stringify(currentUser))
+
   React.useEffect(() => {
     searchListings(null, 9).then((querySnapshot) => {
       var temp = [];
@@ -29,7 +31,7 @@ function HomePage({ history }) {
   return (
     <div className="HomePage">
       <h1>Home</h1>
-      <h2>Welcome {currentUser.username}</h2>
+      <h2>Welcome {currentUser && currentUser.username}</h2>
       <ListingList colSize={3} dataList={currentListings} />
     </div>
   );
