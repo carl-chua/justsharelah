@@ -4,23 +4,15 @@ import { loadUser } from "../API/CurrentUser";
 import { searchListings } from "../API/Listings";
 import { Redirect } from "react-router";
 import ListingList from "./ListingList";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { signOut as logOut } from "../Redux/actions";
 
 function HomePage({ history }) {
-  const [currentUser, setCurrentUser] = React.useState({});
+  const currentUser = useSelector(state => state.currentUser)
   const [currentListings, setListings] = React.useState([]);
 
   const dispatch = useDispatch();
-
-  function loadCurrentUser() {
-    loadUser(setCurrentUser);
-  }
-
-  React.useEffect(() => {
-    loadCurrentUser();
-  }, []);
 
   React.useEffect(() => {
     searchListings(null, 9).then((querySnapshot) => {
@@ -30,12 +22,6 @@ function HomePage({ history }) {
     });
   }, []);
 
-  function signOut() {
-    firebase.auth().signOut();
-    dispatch(logOut());
-    history.push("/login");
-  }
-
   if (currentUser == {}) {
     return <Redirect to="/login" />;
   }
@@ -44,7 +30,6 @@ function HomePage({ history }) {
     <div className="HomePage">
       <h1>Home</h1>
       <h2>Welcome {currentUser.username}</h2>
-      <button onClick={signOut}>Sign out</button>
       <ListingList colSize={3} dataList={currentListings} />
     </div>
   );

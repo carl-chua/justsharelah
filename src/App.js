@@ -5,7 +5,7 @@ import DemoPage from "./DemoPage";
 import { useSelector, useDispatch } from "react-redux";
 import { demoHeader, reSignIn, currentUser as currUser } from "./Redux/actions";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider } from "./Auth";
+import AuthProvider from "./Auth";
 import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
@@ -22,40 +22,44 @@ import UsersListingsPage from "./Screens/UsersListingsPage";
 import UsersListingPage from "./Screens/UsersListingPage";
 import OrdersListingPage from "./Screens/OrdersListingPage";
 import ChatPage from "./Components/ChatPage";
+import { useAlert } from "react-alert";
 
 function App() {
   const userToken = useSelector((state) => state.userToken);
 
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
   return (
     <div className="App" style={{ height: "100vh" }}>
-      <AuthProvider>
+      <AuthProvider dispatch = {dispatch} alert = {alert}>
         <Router>
           {userToken && <NavBar />}
           <div>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/user/:username" component={UserPage} />
-            <Route exact path="/settings/:username" component={SettingsPage} />
-            <Route exact path="/chat/:username" component={ChatPage} />
-            <Route
+            <PrivateRoute exact path="/user/:username" component={UserPage} />
+            <PrivateRoute exact path="/settings/:username" component={SettingsPage} />
+            <PrivateRoute exact path="/chat/:username" component={ChatPage} />
+            <PrivateRoute
               exact
               path="/listingDetails/:id"
               component={ListingDetails}
             />
-            <Route exact path="/createListing" component={CreateListing} />
-            <Route exact path="/search" component={SearchResultsPage} />
-            <Route
+            <PrivateRoute exact path="/createListing" component={CreateListing} />
+            <PrivateRoute exact path="/search" component={SearchResultsPage} />
+            <PrivateRoute
               exact
               path="/usersListingsPage"
               component={UsersListingsPage}
             />
-            <Route
+            <PrivateRoute
               exact
               path="/usersListingPage/:listingId"
               component={UsersListingPage}
             />
-            <Route
+            <PrivateRoute
               exact
               path="/ordersListingPage"
               component={OrdersListingPage}

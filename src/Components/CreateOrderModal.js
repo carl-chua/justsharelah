@@ -124,7 +124,6 @@ function CreateOrderModal({ show, handleClose, listingId }) {
     console.log("SUBMITTED");
 
     async function createOrder() {
-      addOrder(items, listingId);
       let result = await addOrder(items, listingId);
       console.log("RESULT IS: " + result);
       //history.push(`/chat/${currentUser.username}`);

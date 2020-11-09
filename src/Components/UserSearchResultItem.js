@@ -63,7 +63,7 @@ export default function UserSearchResultItem({ user }) {
                 <p className={styles.nameText}>{user.username}</p>
                 <p className={styles.desText}>{user.country}</p>
                 <p className={styles.desText}>
-                  {user.listingsAsOP.length} Listings created
+                  {user.listingsAsOP ? user.listingsAsOP.length : 0} Listings created
                 </p>
               </Box>
             </Box>

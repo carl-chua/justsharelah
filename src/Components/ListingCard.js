@@ -44,37 +44,38 @@ const useStyles = makeStyles({
 export default function ListingCard({ key, data }) {
   const styles = useStyles();
 
-  const history = useHistory()
+  const history = useHistory();
+  console.log("DATA IN LISTINGCARD :" + JSON.stringify(data))
 
   function handleNavigate() {
-    history.push(`/listingDetails/${data[0]}`)
+    history.push(`/listingDetails/${data[0]}`);
   }
 
-  var [imgUrl, setImgUrl] = React.useState('');
+  var [imgUrl, setImgUrl] = React.useState("");
 
   function loadPhoto() {
-     // Create a reference to the file we want to download
-     const storageRef = firebase.storage().ref();
-     var photoRef = storageRef.child('image').child(data[1].photo);
-     
-     // Get the download URL
-     photoRef.getDownloadURL().then(function(url) {
-       setImgUrl(url);
-     });
+    // Create a reference to the file we want to download
+    const storageRef = firebase.storage().ref();
+    if (data[1] && data[1].photo) {
+      var photoRef = storageRef.child("image").child(data[1].photo);
+
+      // Get the download URL
+      photoRef.getDownloadURL().then(function (url) {
+        setImgUrl(url);
+      });
+    }
   }
 
   React.useEffect(() => {
     loadPhoto();
   }, []);
 
-  return (
-    data[1] ?
+  return data[1] ? (
     <Card className={styles.root}>
       <CardActionArea onClick={handleNavigate}>
-        
         <CardMedia
           component="img"
-          src= {imgUrl}
+          src={imgUrl}
           style={{
             height: 250,
           }}
@@ -121,6 +122,5 @@ export default function ListingCard({ key, data }) {
         </CardContent>
       </CardActionArea>
     </Card>
-    : null
-  );
+  ) : null;
 }

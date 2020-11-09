@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import firebase from "../API/Firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { reduxSetSearchString } from "../Redux/actions";
+import { reduxSetSearchString, signOut } from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
-import { IconButton } from "@material-ui/core";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
-import { getUserById } from "../API/Users";
+import { getUserById, getUserByIdListener } from "../API/Users";
+import { AccountCircle } from "@material-ui/icons";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { AuthContext } from "../Auth";
+
+import {currentUser as currUser} from "../Redux/actions"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,22 +38,33 @@ function NavBar() {
 
   const[currentUser, setCurrentUser] = React.useState()
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const isMenuOpen = Boolean(anchorEl);
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   React.useEffect(() => {
-    const unsubscribe = getUserById(userToken, setCurrentUser);
+    const unsubscribe = getUserByIdListener(userToken, setCurrentUser);
 
     return unsubscribe;
   },[])
+
+  React.useEffect(() => {
+    if(currentUser) {
+      dispatch(currUser(currentUser))
+    }
+  },[currentUser])
   
   const history = useHistory();
 
-  React.useEffect(() => {
-    if (userToken != null && currentUser != null) {
-      console.log("LOGGED IN USERID: " + userToken);
-      console.log(
-        "LOGGED IN USERNAME: " + JSON.stringify(currentUser.username)
-      );
-    }
-  }, [userToken, currentUser]);
+  const {signOut} = React.useContext(AuthContext);
 
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
@@ -61,6 +77,7 @@ function NavBar() {
   }
 
   function handleClickOnName() {
+    
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push("/");
     } else {
@@ -74,6 +91,7 @@ function NavBar() {
     } else {
       history.push("/login");
     }
+    handleMenuClose()
   }
 
   function handleChatClick() {
@@ -83,6 +101,36 @@ function NavBar() {
       history.push("/login");
     }
   }
+
+  async function handleSignOut(e) {
+    e.preventDefault();
+    await signOut();
+    history.push("/login");
+  }
+
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleProfileClick}>
+        <IconButton color="inherit">
+          <AccountCircle />
+        </IconButton>
+        <p>My Profile</p>
+      </MenuItem>
+      <MenuItem onClick={handleSignOut}>
+        <IconButton color="inherit">
+          <ExitToAppIcon />
+        </IconButton>
+        <p>Logout</p>
+      </MenuItem>
+    </Menu>
+  );
 
   return (
     <div className="NavBar">
@@ -124,7 +172,7 @@ function NavBar() {
             />
           </IconButton>
 
-          <IconButton onClick={() => handleProfileClick()}>
+          <IconButton onClick={handleProfileMenuOpen}>
             <PersonOutlineIcon style={{ color: "white" }} fontSize="large" />
           </IconButton>
         </div>
@@ -141,6 +189,7 @@ function NavBar() {
         </div>
         <button className="UploadListing">UPLOAD LISTING</button>
       </div>
+      {renderMenu}
     </div>
   );
 }

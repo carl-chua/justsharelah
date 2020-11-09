@@ -28,7 +28,7 @@ export default function ListingSearchResult({ colSize, dataList }) {
   const theme = useTheme();
   const isNotSmallScreen = useMediaQuery(theme.breakpoints.up("md"));
   console.log(colSize);
-  console.log(dataList);
+  console.log("DATALIST:" + JSON.stringify(dataList));
 
   return (
     <div className="ListingSearchResult">
@@ -41,7 +41,7 @@ export default function ListingSearchResult({ colSize, dataList }) {
         }}
       >
         {dataList.map((data) => (
-          <ListingCard key={data[0]} data={data[1]} />
+          <ListingCard key={data[0]} data={data} />
         ))}
       </GridList>
       {dataList.length == 0 ? <p>No such listing found!</p> : ""}

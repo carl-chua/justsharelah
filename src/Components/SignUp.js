@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { withRouter } from "react-router";
+import { useHistory, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import firebase from "../API/Firebase";
 import Button from "@material-ui/core/Button";
@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/SignUp.css";
 import loginImage from "../Media/Capture.PNG";
 import { useAlert } from "react-alert";
+import { AuthContext } from "../Auth";
 
 const useStyles = makeStyles((theme) => ({
   root: { height: "100vh", overflow: "hidden" },
@@ -68,58 +69,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ history }) => {
+export default function SignUp() {
   const classes = useStyles();
   const alert = useAlert();
 
-  const handleSignUp = useCallback(
-    async (event) => {
-      event.preventDefault();
-      const {
-        email,
-        password,
-        username,
-        phoneNumber,
-        country,
-        city,
-      } = event.target.elements;
-      try {
-        await firebase
-          .auth()
-          .createUserWithEmailAndPassword(email.value, password.value);
-        let user = firebase.auth().currentUser;
-        if (user) {
-          // User is signed in.
-          try {
-            await firebase.firestore().collection("users").doc(user.uid).set({
-              email: email.value,
-              username: username.value,
-              phoneNumber: phoneNumber.value,
-              country: country.value,
-              city: city.value,
-              photo: null,
-              followers: [],
-              following: [],
-              userReviews: [],
-              listingsAsMember: [],
-              listingsAsOP: [],
-              orderRecords: [],
-            });
-            history.push("/");
-            alert.show("You have successfully signed up.");
-          } catch (error) {
-            alert.show(`An error occured while signing up`);
-            await user.delete();
-          }
-        }
-      } catch (error) {
-        alert.show(
-          `This email has been taken. Please use another email for sign-up.`
-        );
-      }
-    },
-    [history]
-  );
+  const { signUp } = React.useContext(AuthContext);
+
+  const history = useHistory();
+
+  async function handleSignUp(event) {
+    event.preventDefault();
+    const {
+      email,
+      password,
+      username,
+      phoneNumber,
+      country,
+      city,
+    } = event.target.elements;
+    let result = await signUp({
+      email: email.value,
+      username: username.value,
+      phoneNumber: phoneNumber.value,
+      country: country.value,
+      city: city.value,
+      password : password.value
+    });
+
+    if(result) {
+      history.push("/login")
+    }
+  }
 
   /*return (
     <div>
@@ -293,6 +273,4 @@ const SignUp = ({ history }) => {
       </Grid>
     </Grid>
   );
-};
-
-export default withRouter(SignUp);
+}
