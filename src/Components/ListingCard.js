@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 
 import React from "react";
-
+import firebase from "../API/Firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 
@@ -50,13 +50,31 @@ export default function ListingCard({ key, data }) {
     history.push(`/listingDetails/${data[0]}`)
   }
 
+  var [imgUrl, setImgUrl] = React.useState('');
+
+  function loadPhoto() {
+     // Create a reference to the file we want to download
+     const storageRef = firebase.storage().ref();
+     var photoRef = storageRef.child('image').child(data[1].photo);
+     
+     // Get the download URL
+     photoRef.getDownloadURL().then(function(url) {
+       setImgUrl(url);
+     });
+  }
+
+  React.useEffect(() => {
+    loadPhoto();
+  }, []);
+
   return (
     data[1] ?
     <Card className={styles.root}>
       <CardActionArea onClick={handleNavigate}>
+        
         <CardMedia
           component="img"
-          src="https://images.unsplash.com/photo-1596650956793-68f12df4e549?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2980&q=80"
+          src= {imgUrl}
           style={{
             height: 250,
           }}
