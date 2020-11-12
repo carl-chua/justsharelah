@@ -13,7 +13,7 @@ import FollowButton from "./FollowButton";
 const useStyles = makeStyles({
     root: {
         background : 'linear-gradient(to bottom, #FFD076 30%, white 20%, white)',
-        //minWidth : 220,
+        minWidth : 260,
         paddingLeft : "5%",
         paddingRight : "5%",
         maxHeight : "auto",

@@ -33,10 +33,11 @@ function App() {
   const alert = useAlert();
 
   return (
-    <div className="App" style={{ height: "100vh" }}>
+    <div className="App" style={{ height: "100vh", overflow : "hidden", }}>
       <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
           {userToken && <NavBar />}
+          <div style = {{height: "100%", overflow : "scroll"}}>
           <Switch>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
@@ -85,6 +86,7 @@ function App() {
               component={WalletPage}
             />
           </Switch>
+          </div>
         </Router>
       </AuthProvider>
     </div>
