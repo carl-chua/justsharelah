@@ -189,7 +189,7 @@ function NavBar() {
             <ChatTwoToneIcon fontSize="large" />
           </IconButton>
 
-          <IconButton>
+          <IconButton onClick={handleWalletClick}>
             <AccountBalanceWalletTwoToneIcon fontSize="large" />
           </IconButton>
 
