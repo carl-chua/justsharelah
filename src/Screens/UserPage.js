@@ -18,13 +18,13 @@ import { getReviews, getReviewsListener } from "../API/Reviews";
 const useStyles = makeStyles({
   root: {
     display: "flex",
-    marginTop: "5%",
+    marginTop: "2%",
     marginLeft: "5%",
     marginRight: "5%",
   },
   tabContainer: {
-    height: "70vh",
-    overflow: "auto",
+    height: "75%",
+    overflow: "scroll",
     borderRadius: 16,
     borderColor: "#BEBEBE",
   },

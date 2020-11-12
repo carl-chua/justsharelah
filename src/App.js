@@ -24,6 +24,7 @@ import UsersListingPage from "./Screens/UsersListingPage";
 import OrdersListingPage from "./Screens/OrdersListingPage";
 import ChatPage from "./Components/ChatPage";
 import { useAlert } from "react-alert";
+import WalletPage from "./Screens/WalletPage";
 
 function App() {
   const userToken = useSelector((state) => state.userToken);
@@ -32,53 +33,60 @@ function App() {
   const alert = useAlert();
 
   return (
-    <div className="App">
+    <div className="App" style={{ height: "100vh", overflow: "hidden" }}>
       <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
           {userToken && <NavBar />}
-          <Switch>
-            <PrivateRoute exact path="/" component={HomePage} />
-            <Route exact path="/login" component={LogIn} />
-            <Route exact path="/signup" component={SignUp} />
-            <PrivateRoute exact path="/user/:username" component={UserPage} />
-            <PrivateRoute
-              exact
-              path="/settings/:username"
-              component={SettingsPage}
-            />
-            <PrivateRoute exact path="/chat/:username" component={ChatPage} />
-            <PrivateRoute
-              exact
-              path="/listingDetails/:id"
-              component={ListingDetails}
-            />
-            <PrivateRoute
-              exact
-              path="/createListing"
-              component={CreateListing}
-            />
-            <PrivateRoute exact path="/search" component={SearchResultsPage} />
-            <PrivateRoute
-              exact
-              path="/usersListingsPage"
-              component={UsersListingsPage}
-            />
-            <PrivateRoute
-              exact
-              path="/usersListingPage/:listingId"
-              component={UsersListingPage}
-            />
-            <PrivateRoute
-              exact
-              path="/ordersListingPage"
-              component={OrdersListingPage}
-            />
-            <PrivateRoute
-              exact
-              path="/usersListingsPage2"
-              component={UsersListingsPage2}
-            />
-          </Switch>
+          <div style={{ height: "100%", overflow: "scroll" }}>
+            <Switch>
+              <PrivateRoute exact path="/" component={HomePage} />
+              <Route exact path="/login" component={LogIn} />
+              <Route exact path="/signup" component={SignUp} />
+              <PrivateRoute exact path="/user/:username" component={UserPage} />
+              <PrivateRoute
+                exact
+                path="/settings/:username"
+                component={SettingsPage}
+              />
+              <PrivateRoute exact path="/chat/:username" component={ChatPage} />
+              <PrivateRoute
+                exact
+                path="/listingDetails/:id"
+                component={ListingDetails}
+              />
+              <PrivateRoute
+                exact
+                path="/createListing"
+                component={CreateListing}
+              />
+              <PrivateRoute
+                exact
+                path="/search"
+                component={SearchResultsPage}
+              />
+              <PrivateRoute
+                exact
+                path="/usersListingsPage"
+                component={UsersListingsPage}
+              />
+              <PrivateRoute
+                exact
+                path="/usersListingPage/:listingId"
+                component={UsersListingPage}
+              />
+              <PrivateRoute
+                exact
+                path="/ordersListingPage"
+                component={OrdersListingPage}
+              />
+              <PrivateRoute
+                exact
+                path="/usersListingsPage2"
+                component={UsersListingsPage2}
+              />
+              <PrivateRoute exact path="/myWallet" component={WalletPage} />
+            </Switch>
+          </div>
         </Router>
       </AuthProvider>
     </div>

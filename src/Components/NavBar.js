@@ -104,6 +104,14 @@ function NavBar() {
     }
   }
 
+  function handleWalletClick() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push("/myWallet");
+    } else {
+      history.push("/login");
+    }
+  }
+
   async function handleSignOut(e) {
     e.preventDefault();
     await signOut();
@@ -167,8 +175,8 @@ function NavBar() {
             />
           </IconButton>
 
-          <IconButton>
-            <AccountBalanceWalletOutlinedIcon
+          <IconButton onClick={handleWalletClick}>
+            <LocalMallOutlinedIcon
               style={{ color: "white" }}
               fontSize="large"
             />

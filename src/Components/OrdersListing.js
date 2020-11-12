@@ -83,18 +83,6 @@ export default function OrdersListing() {
   }, []);
 
 
-  function handleOpenModal(data, id) {
-    //setModalData(data)
-    //setModalDataId(id)
-    setShowModal(true)
-
-    return  <OrderCardModal show = {showModal} handleClose = {handleCloseModal} data = {data} dataId = {id}/>
-  }
-
-  function handleCloseModal() {
-    setShowModal(false)
-  }
-
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -158,8 +146,8 @@ export default function OrdersListing() {
     </AppBar>
 
     <TabPanel value={value} index={0}>
-      <TableContainer component={Paper}>
-        <Table className={styles.table} aria-label="simple table">
+      <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+        <Table stickyHeader className={styles.table} aria-label="simple table">
           <TableHead>
             <TableRow className={styles.head}>
               <TableCell>Listing Title</TableCell>
@@ -170,8 +158,8 @@ export default function OrdersListing() {
           </TableHead>
           <TableBody>
             {orders
-              ? orders.map((order) => 
-              <OrderRow key={order[0]} order={order} handleOpenModal = {handleOpenModal} filter = {searchString}/>)
+              ? orders.filter((order) => order[1].paymentStatus !== "PAID").map((order) => 
+              <OrderRow key={order[0]} order={order} filter = {searchString}/>)
               : null}
           </TableBody>
         </Table>
@@ -179,8 +167,8 @@ export default function OrdersListing() {
     </TabPanel>
 
     <TabPanel value={value} index={1}>
-    <TableContainer component={Paper}>
-        <Table className={styles.table} aria-label="simple table">
+    <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+        <Table stickyHeader className={styles.table} aria-label="simple table">
           <TableHead>
             <TableRow className={styles.head}>
               <TableCell>Listing Title</TableCell>
@@ -191,8 +179,8 @@ export default function OrdersListing() {
           </TableHead>
           <TableBody>
             {orders
-              ? orders.map((order) => 
-              <OrderRow key = {order[0]} order={order} handleOpenModal = {handleOpenModal} filter = {searchString}/>)
+              ? orders.filter((order) => order[1].paymentStatus === "PAID").map((order) => 
+              <OrderRow key = {order[0]} order={order} filter = {searchString}/>)
               : null}
           </TableBody>
           

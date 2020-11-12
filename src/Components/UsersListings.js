@@ -147,8 +147,8 @@ export default function UsersListings() {
           </div>
         </AppBar>
         <TabPanel value={value} index={0}>
-            <TableContainer component={Paper}>
-              <Table className={classes.table} aria-label="simple table">
+            <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+              <Table stickyHeader className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow className={classes.head}>
                     <TableCell>Listing</TableCell>
@@ -198,8 +198,8 @@ export default function UsersListings() {
           </TabPanel>
 
           <TabPanel value={value} index={1}>
-            <TableContainer component={Paper}>
-              <Table className={classes.table} aria-label="simple table">
+            <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+              <Table stickyHeader className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow className={classes.head}>
                     <TableCell>Listing</TableCell>

@@ -197,7 +197,7 @@ export default function OrderCardModal({
                 setUrl={setUrl}
                 setAllUploads={setAllUploads}
                 setIsUploading={setIsUploading}
-                disabled = {data.order[1].paymentStatus === "PAID"}
+                disabled = {(data.order[1].paymentStatus === "PAID" || (data.order[1].price <= 0))}
               />
             </div>
           </CardContent>
@@ -216,10 +216,10 @@ export default function OrderCardModal({
                 !isUploading &&
                 (data.order[1].receiptImage
                   ? data.order[1].receiptImage === url
-                  : !url) 
+                  : !url) && !(data.order[1].price > 0)
               }
             >
-              SEND PAYMENT
+              {data.order[1].price > 0 ? "SEND PAYMENT" : "NO PRICE"}
             </Button>
             :
             <h3>PAYMENT CONFIRMED</h3>}
