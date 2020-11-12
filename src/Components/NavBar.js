@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import firebase from "../API/Firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { reduxSetSearchString, reduxSetCategory } from "../Redux/actions";
 import { reduxSetSearchString, signOut } from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
-import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import ChatTwoToneIcon from "@material-ui/icons/ChatTwoTone";
-import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
-import PersonOutlineTwoToneIcon from "@material-ui/icons/PersonOutlineTwoTone";
-
-import { Link } from 'react-router-dom'
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
@@ -23,7 +16,8 @@ import { AccountCircle } from "@material-ui/icons";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { AuthContext } from "../Auth";
 
-import { currentUser as currUser } from "../Redux/actions";
+import {currentUser as currUser} from "../Redux/actions"
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +36,7 @@ function NavBar() {
 
   //const currentUser = useSelector((state) => state.currentUser);
 
-  const [currentUser, setCurrentUser] = React.useState();
+  const[currentUser, setCurrentUser] = React.useState()
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -56,22 +50,21 @@ function NavBar() {
     setAnchorEl(null);
   };
 
-
   React.useEffect(() => {
     const unsubscribe = getUserByIdListener(userToken, setCurrentUser);
 
     return unsubscribe;
-  }, []);
+  },[])
 
   React.useEffect(() => {
-    if (currentUser) {
-      dispatch(currUser(currentUser));
+    if(currentUser) {
+      dispatch(currUser(currentUser))
     }
-  }, [currentUser]);
-
+  },[currentUser])
+  
   const history = useHistory();
 
-  const { signOut } = React.useContext(AuthContext);
+  const {signOut} = React.useContext(AuthContext);
 
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
@@ -84,6 +77,7 @@ function NavBar() {
   }
 
   function handleClickOnName() {
+    
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push("/");
     } else {
@@ -97,12 +91,9 @@ function NavBar() {
     } else {
       history.push("/login");
     }
-    handleMenuClose();
+    handleMenuClose()
   }
 
-  function handleCategoryClick(category) {
-    if (firebase.auth().currentUser != null) {
-      history.push(`/categories/${category}`);
   function handleChatClick() {
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/chat/${currentUser.username}`);
@@ -116,6 +107,12 @@ function NavBar() {
       history.push("/myWallet");
     } else {
       history.push("/login");
+    }
+  }
+
+  function handleCategoryClick(category) {
+    if (firebase.auth().currentUser != null) {
+      history.push(`/categories/${category}`);
     }
   }
 
@@ -175,7 +172,7 @@ function NavBar() {
           </div>
         </form>
         <div className="SideButtons">
-          {/*<IconButton onClick={() => handleChatClick()}>
+          <IconButton onClick={() => handleChatClick()}>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
               fontSize="large"
@@ -191,23 +188,12 @@ function NavBar() {
 
           <IconButton onClick={handleProfileMenuOpen}>
             <PersonOutlineIcon style={{ color: "white" }} fontSize="large" />
-            </IconButton>*/}
-          <IconButton onClick={() => handleChatClick()}>
-            <ChatTwoToneIcon fontSize="large" />
-          </IconButton>
-
-          <IconButton onClick={handleWalletClick}>
-            <AccountBalanceWalletTwoToneIcon fontSize="large" />
-          </IconButton>
-
-          <IconButton onClick={() => handleProfileClick()}>
-            <PersonOutlineTwoToneIcon fontSize="large" />
           </IconButton>
         </div>
       </div>
       <div className="NavBarBottom">
         <div className="CategoryButtons">
-          <button onClick= {() => handleCategoryClick('Apparel')}>APPAREL</button>
+        <button onClick= {() => handleCategoryClick('Apparel')}>APPAREL</button>
           <button onClick= {() => handleCategoryClick('Electronics')}> ELECTRONICS</button>
           <button onClick= {() => handleCategoryClick('Accessories')}> ACCESSORIES</button>
           <button onClick= {() => handleCategoryClick('Education')}>EDUCATION</button>
