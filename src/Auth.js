@@ -73,6 +73,14 @@ const AuthProvider = ({ children, dispatch, alert }) => {
             return;
           }
 
+  useEffect(() => {
+      firebase.auth().onAuthStateChanged((user) => {
+      setCurrentUser(user);
+      setPending(false);
+
+
+    });
+  }, []);
           await firebase
             .auth()
             .createUserWithEmailAndPassword(data.email, data.password);
