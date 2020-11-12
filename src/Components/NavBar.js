@@ -124,12 +124,13 @@ export default function NavBar() {
     }
   }
 
-  function handleCategoryClick(category) {
-    if (firebase.auth().currentUser != null) {
-      history.push(`/categories/${category}`);
+  function handleUploadListingClick() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push("/createListing");
+    } else {
+      history.push("/login");
     }
   }
-
   async function handleSignOut(e) {
     e.preventDefault();
     await signOut();
@@ -216,7 +217,7 @@ export default function NavBar() {
           <button onClick= {() => handleCategoryClick('Babies&Kids')}>BABIES & KIDS</button>
           <button onClick= {() => handleCategoryClick('Others')}>OTHERS</button>
         </div>
-        <button className="UploadListing">UPLOAD LISTING</button>
+        <button className="UploadListing" onClick={() => handleUploadListingClick()}>UPLOAD LISTING</button>
       </div>
       {renderMenu}
     </div>
