@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import firebase from "../API/Firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { reduxSetSearchString, signOut } from "../Redux/actions";
+import {
+  reduxSetSearchString,
+  reduxSetCategory,
+  signOut,
+} from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import ChatTwoToneIcon from "@material-ui/icons/ChatTwoTone";
+import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
+import PersonOutlineTwoToneIcon from "@material-ui/icons/PersonOutlineTwoTone";
+
+import { Link } from "react-router-dom";
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
@@ -25,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar() {
+export default function NavBar() {
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
@@ -94,6 +103,11 @@ function NavBar() {
     handleMenuClose()
   }
 
+  function handleCategoryClick(category) {
+    if (firebase.auth().currentUser != null) {
+      history.push(`/categories/${category}`);
+    }
+  }
   function handleChatClick() {
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/chat/${currentUser.username}`);
@@ -208,5 +222,3 @@ function NavBar() {
     </div>
   );
 }
-
-export default NavBar;

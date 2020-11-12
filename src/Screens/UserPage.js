@@ -16,53 +16,60 @@ import CreateReviewModal from "../Components/CreateReviewModal";
 import { getReviews, getReviewsListener } from "../API/Reviews";
 
 const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    marginTop: "2%",
-    marginLeft: "5%",
-    marginRight: "5%",
-  },
-  tabContainer: {
-    height: "75%",
-    overflow: "scroll",
-    borderRadius: 16,
-    borderColor: "#BEBEBE",
-  },
-  lowerCase: {
-    fontSize: 26,
-    textTransform: "none",
-  },
-  tabBar: {
-    justifyContent: "flex-start",
-    alignItems: "center",
-    textAlign: "start",
-  },
-  tabHeaderText: {
-    textAlign: "start",
-    fontSize: 36,
-    fontWeight: "bold",
-    paddingLeft: "5%",
-  },
-  listingList: {
-    display: "flex",
-    flexWrap: "wrap",
-    overflow: "auto",
-    paddingLeft: "2.5%",
-  },
-  noListText: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "80%",
-    color: "grey",
-  },
-  tabContainerTitle: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    alignItems: "center",
-  },
+    root : {
+        display : "flex",
+        marginTop : "2%",
+        marginLeft : "5%",
+        marginRight : "5%",
+    },
+    tabContainer : {
+        height: "80%", 
+        overflow: "auto",
+        borderRadius : 16,
+        borderColor : "#BEBEBE",
+    },
+    lowerCase : {
+        fontSize: 26,
+        textTransform : 'none',
+    },
+    tabBar : {
+        justifyContent : "flex-start",
+        alignItems : "center",
+        textAlign : "start",
+    },
+    tabHeaderText : {
+        textAlign : "start",
+        fontSize : 36,
+        fontWeight : "bold",
+        paddingLeft : "5%"
+    },                       
+    listingList : {
+        display : "flex",
+        flexWrap : "wrap",
+        overflow : "auto",
+        paddingLeft : "2.5%"
+    },
+    noListText : {
+        display : "flex",
+        justifyContent : "center",
+        alignItems : "center",
+        height : "80%",
+        color : "grey",
+    },
+    tabContainerTitle : {
+        display: "flex", 
+        flexDirection : "row", 
+        justifyContent: "space-between", 
+        width : "100%", 
+        alignItems : "center",
+    },
+    button: {
+        backgroundColor: "#CC7F5D",
+        color: "white",
+        width: "10vw",
+        minHeight: "6vh",
+        marginTop: "10%",
+    }
 });
 
 export default function UserPage({ history }) {
@@ -155,7 +162,14 @@ export default function UserPage({ history }) {
         userReview.sort((a, b) => b[1].date.toDate() - a[1].date.toDate())
       );
     }
-  }, [userReview]);
+
+
+  },[userReview])
+
+  function handleEditProfile() {
+    console.log("GOING TO EDIT PROFILE:");
+    history.push(`/settings`);
+  }
 
   function handleEditProfile() {
     console.log("GOING TO EDIT PROFILE:");
@@ -263,5 +277,5 @@ export default function UserPage({ history }) {
     >
       <p>User {username} does not exist!</p>
     </div>
-  );
+  )
 }
