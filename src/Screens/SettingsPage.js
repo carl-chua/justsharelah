@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius : 16,
     borderColor : "#BEBEBE",
     boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)",
-},
+  },
 }));
 
 
