@@ -155,6 +155,23 @@ export default function Profile({user}) {
     alert("Image uploaded!");
   };
 
+  var [imgUrl, setImgUrl] = React.useState("");
+
+  function loadPhoto() {
+    // Create a reference to the file we want to download
+    const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(user.imageUrl);
+
+      // Get the download URL
+      photoRef.getDownloadURL().then(function (url) {
+        setImgUrl(url);
+      });
+  }
+
+  React.useEffect(() => {
+    loadPhoto();
+  }, []);
+
     return (
       
       user ?
@@ -171,7 +188,7 @@ export default function Profile({user}) {
             <form className={classes.form} noValidate autoComplete="off">
             <div>
                 <Avatar 
-                    src = {profileUrl} 
+                    src = {imgUrl} 
                     className = {classes.avatar}
                     style = {{
                         width:120,

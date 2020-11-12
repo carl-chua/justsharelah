@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   tabContainer : {
     marginLeft: "5%",
     padding: "2%",
-    maxHeight: "85vh", 
+    maxHeight: "75vh", 
     minWidth: "60VW",
     overflow: "auto",
     borderRadius : 16,

@@ -54,7 +54,7 @@ function App() {
             <PrivateRoute exact path="/user/:username" component={UserPage} />
             <PrivateRoute
               exact
-              path="/settings/:username"
+              path="/settings"
               component={SettingsPage}
             />
             <PrivateRoute exact path="/chat/:username" component={ChatPage} />
