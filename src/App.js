@@ -18,7 +18,14 @@ import ListingDetails from "./Components/ListingDetails";
 import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
 import NavBar from "./Components/NavBar";
-
+import Apparel from "./Components/subpages/Apparel";
+import Electronics from "./Components/subpages/Electronics";
+import Accessories from "./Components/subpages/Accessories";
+import Education from "./Components/subpages/Education";
+import Beauty from "./Components/subpages/Beauty";
+import Living from "./Components/subpages/Living";
+import BabiesKids from "./Components/subpages/BabiesKids";
+import Others from "./Components/subpages/Others";
 
 import UsersListingsPage from "./Screens/UsersListingsPage";
 
@@ -36,12 +43,21 @@ function App() {
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/user/:username" component={UserPage} />
-            <Route exact path="/settings/:username" component={SettingsPage} />
+            <Route exact path="/settings" component={SettingsPage} />
             <Route exact path="/chat" component={Chat} />
             <Route exact path="/listingDetails" component={ListingDetails} />
             <Route exact path="/createListing" component={CreateListing} />
             <Route exact path="/search" component={SearchResultsPage} />
             <Route exact path="/usersListingsPage" component={UsersListingsPage} />
+            <Route exact path="/categories/Electronics" component={Electronics} />
+            <Route exact path="/categories/Accessories" component={Accessories} />
+            <Route exact path="/categories/Apparel" component={Apparel} />
+            <Route exact path="/categories/Education" component={Education} />
+            <Route exact path="/categories/Living" component={Living} />
+            <Route exact path="/categories/Beauty" component={Beauty} />
+            <Route exact path="/categories/Babies&Kids" component={BabiesKids} />
+            <Route exact path="/categories/Others" component={Others} />
+
           </div>
         </Router>
       </AuthProvider>

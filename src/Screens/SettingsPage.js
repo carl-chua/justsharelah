@@ -11,6 +11,8 @@ import ProfileCard from "../Components/ProfileCard";
 import ChangePassword from "../Components/ChangePassword";
 
 import NavBar from "../Components/NavBar";
+import { useSelector } from 'react-redux';
+import { getUserByIdListener } from '../API/Users';
 
 
 
@@ -62,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     borderRight: `1px solid ${theme.palette.divider}`,
     paddingLeft: 10,
     minWidth: "18vw",
-    height: 120,
+    height: 160,
   },
   tabPanel: {
   },
@@ -78,12 +80,6 @@ const useStyles = makeStyles((theme) => ({
 },
 }));
 
-const dummyData = {
-        name: "MAX",
-        mobileNum: "999999",
-        password: "xxxx",
-        country: "MSIA"
-    }
 
 export default function VerticalTabs() {
   const classes = useStyles();
@@ -93,12 +89,20 @@ export default function VerticalTabs() {
     setValue(newValue);
   };
 
+  const userToken = useSelector(state => state.userToken);
+
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+    
+    const unsubscribe = getUserByIdListener(userToken, setUser) 
+    
+    return unsubscribe
+  },[])
+
   return (
 
-    <div className={classes.root}>
-      <div>
-        <NavBar style={{ position: "sticky" }} />
-      </div>
+    user ? <div className={classes.root}>
       <div className = {classes.content}>
         <Tabs
           orientation="vertical"
@@ -107,7 +111,7 @@ export default function VerticalTabs() {
           aria-label="Vertical tabs example"
           className={classes.tabs}
         >
-          <Tab label="Edit Profile" {...a11yProps(0)} />
+          <Tab label="My Profile" {...a11yProps(0)} />
           <Tab label="Change Password" {...a11yProps(1)} />
           
         </Tabs>
@@ -118,7 +122,7 @@ export default function VerticalTabs() {
               bgcolor = "background-paper"
               className = {classes.tabContainer}
               >
-              <ProfileCard data = {dummyData}/>
+              <ProfileCard user = {user}/>
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1} className = {classes.tabPanel}>
@@ -128,10 +132,13 @@ export default function VerticalTabs() {
               bgcolor = "background-paper"
               className = {classes.tabContainer}
               >
-              <ChangePassword data = {dummyData}/>
+              <ChangePassword user = {user}/>
           </Box>
         </TabPanel>
+        
       </div>
     </div>
+    :
+    null
   );
 }

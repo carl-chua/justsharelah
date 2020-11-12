@@ -1,4 +1,6 @@
 import React from 'react'
+import firebase from "../API/Firebase";
+
 import {Box, Button} from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 
@@ -37,9 +39,25 @@ const useStyles = makeStyles({
     }
 })
 
-export default function Profile({data}) {
+export default function ChangePassword({user}) {
 
     const classes = useStyles()
+
+    const [currPassword, setCurrent] = React.useState("");
+    const handleCurrPassword = (event) => {
+      setCurrent(event.target.value);
+    };
+
+    function handleReauthentication() {
+        const emailCred  = firebase.auth.EmailAuthProvider.credential(
+            firebase.auth().currentUser, currPassword);
+            firebase.auth().currentUser.reauthenticateWithCredential(emailCred)
+            .then(() => {
+              // User successfully reauthenticated.
+              const newPass = window.prompt('Please enter new password');
+              return firebase.auth().currentUser.updatePassword(newPass);
+            })
+    }
 
     return (
         <Box
@@ -57,7 +75,7 @@ export default function Profile({data}) {
                     <TextField
                     label="Current Password"
                     id="outlined-size-small"
-                    defaultValue= {data.password}
+                    onChange={handleCurrPassword}
                     variant="outlined"
                     size="small"
                     className = {classes.textfield}
@@ -85,6 +103,7 @@ export default function Profile({data}) {
                 <Button 
                     variant="contained" 
                     className = {classes.button}
+                    onClick = {handleReauthentication}
                     >
                     Confirm
                 </Button>   

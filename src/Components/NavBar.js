@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import firebase from "../API/Firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { reduxSetSearchString } from "../Redux/actions";
+import { reduxSetSearchString, reduxSetCategory } from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
+
+import { Link } from 'react-router-dom'
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
@@ -31,6 +33,7 @@ function NavBar() {
   const currentUser = useSelector((state) => state.currentUser);
   
   const history = useHistory();
+
 
   React.useEffect(() => {
     if (userToken != null && currentUser != null) {
@@ -64,6 +67,14 @@ function NavBar() {
 
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/user/${currentUser.username}`);
+    } else {
+      history.push("/login");
+    }
+  }
+
+  function handleCategoryClick(category) {
+    if (firebase.auth().currentUser != null) {
+      history.push(`/categories/${category}`);
     } else {
       history.push("/login");
     }
@@ -116,13 +127,14 @@ function NavBar() {
       </div>
       <div className="NavBarBottom">
         <div className="CategoryButtons">
-          <button>APPAREL</button>
-          <button>ELECTRONICS</button>
-          <button>ACCESSORIES</button>
-          <button>EDUCATION</button>
-          <button>BEAUTY</button>
-          <button>LIVING</button>
-          <button>BABIES & KIDS</button>
+          <button onClick= {() => handleCategoryClick('Apparel')}>APPAREL</button>
+          <button onClick= {() => handleCategoryClick('Electronics')}> ELECTRONICS</button>
+          <button onClick= {() => handleCategoryClick('Accessories')}> ACCESSORIES</button>
+          <button onClick= {() => handleCategoryClick('Education')}>EDUCATION</button>
+          <button onClick= {() => handleCategoryClick('Beauty')}>BEAUTY</button>
+          <button onClick= {() => handleCategoryClick('Living')}>LIVING</button>
+          <button onClick= {() => handleCategoryClick('Babies&Kids')}>BABIES & KIDS</button>
+          <button onClick= {() => handleCategoryClick('Others')}>OTHERS</button>
         </div>
         <button className="UploadListing">UPLOAD LISTING</button>
       </div>
