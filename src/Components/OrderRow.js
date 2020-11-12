@@ -6,14 +6,10 @@ import { getListingListener } from "../API/Listings";
 import OrderCardModal from "./OrderCardModal";
 import { ClickAwayListener } from "@material-ui/core";
 
-export default function OrderRow({ order, handleOpenModal, filter }) {
+export default function OrderRow({ order, filter }) {
   const [parentListing, setParentListing] = React.useState();
 
   const [showModal, setShowModal] = React.useState(false);
-
-  function handleCloseModal() {
-    setShowModal(false);
-  }
 
   React.useEffect(() => {
     console.log("orderrow refiring")
@@ -24,15 +20,6 @@ export default function OrderRow({ order, handleOpenModal, filter }) {
 
     return unsubscribe;
   }, []);
-
-  function handleOnClick() {
-    let data = {
-        order : order,
-        parentListing : parentListing,
-    }
-    handleOpenModal(data, order[0])
-    setShowModal(true)
-  }
 
   const handleClose = (e) => {
     if(e) {
@@ -58,7 +45,7 @@ export default function OrderRow({ order, handleOpenModal, filter }) {
         {order[1].price ? order[1].price : "-"}
       </TableCell>
       <TableCell align="right">
-        {order[1].paymentStatus ? order[1].paymentStatus : "Unpaid"}
+        {order[1].paymentStatus ? order[1].paymentStatus : "UNPAID"}
       </TableCell> 
       <OrderCardModal show = {showModal} handleClose = {handleClose} data = {{order : order, parentListing: parentListing}} dataId = {order[0]}/>
     </TableRow>

@@ -19,6 +19,7 @@ import SearchResultsPage from "./Screens/SearchResultsPage";
 import NavBar from "./Components/NavBar";
 
 import UsersListingsPage from "./Screens/UsersListingsPage";
+import UsersListingsPage2 from "./Screens/UsersListingsPage2";
 import UsersListingPage from "./Screens/UsersListingPage";
 import OrdersListingPage from "./Screens/OrdersListingPage";
 import ChatPage from "./Components/ChatPage";
@@ -32,22 +33,30 @@ function App() {
 
   return (
     <div className="App" style={{ height: "100vh" }}>
-      <AuthProvider dispatch = {dispatch} alert = {alert}>
+      <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
           {userToken && <NavBar />}
-          <div>
+          <Switch>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route exact path="/login" component={LogIn} />
             <Route exact path="/signup" component={SignUp} />
             <PrivateRoute exact path="/user/:username" component={UserPage} />
-            <PrivateRoute exact path="/settings/:username" component={SettingsPage} />
+            <PrivateRoute
+              exact
+              path="/settings/:username"
+              component={SettingsPage}
+            />
             <PrivateRoute exact path="/chat/:username" component={ChatPage} />
             <PrivateRoute
               exact
               path="/listingDetails/:id"
               component={ListingDetails}
             />
-            <PrivateRoute exact path="/createListing" component={CreateListing} />
+            <PrivateRoute
+              exact
+              path="/createListing"
+              component={CreateListing}
+            />
             <PrivateRoute exact path="/search" component={SearchResultsPage} />
             <PrivateRoute
               exact
@@ -64,7 +73,12 @@ function App() {
               path="/ordersListingPage"
               component={OrdersListingPage}
             />
-          </div>
+            <PrivateRoute
+              exact
+              path="/usersListingsPage2"
+              component={UsersListingsPage2}
+            />
+          </Switch>
         </Router>
       </AuthProvider>
     </div>

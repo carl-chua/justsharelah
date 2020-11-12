@@ -272,11 +272,12 @@ export async function getOrderItemsListener(orderId, setItems) {
   return unsubscribe;
 }
 
-export async function getUserOrders(userId, setOrders) {
-  let unsubscribe = await firebase
+export function getUserOrders(userId, setOrders) {
+  let unsubscribe = firebase
     .firestore()
     .collection("orderRecords")
     .where("user", "==", userId)
+    .orderBy("date", "desc")
     .onSnapshot(function (querySnapshot) {
       querySnapshot.docChanges().forEach(function (changes) {
         if (changes.type === "added") {
