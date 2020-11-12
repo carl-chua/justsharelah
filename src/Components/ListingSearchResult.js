@@ -33,18 +33,21 @@ export default function ListingSearchResult({ colSize, dataList }) {
   return (
     <div className="ListingSearchResult">
       <h1>Listings</h1>
-      <GridList
-        cols={colSize}
-        className={styles.listingList}
-        style={{
-          justifyContent: `${isNotSmallScreen ? "start" : "center"}`,
-        }}
-      >
-        {dataList.map((data) => (
-          <ListingCard key={data[0]} data={data} />
-        ))}
-      </GridList>
-      {dataList.length == 0 ? <p>No such listing found!</p> : ""}
+      {dataList && dataList.length > 0 ? (
+        <GridList
+          cols={colSize}
+          className={styles.listingList}
+          style={{
+            justifyContent: `${isNotSmallScreen ? "start" : "center"}`,
+          }}
+        >
+          {dataList.map((data) => (
+            <ListingCard key={data[0]} data={data} />
+          ))}
+        </GridList>
+      ) : (
+        <p>No listings found!</p>
+      )}
     </div>
   );
 }

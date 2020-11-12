@@ -199,6 +199,7 @@ function Chat({ history }) {
                 selectedChat={selectedChat}
                 chatUser={chatUser}
                 orderRecord={orderRecord}
+                selectedListing={selectedListing}
                 openCreateOrderModal={openCreateOrderModal}
                 openEditOrderModal={openEditOrderModal}
                 openWithdrawOrderModal={openWithdrawOrderModal}

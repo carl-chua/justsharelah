@@ -24,13 +24,13 @@ export async function getUserByUsername(username, setUser) {
     .limit(1)
     .get();
 
-  if(snapshot.empty) {
+  if (snapshot.empty) {
     return false;
   }
 
   snapshot.forEach((doc) => {
     console.log("USERDATA: " + JSON.stringify(doc.data()));
-    setUser([doc.id,doc.data()]);
+    setUser([doc.id, doc.data()]);
   });
 
   return true;
@@ -152,6 +152,15 @@ export async function unfollowUser(user1Id, user2Id) {
 
 export async function getAllUsers() {
   const db = firebase.firestore().collection("users");
+  const snapshot = await db.get();
+  return snapshot;
+}
+
+export async function getAllUsersExcept(username) {
+  const db = firebase
+    .firestore()
+    .collection("users")
+    .where("username", "!=", username);
   const snapshot = await db.get();
   return snapshot;
 }

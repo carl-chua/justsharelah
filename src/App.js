@@ -32,7 +32,7 @@ function App() {
   const alert = useAlert();
 
   return (
-    <div className="App" style={{ height: "100vh" }}>
+    <div className="App">
       <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
           {userToken && <NavBar />}

@@ -24,6 +24,7 @@ function ChatBox({
   selectedChat,
   chatUser,
   orderRecord,
+  selectedListing,
   openCreateOrderModal,
   openEditOrderModal,
   openWithdrawOrderModal,
@@ -123,7 +124,9 @@ function ChatBox({
           <Typography variant="h6" color="inherit">
             {selectedChat[1].groupName}
           </Typography>
-          {isEmpty(orderRecord) ? (
+          {selectedListing.isClosed ? (
+            <h4>Order has been closed!</h4>
+          ) : isEmpty(orderRecord) ? (
             <button className="OrderButton" onClick={openCreateOrderModal}>
               Order
             </button>
