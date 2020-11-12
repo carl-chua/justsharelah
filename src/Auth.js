@@ -9,7 +9,7 @@ const AuthProvider = ({ children, dispatch, alert }) => {
   const authContext = React.useMemo(
     () => ({
       signIn: async (data) => {
-        console.log("EMAIL : " + data.email + " PASSWORD : " + data.password);
+        //console.log("EMAIL : " + data.email + " PASSWORD : " + data.password);
         try {
           await firebase
             .auth()
@@ -17,22 +17,22 @@ const AuthProvider = ({ children, dispatch, alert }) => {
 
           var user = firebase.auth().currentUser;
           if (user) {
-              try {
-                let userData = await firebase
-                  .firestore()
-                  .collection("users")
-                  .doc(user.uid)
-                  .get();
-                dispatch(signIn(user.uid));
-                //console.log('USERDATA:', userData.data())
-                dispatch(currentUser(userData.data()));
-              } catch (err) {
-                console.log("ERROR FETCHING DATA:", err);
-                alert.show("Error occured while logging you in");
-              }
-          //} else {
+            try {
+              let userData = await firebase
+                .firestore()
+                .collection("users")
+                .doc(user.uid)
+                .get();
+              dispatch(signIn(user.uid));
+              //console.log('USERDATA:', userData.data())
+              dispatch(currentUser(userData.data()));
+            } catch (err) {
+              console.log("ERROR FETCHING DATA:", err);
+              alert.show("Error occured while logging you in");
+            }
+            //} else {
             //alert.show("Please verify your email address and try again.");
-          //}
+            //}
           } else {
             console.log("failed to fetch data");
           }
@@ -44,18 +44,22 @@ const AuthProvider = ({ children, dispatch, alert }) => {
         }
       },
       signOut: async () => {
-        try{
+        try {
           console.log("LOGGING OUT");
           firebase.auth().signOut();
-          dispatch(signOut())
+          dispatch(signOut());
         } catch (error) {
           alert.show("Error logging out");
         }
-        
       },
       signUp: async (data) => {
         try {
-          console.log("TRYING SIGNUP USERNAME : " + data.username + " | email : "  + data.email);
+          console.log(
+            "TRYING SIGNUP USERNAME : " +
+              data.username +
+              " | email : " +
+              data.email
+          );
           var snapshot = await firebase
             .firestore()
             .collection("users")
@@ -64,10 +68,11 @@ const AuthProvider = ({ children, dispatch, alert }) => {
 
           if (!snapshot.empty) {
             alert.show(
-              `The username has been taken. Please use another email for sign-up.`
+              `The username has been taken. Please use another username for sign-up.`
             );
             return;
           }
+
           await firebase
             .auth()
             .createUserWithEmailAndPassword(data.email, data.password);
@@ -91,7 +96,7 @@ const AuthProvider = ({ children, dispatch, alert }) => {
                 listingsAsMember: [],
                 listingsAsOP: [],
                 orderRecords: [],
-                usernameLower : data.username.toLowerCase(),
+                usernameLower: data.username.toLowerCase(),
               });
               //dispatch(signIn(user.uid))
               user.sendEmailVerification();

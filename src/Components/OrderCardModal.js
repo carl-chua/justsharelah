@@ -1,42 +1,45 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
-  InputAdornment,
-  Paper,
+  ClickAwayListener,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from "@material-ui/core";
 import { useAlert } from "react-alert";
-import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getOrderItems, getOrderItemsListener } from "../API/OrderRecord";
+import {
+  getOrderItems,
+  getOrderItemsListener,
+  setOrderPayment,
+} from "../API/OrderRecord";
+
+import Dropzone from "./Dropzone";
+import PhotoModal from "./PhotoModal";
+import { deleteImages } from "../API/Storage";
 
 const useStyles = makeStyles((theme) => ({
-  cardContent: {
+  root: {
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    position: "absolute",
+    justifyContent: "center",
     alignItems: "center",
-    minWidth: 300,
-    margin: 20,
+    width: "100%",
+    overflow: "scroll",
+    alignSelf: "center",
   },
-  /*cardContainer: {
-    background: "white",
-    height: "100%",
-    width: "25%",
-    minWidth: 100,
-    minHeight: 200,
-    maxHeight: "auto",
+  cardContainer: {
+    width: "30%",
+    minWidth: 350,
+    maxWidth: 800,
+    maxHeight: "80%",
     overflow: "scroll",
   },
   cardContent: {
@@ -45,18 +48,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     margin: 20,
-    maxWidth: "100%",
+    overflow: "scroll",
   },
-  textRoot: {
-    minHeight: "40vh",
-    display: "flex",
-    justifyContent: "start",
-    alignContent: "center",
-    flexDirection: "column",
-    backgroundColor: "white",
-    padding: 15,
-    borderRadius: 5,
-  },*/
   title: {
     display: "flex",
     justifyContent: "flex-start",
@@ -74,6 +67,21 @@ const useStyles = makeStyles((theme) => ({
   textInput: {
     marginBottom: 10,
   },
+  dropzone: {
+    width: "100%",
+    height: 90,
+    borderWidth: 2,
+    borderColor: "8FBCAC",
+    borderStyle: "dashed",
+    borderRadius: 5,
+  },
+  button: {
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: "#CC7F5D",
+    color: "white",
+  },
 }));
 
 export default function OrderCardModal({
@@ -89,71 +97,140 @@ export default function OrderCardModal({
 
   const userToken = useSelector((state) => state.userToken);
 
-  const [itemList, setItemList] = React.useState([])
+  const [itemList, setItemList] = React.useState([]);
+
+  const [isPhotoModal, setIsPhotoModal] = React.useState(false);
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  const [url, setUrl] = React.useState();
+  const [allUploads, setAllUploads] = React.useState([]);
 
   React.useEffect(() => {
-    setItemList([])
-    if(data) {
-      getOrderItems(dataId, setItemList)
+    setItemList([]);
+    setAllUploads([]);
+    setUrl();
+    if (data) {
+      getOrderItems(dataId, setItemList);
+      setUrl(data.order[1].receiptImage);
     }
-  },[data])
+  }, [data]);
 
-  return  data ? (
-    <Modal
-      open={show}
-      onClose={handleClose}
-      style={{
-        display: "flex",
-        position: "absolute",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        maxHeight: "62%",
-        overflow: "scroll",
-        top: "20%",
-        alignSelf: "center",
-      }}
-    >
-      <Card
-        className={styles.cardContainer}
-      >
-        <CardContent className={styles.cardContent}>
-          <h2>{data.parentListing ? data.parentListing.title : ""}</h2>
-          <TableContainer>
-            <Table className={styles.table} aria-label="simple table">
-              <TableHead>
-                <TableRow className={styles.head}>
-                  <TableCell>Item</TableCell>
-                  <TableCell align="right">Qty</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-              {itemList.length > 0 && itemList.map((item) => (
-                  <TableRow
-                    key={item[0]}
-                  >
-                    <TableCell component="th" scope="row">
-                      {item[1].itemName}
-                    </TableCell>
-                    <TableCell align="right">
-                      {item[1].itemQty}
-                    </TableCell>
-                    <TableCell align="right">
-                      {item[1].itemPrice ? item[1].itemPrice : "-"}
-                    </TableCell>
-                    
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <div style = {{display : "flex", justifyContent : "flex-start", width : "100%", paddingLeft : 10, paddingRight : 10}}>
-            <p>Total : {data.parentListing.price ? data.parentListing.price : "-"}</p>
+  function handleClosePhotoModal() {
+    setIsPhotoModal(false);
+  }
+
+  function handlePhotoModal(url) {
+    setUrl(url);
+    setIsPhotoModal(true);
+  }
+
+  async function handleSubmit() {
+    let filter = allUploads.filter((file) => file[1] !== url);
+    setAllUploads(filter);
+    deleteImages(filter);
+    let status = await setOrderPayment(dataId, url);
+    if (status) {
+      handleClose();
+    } else {
+      alert("Error submitting payment. please try again");
+    }
+  }
+
+  const handleCloseModal = (e) => {
+    deleteImages(allUploads);
+    setAllUploads([]);
+    setUrl();
+    handleClose(e);
+  };
+
+  return data ? (
+    <div>
+      <Modal open={show} onClose={handleCloseModal} className={styles.root}>
+        <Card className={styles.cardContainer}>
+          <CardContent className={styles.cardContent}>
+            <div style={{ maxHeight: 500, width: "100%", paddingBottom: 20 }}>
+              <h2 style={{ textAlign: "center" }}>
+                {data.parentListing ? data.parentListing.title : ""}
+              </h2>
+              <TableContainer>
+                <Table className={styles.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow className={styles.head}>
+                      <TableCell>Item</TableCell>
+                      <TableCell align="right">Qty</TableCell>
+                      <TableCell align="right">Price</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {itemList.length > 0 &&
+                      itemList.map((item) => (
+                        <TableRow key={item[0]}>
+                          <TableCell component="th" scope="row">
+                            {item[1].itemName}
+                          </TableCell>
+                          <TableCell align="right">{item[1].itemQty}</TableCell>
+                          <TableCell align="right">
+                            {item[1].itemPrice ? item[1].itemPrice : "-"}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  width: "100%",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                }}
+              >
+                <p>
+                  Total :{" "}
+                  {data.parentListing.price ? data.parentListing.price : "-"}
+                </p>
+              </div>
+              <Dropzone
+                handlePhotoModal={handlePhotoModal}
+                url={url}
+                setUrl={setUrl}
+                setAllUploads={setAllUploads}
+                setIsUploading={setIsUploading}
+                disabled = {data.order[1].paymentStatus === "PAID"}
+              />
+            </div>
+          </CardContent>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingBottom: 20,
+            }}
+          >
+            { data.order[1].paymentStatus !== "PAID" ? <Button
+              className={styles.button}
+              onClick={handleSubmit}
+              disabled={
+                !isUploading &&
+                (data.order[1].receiptImage
+                  ? data.order[1].receiptImage === url
+                  : !url) 
+              }
+            >
+              SEND PAYMENT
+            </Button>
+            :
+            <h3>PAYMENT CONFIRMED</h3>}
           </div>
-        </CardContent>
-      </Card>
-    </Modal>
-  ) : null
-
+        </Card>
+      </Modal>
+      <PhotoModal
+        show={isPhotoModal}
+        handleClose={handleClosePhotoModal}
+        url={url}
+      />
+    </div>
+  ) : null;
 }

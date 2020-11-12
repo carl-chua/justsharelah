@@ -48,7 +48,7 @@ export async function addOrder(items, listingId) {
 
       tn.set(newOrderRef, {
         listingId: listingId,
-        hasPaid: false,
+        paymentStatus: "UNPAID",
         datePaid: null,
         price: null,
         receiptImage: null,
@@ -101,18 +101,18 @@ export async function getOrderRecordsByListingId(listingId) {
 }
 
 export async function getOrderItems(orderId, setItems) {
-  let temp = []
+  let temp = [];
 
   var snapshot = await firebase
-  .firestore()
-  .collection("orderRecords")
-  .doc(orderId)
-  .collection("items")
-  .get()
+    .firestore()
+    .collection("orderRecords")
+    .doc(orderId)
+    .collection("items")
+    .get();
 
   snapshot.forEach((doc) => {
-    temp.push([doc.id, doc.data()])
-  })
+    temp.push([doc.id, doc.data()]);
+  });
 
   setItems(temp);
 }
@@ -161,9 +161,7 @@ export async function getOrderItemsListener(orderId, setItems) {
     });
 
   return unsubscribe;
-
 }
-
 
 export async function getUserOrders(userId, setOrders) {
   let unsubscribe = await firebase
@@ -208,4 +206,20 @@ export async function getUserOrders(userId, setOrders) {
     });
 
   return unsubscribe;
+}
+
+export async function setOrderPayment(orderId, receiptUrl) {
+  try {
+    await firebase.firestore().collection("orderRecords").doc(orderId).set(
+      {
+        paymentStatus: "PENDING",
+        datePaid: new Date(),
+        receiptImage: receiptUrl,
+      },
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
 }

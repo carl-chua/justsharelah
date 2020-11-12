@@ -63,7 +63,7 @@ export default function UsersListingsPage() {
 
   const [value, setValue] = React.useState(0);
 
-  const [view, setView] = React.useState(1);
+  const [view, setView] = React.useState(2);
 
   const [searchString, setSearchString] = React.useState("");
 
@@ -88,9 +88,11 @@ export default function UsersListingsPage() {
   };
 
   function handleOpenModal(data, id) {
-    setModalData(data)
-    setModalDataId(id)
+    //setModalData(data)
+    //setModalDataId(id)
     setShowModal(true)
+
+    return  <OrderCardModal show = {showModal} handleClose = {handleCloseModal} data = {data} dataId = {id}/>
   }
 
   function handleCloseModal() {
@@ -202,7 +204,7 @@ export default function UsersListingsPage() {
               <TableBody>
                 {orders
                   ? orders.map((order) => 
-                  <OrderRow order={order} handleOpenModal = {handleOpenModal} filter = {searchString}/>)
+                  <OrderRow key={order[0]} order={order} handleOpenModal = {handleOpenModal} filter = {searchString}/>)
                   : null}
               </TableBody>
             </Table>
@@ -223,15 +225,18 @@ export default function UsersListingsPage() {
               <TableBody>
                 {orders
                   ? orders.map((order) => 
-                  <OrderRow order={order} handleOpenModal = {handleOpenModal} filter = {searchString}/>)
+                  <OrderRow key = {order[0]} order={order} handleOpenModal = {handleOpenModal} filter = {searchString}/>)
                   : null}
               </TableBody>
+              
             </Table>
           </TableContainer>
         </TabPanel>
       </Paper>
       : null} 
-      <OrderCardModal show = {showModal} handleClose = {handleCloseModal} data = {modalData} dataId = {modalDataId}/>
+
     </Container>
   );
 }
+
+//<OrderCardModal show = {showModal} handleClose = {handleCloseModal} data = {modalData} dataId = {modalDataId}/>
