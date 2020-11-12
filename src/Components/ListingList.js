@@ -36,7 +36,7 @@ export default function ListingList({ colSize, dataList }) {
       }}
     >
       {dataList.map((data) => (
-        <ListingCard key={data[0]} data={data[1]} />
+        <ListingCard key={data[0]} data={data} />
       ))}
     </GridList>
   ) : (

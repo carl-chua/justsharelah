@@ -5,6 +5,7 @@ import {
   CardContent,
   CardMedia,
   CardActionArea,
+  Button,
 } from "@material-ui/core";
 
 import React from "react";
@@ -17,10 +18,12 @@ import Rating from "@material-ui/lab/Rating";
 import moment from "moment";
 
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import FollowButton from "./FollowButton";
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 250,
+    minWidth: 300,
     width: `100%`,
     textAlign: "start",
     marginLeft: "2.5%",
@@ -50,6 +53,8 @@ export default function UserListCard({ data, handleClose }) {
   const styles = useStyles();
   const [user, setUser] = React.useState();
 
+  const currentUser = useSelector(state => state.currentUser)
+
   let history = useHistory()
 
   React.useEffect(() => {
@@ -68,7 +73,8 @@ export default function UserListCard({ data, handleClose }) {
     <Card className={styles.root}>
       <CardActionArea onClick={handleOnPress}>
       <CardContent>
-        <Box display="flex" flexDirection="row" alignItems="center">
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent = "space-between">
+          <div style = {{display : "flex", flexDirection : "row", alignItems : "center"}}>
           <Avatar
             src={user.imageUrl}
             style={{
@@ -81,6 +87,8 @@ export default function UserListCard({ data, handleClose }) {
             </span>
           </Avatar>
           <p className={styles.nameText}>{user.username}</p>
+          </div>
+          <FollowButton userId = {data} user = {user}/>
         </Box>
       </CardContent>
       </CardActionArea>

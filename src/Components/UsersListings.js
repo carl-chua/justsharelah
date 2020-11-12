@@ -18,6 +18,14 @@ import Container from "@material-ui/core/Container";
 
 import { useSelector } from "react-redux";
 import { getUserListing } from "../API/Listings";
+import { Button, InputAdornment, TextField } from "@material-ui/core";
+
+import SearchIcon from "@material-ui/icons/Search";
+import { getUserOrders } from "../API/OrderRecord";
+
+import Moment from "moment";
+import OrderRow from "../Components/OrderRow";
+import OrderCardModal from "../Components/OrderCardModal";
 
 const useStyles = makeStyles({
   table: {
@@ -25,29 +33,57 @@ const useStyles = makeStyles({
   },
   head: {},
   root: {
-    flexGrow: 1,
+    paddingTop: "2%",
+  },
+  tabBar: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  tabText: {
+    fontSize: 25,
+    fontWeight: "400",
+  },
+  tabDivider: {
+    fontWeight: "lighter",
+    fontSize: 30,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 10,
   },
 });
 
-export default function UsersListingsPage() {
+export default function UsersListings() {
   const classes = useStyles();
-  let history = useHistory();
+
+  const history = useHistory();
 
   const userToken = useSelector((state) => state.userToken);
-  const currentUser = useSelector((state) => state.currentUser);
 
-  const [value, setValue] = React.useState(0);
+  const [searchString, setSearchString] = React.useState("");
+
   const [usersListings, setUsersListings] = React.useState([]);
 
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeSearch = (e) => {
+    e.preventDefault();
+    setSearchString(e.target.value);
+  };
+
+  
   React.useEffect(() => {
     getUserListing(userToken).then((listings) => {
       setUsersListings(listings);
     });
   }, [userToken]);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -70,21 +106,49 @@ export default function UsersListingsPage() {
   }
 
   return (
-    <div>
-      <h2>My Listings</h2>
-
-      <Container maxWidth="lg">
-        <Paper>
-          <AppBar position="static">
-            <Tabs value={value} onChange={handleChange}>
+      <Paper>
+        <AppBar
+          position="static"
+          style={{
+            backgroundColor: "white",
+            boxShadow: "none",
+            paddingRight: 20,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {<Tabs
+              value={value}
+              onChange={handleChange}
+              style={{ paddingTop: 20 }}
+            >
               <Tab label="Ongoing" />
               <Tab label="Past" />
-            </Tabs>
-          </AppBar>
-
-          <TabPanel value={value} index={0}>
-            <TableContainer component={Paper}>
-              <Table className={classes.table} aria-label="simple table">
+            </Tabs>}
+            <TextField
+              placeholder="Search"
+              value={searchString}
+              onChange={handleChangeSearch}
+              style={{ width: "30%" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="disabled" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+        </AppBar>
+        <TabPanel value={value} index={0}>
+            <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+              <Table stickyHeader className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow className={classes.head}>
                     <TableCell>Listing</TableCell>
@@ -134,8 +198,8 @@ export default function UsersListingsPage() {
           </TabPanel>
 
           <TabPanel value={value} index={1}>
-            <TableContainer component={Paper}>
-              <Table className={classes.table} aria-label="simple table">
+            <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+              <Table stickyHeader className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow className={classes.head}>
                     <TableCell>Listing</TableCell>
@@ -183,8 +247,6 @@ export default function UsersListingsPage() {
               </Table>
             </TableContainer>
           </TabPanel>
-        </Paper>
-      </Container>
-    </div>
+      </Paper>
   );
 }

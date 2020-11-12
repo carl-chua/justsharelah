@@ -24,13 +24,13 @@ export async function getUserByUsername(username, setUser) {
     .limit(1)
     .get();
 
-  if(snapshot.empty) {
+  if (snapshot.empty) {
     return false;
   }
 
   snapshot.forEach((doc) => {
     console.log("USERDATA: " + JSON.stringify(doc.data()));
-    setUser([doc.id,doc.data()]);
+    setUser([doc.id, doc.data()]);
   });
 
   return true;
@@ -60,6 +60,16 @@ export async function getUserById(userId, setUser) {
   console.log(snapshot.data());
 
   setUser(snapshot.data());
+}
+
+export async function getUserByIdForChat(userId) {
+  const snapshot = await firebase
+    .firestore()
+    .collection("users")
+    .doc(userId)
+    .get();
+
+  return snapshot.data();
 }
 
 export async function followUser(user1Id, user2Id) {
@@ -154,4 +164,11 @@ export function changePassword(newPassword) {
   }).catch(function(error) {
     // An error happened.
   });
+export async function getAllUsersExcept(username) {
+  const db = firebase
+    .firestore()
+    .collection("users")
+    .where("username", "!=", username);
+  const snapshot = await db.get();
+  return snapshot;
 }

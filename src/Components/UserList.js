@@ -9,8 +9,10 @@ import UserListCard from './UserListCard';
 const useStyles = makeStyles({
     listingList : {
         display : "flex",
+        width : "100%",
         flexWrap : "wrap",
         overflow : "auto",
+        maxHeight : 500,
     },
     noListText : {
         display : "flex",
@@ -27,7 +29,7 @@ export default function UserList({dataList, title, handleClose}) {
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
-        dataList.length > 0  ?
+        dataList && dataList.length > 0  ?
         <GridList 
             cols = {1}
             className = {styles.listingList}

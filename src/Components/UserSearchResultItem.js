@@ -7,6 +7,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -41,35 +43,37 @@ const useStyles = makeStyles({
 
 export default function UserSearchResultItem({ user }) {
   const styles = useStyles();
+  const history = useHistory();
+
+  const linkString = "/user/" + user.username;
 
   return (
-    <div className="UserSearchResultItem">
-      <Card borderBottom={1} className={styles.root}>
-        <CardActionArea onClick={() => console.log("clicked listingcard")}>
-          <CardContent>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              <Avatar
-                src={user.imageUrl}
-                style={{
-                  width: 60,
-                  height: 60,
-                }}
-              >
-                <span style={{ fontSize: "150%" }}>
-                  {user.username.charAt(0).toUpperCase()}
-                </span>
-              </Avatar>
-              <Box display="flex" flexDirection="column">
-                <p className={styles.nameText}>{user.username}</p>
-                <p className={styles.desText}>{user.country}</p>
-                <p className={styles.desText}>
-                  {user.listingsAsOP.length} Listings created
-                </p>
+    <Link to={linkString} style={{ textDecoration: "none" }}>
+      <div className="UserSearchResultItem">
+        <Card borderBottom={1} className={styles.root}>
+          <CardActionArea onClick={() => console.log("clicked listingcard")}>
+            <CardContent>
+              <Box display="flex" flexDirection="row" alignItems="center">
+                <Avatar
+                  src={user.imageUrl}
+                  style={{
+                    width: 60,
+                    height: 60,
+                  }}
+                >
+                  <span style={{ fontSize: "150%" }}>
+                    {user.username.charAt(0).toUpperCase()}
+                  </span>
+                </Avatar>
+                <Box display="flex" flexDirection="column">
+                  <p className={styles.nameText}>{user.username}</p>
+                  <p className={styles.desText}>{user.country}</p>
+                </Box>
               </Box>
-            </Box>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </div>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </div>
+    </Link>
   );
 }

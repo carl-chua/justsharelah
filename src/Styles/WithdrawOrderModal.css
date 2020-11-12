@@ -1,0 +1,48 @@
+.WithdrawOrderModalForm .Item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+}
+
+.WarningMessage {
+  display: flex;
+  justify-content: center;
+}
+
+.WithdrawOrderModalForm .ConfirmButtonDiv {
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.WithdrawOrderModalForm .ConfirmButtonDiv .ConfirmButton {
+  background-color: #cc7f5d;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  height: 50px;
+  width: 288px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.WithdrawOrderModalForm .ConfirmButtonDiv .CancelButton {
+  background-color: #b1b1b1;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  height: 50px;
+  width: 288px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

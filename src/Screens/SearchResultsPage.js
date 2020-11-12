@@ -4,7 +4,7 @@ import SearchSideBar from "../Components/SearchSideBar";
 import Album from "../Components/Album";
 import UserSearchResult from "../Components/UserSearchResult";
 import { getAllListings, searchListings } from "../API/Listings";
-import { getAllUsers } from "../API/Users";
+import { getAllUsers, getAllUsersExcept } from "../API/Users";
 import { useSelector, useDispatch } from "react-redux";
 import "../Styles/SearchResultsPage.css";
 import ListingSearchResult from "../Components/ListingSearchResult";
@@ -14,11 +14,13 @@ function SearchResultsPage({ history }) {
     useSelector((state) => state.searchString)
   );
   const [filter, setFilter] = useState("ALL");
-  const [listingResults, setListingResults] = useState([]);
-  const [userResults, setUserResults] = useState([]);
+  const [listingResults, setListingResults] = useState();
+  const [userResults, setUserResults] = useState();
+
+  const currentUser = useSelector((state) => state.currentUser);
 
   useEffect(() => {
-    getAllUsers().then((querySnapshot) => {
+    getAllUsersExcept(currentUser.username).then((querySnapshot) => {
       let temp = [];
       querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
       setUserResults(
@@ -45,7 +47,6 @@ function SearchResultsPage({ history }) {
 
   return (
     <div className="SearchResultsPage">
-      <NavBar history={history} />
       <div className="Content">
         <div className="SearchSideBar">
           <SearchSideBar

@@ -18,6 +18,14 @@ import Container from "@material-ui/core/Container";
 
 import { useSelector } from "react-redux";
 import { getUserListing } from "../API/Listings";
+import { Button, InputAdornment, TextField } from "@material-ui/core";
+
+import SearchIcon from "@material-ui/icons/Search";
+import { getUserOrders } from "../API/OrderRecord";
+
+import Moment from "moment";
+import OrderRow from "../Components/OrderRow";
+import OrderCardModal from "../Components/OrderCardModal";
 
 const useStyles = makeStyles({
   table: {
@@ -25,29 +33,61 @@ const useStyles = makeStyles({
   },
   head: {},
   root: {
-    flexGrow: 1,
+    paddingTop: "2%",
+  },
+  tabBar: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  tabText: {
+    fontSize: 25,
+    fontWeight: "400",
+  },
+  tabDivider: {
+    fontWeight: "lighter",
+    fontSize: 30,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 10,
   },
 });
 
-export default function UsersListingsPage() {
+export default function UsersListingsPage2() {
   const classes = useStyles();
-  let history = useHistory();
+
+  const history = useHistory();
 
   const userToken = useSelector((state) => state.userToken);
-  const currentUser = useSelector((state) => state.currentUser);
+
+  const [searchString, setSearchString] = React.useState("");
+
+  const [usersListings, setUsersListings] = React.useState([]);
+
+  const [view, setView] = React.useState(1)
 
   const [value, setValue] = React.useState(0);
-  const [usersListings, setUsersListings] = React.useState([]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+
+  function handleNavigate() {
+      history.push("/ordersListingPage")
+  }
+
+  const handleChangeSearch = (e) => {
+    e.preventDefault();
+    setSearchString(e.target.value);
+  };
 
   React.useEffect(() => {
     getUserListing(userToken).then((listings) => {
       setUsersListings(listings);
     });
   }, [userToken]);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -70,18 +110,76 @@ export default function UsersListingsPage() {
   }
 
   return (
-    <div>
-      <h2>My Listings</h2>
-
-      <Container maxWidth="lg">
+    <Container maxWidth="lg" className={classes.root}>
+      <div className={classes.tabBar}>
+        <Button>
+          <span
+            className={classes.tabText}
+            style={
+              view === 1
+                ? { textDecorationLine: "underline", fontWeight: "bold" }
+                : {}
+            }
+          >
+            MY LISTINGS
+          </span>
+        </Button>
+        <span className={classes.tabDivider}>{"|"}</span>
+        <Button onClick={handleNavigate}>
+          <span
+            className={classes.tabText}
+            style={
+              view === 2
+                ? { textDecorationLine: "underline", fontWeight: "bold" }
+                : {}
+            }
+          >
+            MY ORDERS
+          </span>
+        </Button>
+      </div>
         <Paper>
-          <AppBar position="static">
-            <Tabs value={value} onChange={handleChange}>
-              <Tab label="Ongoing" />
-              <Tab label="Past" />
-            </Tabs>
+          <AppBar
+            position="static"
+            style={{
+              backgroundColor: "white",
+              boxShadow: "none",
+              paddingRight: 20,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              {
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  style={{ paddingTop: 20 }}
+                >
+                  <Tab label="Ongoing" />
+                  <Tab label="Past" />
+                </Tabs>
+              }
+              <TextField
+                placeholder="Search"
+                value={searchString}
+                onChange={handleChangeSearch}
+                style={{ width: "30%" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="disabled" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
           </AppBar>
-
           <TabPanel value={value} index={0}>
             <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="simple table">
@@ -184,7 +282,8 @@ export default function UsersListingsPage() {
             </TableContainer>
           </TabPanel>
         </Paper>
-      </Container>
-    </div>
+    </Container>
   );
 }
+
+//<OrderCardModal show = {showModal} handleClose = {handleCloseModal} data = {modalData} dataId = {modalDataId}/>

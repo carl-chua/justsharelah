@@ -4,13 +4,12 @@ import { demoListener, demoPost, demoFetch } from "./API/DemoAPI";
 import DemoPage from "./DemoPage";
 import { useSelector, useDispatch } from "react-redux";
 import { demoHeader, reSignIn, currentUser as currUser } from "./Redux/actions";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { AuthProvider } from "./Auth";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import AuthProvider from "./Auth";
 import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
-import Chat from "./Components/Chat";
 import UserPage from "./Screens/UserPage";
 import SettingsPage from "./Screens/SettingsPage";
 import { Container } from "@material-ui/core";
@@ -28,14 +27,22 @@ import BabiesKids from "./Components/subpages/BabiesKids";
 import Others from "./Components/subpages/Others";
 
 import UsersListingsPage from "./Screens/UsersListingsPage";
+import UsersListingsPage2 from "./Screens/UsersListingsPage2";
+import UsersListingPage from "./Screens/UsersListingPage";
+import OrdersListingPage from "./Screens/OrdersListingPage";
+import ChatPage from "./Components/ChatPage";
+import { useAlert } from "react-alert";
+import WalletPage from "./Screens/WalletPage";
 
 function App() {
+  const userToken = useSelector((state) => state.userToken);
 
-  const userToken = useSelector(state => state.userToken);
+  const dispatch = useDispatch();
+  const alert = useAlert();
 
   return (
-    <div className="App" style={{height : "100vh"}}>
-      <AuthProvider>
+    <div className="App" style={{ height: "100vh", overflow: "hidden" }}>
+      <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
         {userToken && <NavBar/>}
           <div>
@@ -58,6 +65,56 @@ function App() {
             <Route exact path="/categories/Babies&Kids" component={BabiesKids} />
             <Route exact path="/categories/Others" component={Others} />
 
+          {userToken && <NavBar />}
+          <div style={{ height: "100%", overflow: "scroll" }}>
+            <Switch>
+              <PrivateRoute exact path="/" component={HomePage} />
+              <Route exact path="/login" component={LogIn} />
+              <Route exact path="/signup" component={SignUp} />
+              <PrivateRoute exact path="/user/:username" component={UserPage} />
+              <PrivateRoute
+                exact
+                path="/settings/:username"
+                component={SettingsPage}
+              />
+              <PrivateRoute exact path="/chat/:username" component={ChatPage} />
+              <PrivateRoute
+                exact
+                path="/listingDetails/:id"
+                component={ListingDetails}
+              />
+              <PrivateRoute
+                exact
+                path="/createListing"
+                component={CreateListing}
+              />
+              <PrivateRoute
+                exact
+                path="/search"
+                component={SearchResultsPage}
+              />
+              <PrivateRoute
+                exact
+                path="/usersListingsPage"
+                component={UsersListingsPage}
+              />
+              <PrivateRoute
+                exact
+                path="/usersListingPage/:listingId"
+                component={UsersListingPage}
+              />
+              <PrivateRoute
+                exact
+                path="/ordersListingPage"
+                component={OrdersListingPage}
+              />
+              <PrivateRoute
+                exact
+                path="/usersListingsPage2"
+                component={UsersListingsPage2}
+              />
+              <PrivateRoute exact path="/myWallet" component={WalletPage} />
+            </Switch>
           </div>
         </Router>
       </AuthProvider>
