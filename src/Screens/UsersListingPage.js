@@ -75,7 +75,7 @@ export default function UsersListingPage() {
             component="button"
             variant="body2"
             onClick={() => {
-              history.push("/usersListingsPage/");
+              history.goBack();
             }}
           >
             <ArrowBackIcon />

@@ -24,6 +24,7 @@ import UsersListingPage from "./Screens/UsersListingPage";
 import OrdersListingPage from "./Screens/OrdersListingPage";
 import ChatPage from "./Components/ChatPage";
 import { useAlert } from "react-alert";
+import WalletPage from "./Screens/WalletPage";
 
 function App() {
   const userToken = useSelector((state) => state.userToken);
@@ -77,6 +78,11 @@ function App() {
               exact
               path="/usersListingsPage2"
               component={UsersListingsPage2}
+            />
+            <PrivateRoute
+              exact
+              path="/myWallet"
+              component={WalletPage}
             />
           </Switch>
         </Router>
