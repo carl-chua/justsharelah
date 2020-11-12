@@ -146,8 +146,8 @@ export default function OrdersListing() {
     </AppBar>
 
     <TabPanel value={value} index={0}>
-      <TableContainer component={Paper}>
-        <Table className={styles.table} aria-label="simple table">
+      <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+        <Table stickyHeader className={styles.table} aria-label="simple table">
           <TableHead>
             <TableRow className={styles.head}>
               <TableCell>Listing Title</TableCell>
@@ -167,8 +167,8 @@ export default function OrdersListing() {
     </TabPanel>
 
     <TabPanel value={value} index={1}>
-    <TableContainer component={Paper}>
-        <Table className={styles.table} aria-label="simple table">
+    <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
+        <Table stickyHeader className={styles.table} aria-label="simple table">
           <TableHead>
             <TableRow className={styles.head}>
               <TableCell>Listing Title</TableCell>
