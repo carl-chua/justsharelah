@@ -1,5 +1,6 @@
 import { Grid, Box, Button, Modal, Card} from "@material-ui/core";
 import React from "react";
+import firebase from "../API/Firebase";
 
 import UserCard from "../Components/UserCard";
 import { makeStyles } from '@material-ui/core/styles';
@@ -64,6 +65,13 @@ const useStyles = makeStyles({
         justifyContent: "space-between", 
         width : "100%", 
         alignItems : "center",
+    },
+    button: {
+        backgroundColor: "#CC7F5D",
+        color: "white",
+        width: "10vw",
+        minHeight: "6vh",
+        marginTop: "10%",
     }
 })
 
@@ -111,6 +119,11 @@ export default function UserPage({history}) {
 
     function closeReviewModal() {
         setShowReviewModal(false);
+    }
+
+    function handleEditProfile() {
+        console.log("GOING TO EDIT PROFILE:");
+        history.push(`/settings`);
     }
 
     React.useEffect(() => {
@@ -188,6 +201,13 @@ export default function UserPage({history}) {
                         />
 
                     </Box>
+                    <Button 
+                        variant="contained" 
+                        className = {styles.button}
+                        onClick = {handleEditProfile}
+                        >
+                        Edit Profile
+                    </Button>
                 </Grid>
                 <Grid
                     item
