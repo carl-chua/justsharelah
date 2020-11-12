@@ -7,7 +7,6 @@ import { sendMessage, messagesListener } from "../API/Chat";
 import { getUserByIdForChat } from "../API/Users";
 import { DateSeparator } from "stream-chat-react";
 import "../Styles/ChatBox.css";
-import { getOrderRecordByListingIdAndUserId } from "../API/OrderRecord";
 
 const styles = {
   chat: {
@@ -24,17 +23,13 @@ const styles = {
 function ChatBox({
   selectedChat,
   chatUser,
-  showCreateOrderModal,
+  orderRecord,
   openCreateOrderModal,
-  closeCreateOrderModal,
-  showEditOrderModal,
   openEditOrderModal,
-  closeEditOrderModal,
+  openWithdrawOrderModal,
 }) {
   const [messages, setMessages] = useState([]);
   const [tempMessages, setTempMessages] = useState([]);
-
-  const [orderRecord, setOrderRecord] = useState();
 
   useEffect(() => {
     console.log(selectedChat[0]);
@@ -56,17 +51,6 @@ function ChatBox({
       })
     );
   }, [tempMessages]);
-
-  useEffect(() => {
-    getOrderRecordByListingIdAndUserId(
-      selectedChat[1].listing,
-      chatUser.id
-    ).then((querySnapshot) => {
-      var temp = {};
-      querySnapshot.forEach((doc) => (temp = doc.data()));
-      setOrderRecord(temp);
-    });
-  }, [selectedChat]);
 
   var dates = {
     convert: function (d) {
@@ -144,9 +128,17 @@ function ChatBox({
               Order
             </button>
           ) : (
-            <button className="OrderButton" onClick={openCreateOrderModal}>
-              Edit Order
-            </button>
+            <div>
+              <button
+                className="WithdrawOrderButton"
+                onClick={openWithdrawOrderModal}
+              >
+                Withdraw Order
+              </button>
+              <button className="OrderButton" onClick={openEditOrderModal}>
+                Edit Order
+              </button>
+            </div>
           )}
         </Toolbar>
       </AppBar>
