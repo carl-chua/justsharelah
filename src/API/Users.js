@@ -165,6 +165,7 @@ export function changePassword(newPassword) {
     // An error happened.
   });
 }
+
 export async function getAllUsersExcept(username) {
   const db = firebase
     .firestore()
