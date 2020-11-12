@@ -18,6 +18,10 @@ import { getChatGroups } from "../API/Chat";
 import "../Styles/Chat.css";
 import Loading from "./Loading";
 import CreateOrderModal from "../Components/CreateOrderModal";
+import { getOrderRecordByListingIdAndUserId } from "../API/OrderRecord";
+import { getListingById } from "../API/Listings";
+import EditOrderModal from "./EditOrderModal";
+import WithdrawOrderModal from "./WithdrawOrderModal";
 
 const styles = {
   container: {
@@ -57,12 +61,16 @@ const styles = {
 function Chat({ history }) {
   const [chatGroups, setChatGroups] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
+  const [selectedListing, setSelectedListing] = useState({});
 
   const userToken = useSelector((state) => state.userToken);
   const currentUser = useSelector((state) => state.currentUser);
 
   const [showCreateOrderModal, setShowCreateOrderModal] = useState(false);
   const [showEditOrderModal, setShowEditOrderModal] = useState(false);
+  const [showWithdrawOrderModal, setShowWithdrawOrderModal] = useState(false);
+
+  const [orderRecord, setOrderRecord] = useState();
 
   function openCreateOrderModal() {
     setShowCreateOrderModal(true);
@@ -78,6 +86,14 @@ function Chat({ history }) {
 
   function closeEditOrderModal() {
     setShowEditOrderModal(false);
+  }
+
+  function openWithdrawOrderModal() {
+    setShowWithdrawOrderModal(true);
+  }
+
+  function closeWithdrawOrderModal() {
+    setShowWithdrawOrderModal(false);
   }
 
   const chatUser = {
@@ -96,6 +112,36 @@ function Chat({ history }) {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (selectedChat.length !== 0) {
+      getOrderRecordByListingIdAndUserId(
+        selectedChat[1].listing,
+        chatUser.id
+      ).then((querySnapshot) => {
+        var temp = [];
+        querySnapshot.forEach((doc) => (temp = [doc.id, doc.data()]));
+        setOrderRecord(temp);
+      });
+    }
+  }, [
+    selectedChat,
+    showCreateOrderModal,
+    showEditOrderModal,
+    showWithdrawOrderModal,
+  ]);
+
+  useEffect(() => {
+    if (selectedChat.length !== 0) {
+      getListingById(selectedChat[1].listing).then((querySnapshot) => {
+        if (querySnapshot) {
+          var temp = {};
+          temp = querySnapshot.data();
+          setSelectedListing(temp);
+        }
+      });
+    }
+  }, [selectedChat]);
 
   async function handleChangeChat(data) {
     setSelectedChat(data);
@@ -152,17 +198,25 @@ function Chat({ history }) {
               <ChatBox
                 selectedChat={selectedChat}
                 chatUser={chatUser}
-                showCreateOrderModal={showCreateOrderModal}
+                orderRecord={orderRecord}
                 openCreateOrderModal={openCreateOrderModal}
-                closeCreateOrderModal={closeCreateOrderModal}
-                showEditOrderModal={showEditOrderModal}
                 openEditOrderModal={openEditOrderModal}
-                closeEditOrderModal={closeEditOrderModal}
+                openWithdrawOrderModal={openWithdrawOrderModal}
               />
               <CreateOrderModal
                 show={showCreateOrderModal}
                 handleClose={closeCreateOrderModal}
                 listingId={selectedChat[1].listing}
+              />
+              <EditOrderModal
+                show={showEditOrderModal}
+                handleClose={closeEditOrderModal}
+                orderRecord={orderRecord}
+              />
+              <WithdrawOrderModal
+                show={showWithdrawOrderModal}
+                handleClose={closeWithdrawOrderModal}
+                orderRecord={orderRecord}
               />
             </>
           ) : (

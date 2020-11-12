@@ -29,7 +29,7 @@
 
 .CreateOrderModalForm .ConfirmButtonDiv {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: baseline;
   margin-bottom: 10px;
 }
@@ -44,7 +44,22 @@
   height: 50px;
   width: 288px;
   border-radius: 5px;
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.CreateOrderModalForm .ConfirmButtonDiv .CancelButton {
+  background-color: #b1b1b1;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  height: 50px;
+  width: 288px;
+  border-radius: 5px;
+  display: flex;
   align-items: center;
   justify-content: center;
 }

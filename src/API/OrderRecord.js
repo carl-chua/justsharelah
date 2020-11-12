@@ -42,13 +42,11 @@ export async function addOrder(items, listingId) {
   try {
     await firebase.firestore().runTransaction(async (tn) => {
       var userDoc = await tn.get(userRef);
-      console.log("DEBUG LINE 1");
       var listingDoc = await tn.get(listingRef);
-      console.log("DEBUG LINE 2");
 
       tn.set(newOrderRef, {
         listingId: listingId,
-        hasPaid: false,
+        paymentStatus: "UNPAID",
         datePaid: null,
         price: null,
         receiptImage: null,
@@ -86,6 +84,117 @@ export async function addOrder(items, listingId) {
   }
 }
 
+export async function getOrderRecordItems(orderRecordId) {
+  const snapshot = await db.doc(orderRecordId).collection("items").get();
+
+  return snapshot;
+}
+
+export async function deleteOrderRecord(orderRecordId) {
+  var batch = firebase.firestore().batch();
+
+  const existingOrdersItemsRef = firebase
+    .firestore()
+    .collection("orderRecords")
+    .doc(orderRecordId)
+    .collection("items");
+
+  const orderRecordRef = firebase
+    .firestore()
+    .collection("orderRecords")
+    .doc(orderRecordId);
+
+  try {
+    await existingOrdersItemsRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+    });
+
+    await batch.delete((await orderRecordRef.get()).ref);
+
+    await batch.commit();
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function editOrder(items, orderRecordId) {
+  var batch = firebase.firestore().batch();
+
+  var existingOrdersItemsRef = firebase
+    .firestore()
+    .collection("orderRecords")
+    .doc(orderRecordId)
+    .collection("items");
+
+  try {
+    await existingOrdersItemsRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+    });
+
+    for (const item of items) {
+      var newOrderItem = existingOrdersItemsRef.doc();
+
+      await batch.set(newOrderItem, {
+        itemName: item.itemName,
+        itemQty: item.itemQty,
+        itemPrice: null,
+        date: new Date(),
+      });
+    }
+
+    await batch.commit();
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+
+  /*try {
+    await firebase.firestore().runTransaction(async (tn) => {
+      tn.get(existingOrdersItemsRef).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          tn.delete(doc.ref);
+        });
+      });
+
+      for (const item of items) {
+        var newOrderItem = existingOrdersItemsRef.doc();
+        tn.set(newOrderItem, {
+          itemName: item.itemName,
+          itemQty: item.itemQty,
+          itemPrice: null,
+          date: new Date(),
+        });
+      }
+    });
+    return true;
+  } catch (err) {
+    console.log("Editing err: " + err);
+    return false;
+  }*/
+
+  /*existingOrdersItemsRef.listDocuments().then((val) => {
+    val.map((val) => {
+      val.delete();
+    });
+  });
+
+  for (const item of items) {
+    existingOrdersItemsRef.add({
+      itemName: item.itemName,
+      itemQty: item.itemQty,
+      itemPrice: null,
+      date: new Date(),
+    });
+  }*/
+}
+
 export async function getOrderRecordByListingIdAndUserId(listingId, userId) {
   const snapshot = await db
     .where("listingId", "==", listingId)
@@ -101,18 +210,18 @@ export async function getOrderRecordsByListingId(listingId) {
 }
 
 export async function getOrderItems(orderId, setItems) {
-  let temp = []
+  let temp = [];
 
   var snapshot = await firebase
-  .firestore()
-  .collection("orderRecords")
-  .doc(orderId)
-  .collection("items")
-  .get()
+    .firestore()
+    .collection("orderRecords")
+    .doc(orderId)
+    .collection("items")
+    .get();
 
   snapshot.forEach((doc) => {
-    temp.push([doc.id, doc.data()])
-  })
+    temp.push([doc.id, doc.data()]);
+  });
 
   setItems(temp);
 }
@@ -161,9 +270,7 @@ export async function getOrderItemsListener(orderId, setItems) {
     });
 
   return unsubscribe;
-
 }
-
 
 export async function getUserOrders(userId, setOrders) {
   let unsubscribe = await firebase

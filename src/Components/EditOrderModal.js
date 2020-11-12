@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import firebase from "../API/Firebase";
 import Modal from "@material-ui/core/Modal";
@@ -16,7 +16,7 @@ import { sizing } from "@material-ui/system";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import "../Styles/CreateOrderModal.css";
 import { useAlert } from "react-alert";
-import { addOrder } from "../API/OrderRecord";
+import { editOrder, getOrderRecordItems } from "../API/OrderRecord";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -69,7 +69,7 @@ const useStyles = makeStyles({
   },
 });
 
-function CreateOrderModal({ show, handleClose, listingId }) {
+function EditOrderModal({ show, handleClose, orderRecord }) {
   const alert = useAlert();
   const styles = useStyles();
   const theme = useTheme();
@@ -78,16 +78,31 @@ function CreateOrderModal({ show, handleClose, listingId }) {
   const currentUser = useSelector((state) => state.currentUser);
   const history = useHistory();
 
-  const [items, setItems] = useState([{ itemName: "", itemQty: "" }]);
+  const [items, setItems] = useState([]);
 
-  /*handleItemNameChange = (id) => (evt) => {
-    const newItems = items.map((item, iId) => {
-      if (id !== iId) return item;
-      return { ...item, itemName: evt.target.value };
-    });
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
 
-    setItems(newItems);
-  };*/
+  useEffect(() => {
+    if (!isEmpty(orderRecord)) {
+      getOrderRecordItems(orderRecord[0]).then((querySnapshot) => {
+        var temp = [];
+        querySnapshot.forEach((doc) => {
+          var item = {
+            itemName: doc.data().itemName,
+            itemQty: doc.data().itemQty,
+          };
+
+          temp.push(item);
+        });
+        setItems(temp);
+      });
+    }
+  }, [orderRecord]);
 
   function handleItemNameChange(id, evt) {
     (() => {
@@ -121,29 +136,18 @@ function CreateOrderModal({ show, handleClose, listingId }) {
       quantityList.push(item.itemQty);
     });
 
-    async function createOrder() {
-      let result = await addOrder(items, listingId);
-      console.log("RESULT IS: " + result);
+    async function updateOrder() {
+      let result = await editOrder(items, orderRecord[0]);
       if (result) {
-        setItems([{ itemName: "", itemQty: "" }]);
-        alert.show("Order added successfully!");
+        alert.show("Order edited successfully!");
+        //history.push("/");
         handleClose();
       } else {
-        console.log("TFAILED TO ADD ORDER");
+        console.log("Failed to edit order");
       }
     }
 
-    createOrder();
-    //addOrder(items, listingId);
-    //let result = await addOrder(items, listingId);
-    //console.log("RESULT IS: " + result)
-    //history.push(`/chat/${currentUser.username}`);
-    /*if(result) {
-      alert.show("Order added successfully!");
-      history.push("/");
-    } else {
-      console.log("TFAILED TO ADD ORDER")
-    }*/
+    updateOrder();
   };
 
   function handleAddItem() {
@@ -178,7 +182,7 @@ function CreateOrderModal({ show, handleClose, listingId }) {
                 color: "#ffffff",
               }}
             >
-              ORDER
+              EDIT ORDER
             </h1>
           </CardContent>
 
@@ -228,13 +232,7 @@ function CreateOrderModal({ show, handleClose, listingId }) {
               </p>
             </button>
             <div className="ConfirmButtonDiv">
-              <button
-                className="CancelButton"
-                onClick={() => {
-                  setItems([{ itemName: "", itemQty: "" }]);
-                  handleClose();
-                }}
-              >
+              <button className="CancelButton" onClick={handleClose}>
                 <h2>CANCEL</h2>
               </button>
               <button className="ConfirmButton" type="submit">
@@ -248,4 +246,4 @@ function CreateOrderModal({ show, handleClose, listingId }) {
   );
 }
 
-export default CreateOrderModal;
+export default EditOrderModal;
