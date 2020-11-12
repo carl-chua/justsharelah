@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "5%",
     padding: "2%",
     maxHeight: "75vh", 
-    minWidth: "60VW",
+    minWidth: "65VW",
     overflow: "auto",
     borderRadius : 16,
     borderColor : "#BEBEBE",
@@ -111,7 +111,7 @@ export default function VerticalTabs() {
           aria-label="Vertical tabs example"
           className={classes.tabs}
         >
-          <Tab label="My Profile" {...a11yProps(0)} />
+          <Tab label="Edit Profile" {...a11yProps(0)} />
           <Tab label="Change Password" {...a11yProps(1)} />
           
         </Tabs>

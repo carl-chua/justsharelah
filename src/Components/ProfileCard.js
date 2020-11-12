@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Paper from '@material-ui/core/Paper';
 
+import Grid from '@material-ui/core/Grid';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import "../Styles/Styles.css";
@@ -28,21 +29,15 @@ const useStyles = makeStyles({
     data: {
         fontSize: 20,
     },
-    form: {
-        margin: "2%",
-        width: "60vw",
-    },
-    avatar: {
-      marginBottom : "2%",
-      marginLeft: "10%",
-    },
+
     textfield: {
-        minWidth: "50vw",
-        margin: "3%",
+      margin: "3%",
+      minWidth: '60vw',
+      textAlign: "start"
     },
     dropdown: {
         margin: "3%",
-        minWidth: '50vw',
+        minWidth: '60vw',
         textAlign: "start"
     },
     button: {
@@ -51,7 +46,10 @@ const useStyles = makeStyles({
       width: "15vw",
       minHeight: "6vh",
       marginBottom: "2%",
-    }
+    },
+    input: {
+        display: 'none'
+    },
 })
 
 const countries = [
@@ -181,36 +179,83 @@ export default function Profile({user}) {
             style = {{
                 display : "flex",
                 flexDirection : "column",
-                justifyContent : "center",
+                justifyContent : "space-between",
                 alignItems: "center",
             }}
         >
-            <form className={classes.form} noValidate autoComplete="off">
-            <div>
-                <Avatar 
-                    src = {imgUrl} 
-                    className = {classes.avatar}
-                    style = {{
-                        width:120,
-                        height:120,
-                        backgroundColor: '#7AA18A',
+          <h1>Edit Profile</h1>
+            <form noValidate autoComplete="off">
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={4}
+                  style = {{
+                    display : "flex",
+                    flexDirection : "column",
+                    alignItems: "center",
+                    fontSize: '1.6rem',
+                    fontWeight: '800',
+                  }}
+                >
+                  Profile Photo
+                  <Avatar 
+                      src = {imgUrl} 
+                      style = {{
+                          width:140,
+                          height:140,
+                          backgroundColor: '#7AA18A',
+                          marginTop: '12%',
                         }}
-                    >
-                    <span style = {{fontSize:"300%"}}>{user.username.charAt(0).toUpperCase()}</span>
-                </Avatar>
-                <input
-                accept="image/*"
-                className={classes.input}
-                id="contained-button-file"
-                multiple
-                type="file"
-                label="Upload photos"
-                value={img}
-                onChange={useHandleImg}
-                
-                />
-              
-              </div>
+                      >
+                      <span style = {{fontSize:"300%"}}>{user.username.charAt(0).toUpperCase()}</span>
+                  </Avatar>
+                </Grid>
+                <Grid item xs={12} sm={6}
+                  style = {{
+                    display: 'flex',
+                    flexDirection : 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-end',
+                    textAlign: 'left',
+                    }}
+                >
+                  <div
+                    style = {{
+                    marginBottom: '5%',
+                    }}
+                  >
+                  Clear frontal face photos are an important way for buyers and sellers to learn about each other.
+                  </div>
+                    <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="contained-button-file"
+                    multiple
+                    type="file"
+                    label="Upload a photo of your listing"
+                    value={img}
+                    onChange={useHandleImg}
+                    
+                    />
+                    <label htmlFor="contained-button-file">
+                    <Button variant="contained" component="span" className={classes.button}>
+                        Upload a Photo
+                    </Button>
+                    </label>
+                </Grid>
+
+                <Grid item xs={12} sm={4}
+                  style = {{
+                    display : "flex",
+                    flexDirection : "column",
+                    justifyContent : "flex-start",
+                    marginTop: '6%',
+                    marginBottom: '2%',
+                    fontSize: '1.6rem',
+                    fontWeight: '800',
+                  }}
+                >
+              Personal Details
+              </Grid>
+              </Grid>
                 <div>
                     <TextField
                     label="Username"
@@ -255,6 +300,8 @@ export default function Profile({user}) {
                       </option>
                     ))}
                     </TextField>
+                    </div>
+                    <div>
                     <TextField
                     id="outlined-select-currency-native"
                     select
@@ -274,9 +321,10 @@ export default function Profile({user}) {
                       </option>
                     ))}
                     </TextField>
-                    
                 </div>
+
             </form>
+            
               <Button 
               variant="contained" 
               className = {classes.button}
