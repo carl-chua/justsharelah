@@ -44,27 +44,6 @@ function App() {
     <div className="App" style={{ height: "100vh", overflow: "hidden" }}>
       <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
-        {userToken && <NavBar/>}
-          <div>
-            <PrivateRoute exact path="/" component={HomePage} />
-            <Route exact path="/login" component={LogIn} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/user/:username" component={UserPage} />
-            <Route exact path="/settings" component={SettingsPage} />
-            <Route exact path="/chat" component={Chat} />
-            <Route exact path="/listingDetails" component={ListingDetails} />
-            <Route exact path="/createListing" component={CreateListing} />
-            <Route exact path="/search" component={SearchResultsPage} />
-            <Route exact path="/usersListingsPage" component={UsersListingsPage} />
-            <Route exact path="/categories/Electronics" component={Electronics} />
-            <Route exact path="/categories/Accessories" component={Accessories} />
-            <Route exact path="/categories/Apparel" component={Apparel} />
-            <Route exact path="/categories/Education" component={Education} />
-            <Route exact path="/categories/Living" component={Living} />
-            <Route exact path="/categories/Beauty" component={Beauty} />
-            <Route exact path="/categories/Babies&Kids" component={BabiesKids} />
-            <Route exact path="/categories/Others" component={Others} />
-
           {userToken && <NavBar />}
           <div style={{ height: "100%", overflow: "scroll" }}>
             <Switch>

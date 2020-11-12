@@ -16,7 +16,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/LogIn.css";
 
-import loginImage from "../Media/Capture.PNG";
+import loginImage from "../images/loginImage.svg";
+
 
 import { signIn, currentUser as currUser } from "../Redux/actions";
 import { useDispatch, useSelector } from "react-redux";

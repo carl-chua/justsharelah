@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import firebase from "./API/Firebase";
 
 import { signIn, signOut, currentUser } from "./Redux/actions";
@@ -73,14 +73,6 @@ const AuthProvider = ({ children, dispatch, alert }) => {
             return;
           }
 
-  useEffect(() => {
-      firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
-      setPending(false);
-
-
-    });
-  }, []);
           await firebase
             .auth()
             .createUserWithEmailAndPassword(data.email, data.password);

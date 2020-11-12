@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import firebase from "../API/Firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { reduxSetSearchString, reduxSetCategory } from "../Redux/actions";
-import { reduxSetSearchString, signOut } from "../Redux/actions";
+import {
+  reduxSetSearchString,
+  reduxSetCategory,
+  signOut,
+} from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
@@ -14,7 +17,7 @@ import ChatTwoToneIcon from "@material-ui/icons/ChatTwoTone";
 import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
 import PersonOutlineTwoToneIcon from "@material-ui/icons/PersonOutlineTwoTone";
 
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar() {
+export default function NavBar() {
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
@@ -55,7 +58,6 @@ function NavBar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
 
   React.useEffect(() => {
     const unsubscribe = getUserByIdListener(userToken, setCurrentUser);
@@ -103,6 +105,8 @@ function NavBar() {
   function handleCategoryClick(category) {
     if (firebase.auth().currentUser != null) {
       history.push(`/categories/${category}`);
+    }
+  }
   function handleChatClick() {
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push(`/chat/${currentUser.username}`);
@@ -200,21 +204,33 @@ function NavBar() {
             <AccountBalanceWalletTwoToneIcon fontSize="large" />
           </IconButton>
 
-          <IconButton onClick={() => handleProfileClick()}>
+          <IconButton onClick={handleProfileMenuOpen}>
             <PersonOutlineTwoToneIcon fontSize="large" />
           </IconButton>
         </div>
       </div>
       <div className="NavBarBottom">
         <div className="CategoryButtons">
-          <button onClick= {() => handleCategoryClick('Apparel')}>APPAREL</button>
-          <button onClick= {() => handleCategoryClick('Electronics')}> ELECTRONICS</button>
-          <button onClick= {() => handleCategoryClick('Accessories')}> ACCESSORIES</button>
-          <button onClick= {() => handleCategoryClick('Education')}>EDUCATION</button>
-          <button onClick= {() => handleCategoryClick('Beauty')}>BEAUTY</button>
-          <button onClick= {() => handleCategoryClick('Living')}>LIVING</button>
-          <button onClick= {() => handleCategoryClick('Babies&Kids')}>BABIES & KIDS</button>
-          <button onClick= {() => handleCategoryClick('Others')}>OTHERS</button>
+          <button onClick={() => handleCategoryClick("Apparel")}>
+            APPAREL
+          </button>
+          <button onClick={() => handleCategoryClick("Electronics")}>
+            {" "}
+            ELECTRONICS
+          </button>
+          <button onClick={() => handleCategoryClick("Accessories")}>
+            {" "}
+            ACCESSORIES
+          </button>
+          <button onClick={() => handleCategoryClick("Education")}>
+            EDUCATION
+          </button>
+          <button onClick={() => handleCategoryClick("Beauty")}>BEAUTY</button>
+          <button onClick={() => handleCategoryClick("Living")}>LIVING</button>
+          <button onClick={() => handleCategoryClick("Babies&Kids")}>
+            BABIES & KIDS
+          </button>
+          <button onClick={() => handleCategoryClick("Others")}>OTHERS</button>
         </div>
         <button className="UploadListing">UPLOAD LISTING</button>
       </div>
@@ -222,5 +238,3 @@ function NavBar() {
     </div>
   );
 }
-
-export default NavBar;

@@ -14,7 +14,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/SignUp.css";
-import loginImage from "../Media/Capture.PNG";
+import loginImage from "../images/loginImage.svg";
 import { useAlert } from "react-alert";
 import { AuthContext } from "../Auth";
 

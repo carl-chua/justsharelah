@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
     minWidth: 350,
     maxWidth: 800,
-    maxHeight: "80%",
+    maxHeight: "100%",
     overflow: "scroll",
   },
   cardContent: {
