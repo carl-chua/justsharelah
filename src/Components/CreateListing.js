@@ -125,7 +125,7 @@ function CreateListing({ history }) {
         setShopLink(event.target.value);
     };
 
-    const [photoId, setPhotoId] = React.useState('');
+    const [photoId, setPhotoId] = React.useState('noimage.JPG');
 
     // const handleImg = async (e) => {
     function useHandleImg (e) {
