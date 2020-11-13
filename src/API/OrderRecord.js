@@ -1,4 +1,6 @@
 import firebase from "./Firebase.js";
+import { addNotification } from "./Notification";
+import { getUserById2 } from "./Users";
 
 const db = firebase.firestore().collection("orderRecords");
 
@@ -30,7 +32,7 @@ const db = firebase.firestore().collection("orderRecords");
     });
 }*/
 
-export async function addOrder(items, listingId) {
+export async function addOrder(items, listingId, currentUserUsername) {
   var newOrderRef = firebase.firestore().collection("orderRecords").doc();
   var newOrderItemsCollectionRef = newOrderRef.collection("items");
   var userRef = firebase
@@ -43,6 +45,16 @@ export async function addOrder(items, listingId) {
     await firebase.firestore().runTransaction(async (tn) => {
       var userDoc = await tn.get(userRef);
       var listingDoc = await tn.get(listingRef);
+
+      var listingOwner = (
+        await getUserById2(listingDoc.data().listingOwner)
+      ).data();
+      var message =
+        currentUserUsername +
+        " has added an order to your listing " +
+        listingDoc.data().title;
+
+      addNotification(listingOwner.username, message);
 
       tn.set(newOrderRef, {
         listingId: listingId,

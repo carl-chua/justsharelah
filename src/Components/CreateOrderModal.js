@@ -122,7 +122,7 @@ function CreateOrderModal({ show, handleClose, listingId }) {
     });
 
     async function createOrder() {
-      let result = await addOrder(items, listingId);
+      let result = await addOrder(items, listingId, currentUser.username);
       console.log("RESULT IS: " + result);
       if (result) {
         setItems([{ itemName: "", itemQty: "" }]);
