@@ -157,7 +157,6 @@ export default function UsersListings() {
                 <TableCell>Listing</TableCell>
                 <TableCell align="right">Created</TableCell>
                 <TableCell align="right">Orders</TableCell>
-                <TableCell align="right">Kuppers</TableCell>
               </TableRow>
             </TableHead>
             {usersListings.length > 0 ? (
@@ -182,9 +181,6 @@ export default function UsersListings() {
                         </TableCell>
                         <TableCell align="right">
                           {listing[1].orderRecords.length}
-                        </TableCell>
-                        <TableCell align="right">
-                          {listing[1].kuppers.length}
                         </TableCell>
                       </TableRow>
                     )
@@ -212,7 +208,6 @@ export default function UsersListings() {
                 <TableCell>Listing</TableCell>
                 <TableCell align="right">Created</TableCell>
                 <TableCell align="right">Orders</TableCell>
-                <TableCell align="right">Kuppers</TableCell>
               </TableRow>
             </TableHead>
             {usersListings.length > 0 ? (
@@ -237,9 +232,6 @@ export default function UsersListings() {
                         </TableCell>
                         <TableCell align="right">
                           {listing[1].orderRecords.length}
-                        </TableCell>
-                        <TableCell align="right">
-                          {listing[1].kuppers.length}
                         </TableCell>
                       </TableRow>
                     )

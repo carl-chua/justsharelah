@@ -18,24 +18,26 @@ export function getUserByUsernameListener(username, setUser) {
 
 export async function getUserByUsername(username, setUser) {
   try {
-  const snapshot = await firebase
-    .firestore()
-    .collection("users")
-    .where("usernameLower", "==", username.toLowerCase())
-    .limit(1)
-    .get();
+    const snapshot = await firebase
+      .firestore()
+      .collection("users")
+      .where("usernameLower", "==", username.toLowerCase())
+      .limit(1)
+      .get();
 
-  if (snapshot.empty) {
-    return false;
+    if (snapshot.empty) {
+      return false;
+    }
+
+    snapshot.forEach((doc) => {
+      console.log(
+        "USERDATA: FOR " + username + " " + JSON.stringify(doc.data())
+      );
+      setUser([doc.id, doc.data()]);
+    });
+  } catch (err) {
+    console.log("GETUSERBYUSERNAME : " + JSON.stringify(err));
   }
-
-  snapshot.forEach((doc) => {
-    console.log("USERDATA: FOR " + username + " " + JSON.stringify(doc.data()));
-    setUser([doc.id, doc.data()]);
-  });
-} catch (err) {
-  console.log("GETUSERBYUSERNAME : " + JSON.stringify(err))
-}
 
   return true;
 }
@@ -64,6 +66,16 @@ export async function getUserById(userId, setUser) {
   console.log(snapshot.data());
 
   setUser(snapshot.data());
+}
+
+export async function getUsername(userId) {
+  const snapshot = await firebase
+    .firestore()
+    .collection("users")
+    .doc(userId)
+    .get();
+
+  return snapshot.data().username;
 }
 
 export async function getUserById2(userId) {
