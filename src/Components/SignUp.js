@@ -18,6 +18,13 @@ import loginImage from "../images/loginImage.svg";
 import { useAlert } from "react-alert";
 import { AuthContext } from "../Auth";
 
+import {
+  CountryDropdown,
+  RegionDropdown,
+  CountryRegionData,
+} from "react-country-region-selector";
+
+
 const useStyles = makeStyles((theme) => ({
   root: { height: "100vh", overflow: "hidden" },
   image: {
@@ -69,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function SignUp() {
   const classes = useStyles();
   const alert = useAlert();
@@ -76,6 +84,9 @@ export default function SignUp() {
   const { signIn, signUp } = React.useContext(AuthContext);
 
   const history = useHistory();
+
+  const [country, setCountry] = React.useState('');
+  const [city, setCity] = React.useState('');
 
   async function handleSignUp(event) {
     event.preventDefault();
@@ -221,26 +232,43 @@ export default function SignUp() {
               id="password"
               autoFocus
             />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="country"
-              label="Country"
-              id="country"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="city"
-              label="City"
-              id="city"
-              autoFocus
-            />
+            <CountryDropdown
+            value={country}
+            required
+            fullWidth
+            onChange={(val) => setCountry(val)}
+            whitelist={["SG", "HK", "MY", "ID"]}
+            style={{
+              margin: "1%",
+              marginBottom: "5%",
+              minWidth: "21vw",
+              minHeight: "6.5vh",
+              textAlign: "start",
+              padding: "1%",
+              backgroundColor: 'transparent',
+              borderColor: '#7AA18A',
+              borderRadius: '3px',
+            }}
+          />
+          <RegionDropdown
+            country={country}
+            value={city}
+            onChange={(val) => setCity(val)}
+            required
+            fullWidth
+            style={{
+              marginTop: "6%",
+              marginBottom: "4%",
+              marginLeft: '3%',
+              minWidth: "14vw",
+              minHeight: "6.5vh",
+              textAlign: "start",
+              padding: "1%",
+              backgroundColor: 'transparent',
+              borderColor: '#7AA18A',
+              borderRadius: '3px'
+            }}
+          />
             <TextField
               variant="outlined"
               margin="normal"
