@@ -82,6 +82,7 @@ const ListingDetails = () => {
     var [reviews, setReviews] = React.useState([]);
     var [button, setButton] = React.useState();
     var [profileUrl, setProfileUrl] = React.useState('');
+    var [numReviews, setNumReviews] = React.useState('');
     let user = firebase.auth().currentUser;
     //get listing id from params
     let { id } = useParams();
@@ -205,7 +206,7 @@ const ListingDetails = () => {
 
                 case 'storage/unknown':
                 // Unknown error occurred, inspect the server response
-                alert("Unknown error occurred/no listing photo uploaded");
+                //alert("Unknown error occurred/no listing photo uploaded");
                 break;
             }
             });
@@ -255,7 +256,8 @@ const ListingDetails = () => {
             total = reviews.reduce((a,b) => a + b[1].numStars, 0.0)/reviews.length;
         }
 
-        setRating(total)
+        setNumReviews(reviews.length);
+        setRating(total);
     },[reviews])
 
     //not working
@@ -336,14 +338,16 @@ const ListingDetails = () => {
                         )}
                     </div>
                 </div>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Rating 
+                        value = {rating}
+                        readOnly = {true}
+                        precision = {0.5}
+                    />
+                    &nbsp;
+                    <p>{numReviews} Review(s)</p>
+                </div>
                 
-                <Rating 
-                    value = {rating}
-                    readOnly = {true}
-                    precision = {0.5}
-                />
-                <br></br>
-                <br></br>
                 <Typography variant="h5" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
@@ -415,6 +419,8 @@ const ListingDetails = () => {
                 <Typography variant="p" style={{ color: "#212121" }}>
                     Details:
                 </Typography>
+                &nbsp;
+                &nbsp;
                 <Typography variant="p" fontWeight="fontWeightBold">
                      {desc}
                 </Typography>
