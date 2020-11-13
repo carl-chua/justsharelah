@@ -47,7 +47,12 @@ function App() {
       <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
           {userToken && <NavBar />}
-          <div style={{ height: "100%", overflow: "scroll" }}>
+          <div
+            style={{
+              height: "100%",
+              overflow: "scroll",
+            }}
+          >
             <Switch>
               <PrivateRoute exact path="/" component={HomePage} />
               <Route exact path="/login" component={LogIn} />

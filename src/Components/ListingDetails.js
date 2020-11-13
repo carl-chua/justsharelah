@@ -14,6 +14,8 @@ import { useParams } from "react-router";
 import Rating from '@material-ui/lab/Rating';
 import { getReviews} from "../API/Reviews";
 import { Avatar} from "@material-ui/core";
+import { useHistory } from "react-router";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -82,6 +84,7 @@ const ListingDetails = () => {
     var [reviews, setReviews] = React.useState([]);
     var [button, setButton] = React.useState();
     var [profileUrl, setProfileUrl] = React.useState('');
+    var [numReviews, setNumReviews] = React.useState('');
     let user = firebase.auth().currentUser;
     //get listing id from params
     let { id } = useParams();
@@ -112,7 +115,7 @@ const ListingDetails = () => {
                     members: firebase.firestore.FieldValue.arrayRemove(user.uid),
                 });
                
-                alert("Left listing!");
+                //alert("Left listing!");
                 
                 return true;
             });
@@ -144,7 +147,7 @@ const ListingDetails = () => {
                     members: firebase.firestore.FieldValue.arrayUnion(user.uid),
                 });
                 
-                alert("Joined listing!");
+                //alert("Joined listing!");
                 
                 return true;
             });
@@ -205,7 +208,7 @@ const ListingDetails = () => {
 
                 case 'storage/unknown':
                 // Unknown error occurred, inspect the server response
-                alert("Unknown error occurred/no listing photo uploaded");
+                //alert("Unknown error occurred/no listing photo uploaded");
                 break;
             }
             });
@@ -255,8 +258,18 @@ const ListingDetails = () => {
             total = reviews.reduce((a,b) => a + b[1].numStars, 0.0)/reviews.length;
         }
 
-        setRating(total)
+        setNumReviews(reviews.length);
+        setRating(total);
     },[reviews])
+
+    const history = useHistory();
+
+    function handleProfileClick() {
+        
+        history.push(`/user/${authorName}`);
+    
+    }
+    
 
     //not working
     function loadButton() {
@@ -309,13 +322,14 @@ const ListingDetails = () => {
                         height:50,
                         }}
                     >
-                        
                 </Avatar>
                 &nbsp;
                 &nbsp;
-                    <Typography variant="h4" style={{ color: "#212121" }}>
+                <Tooltip title="Click to view profile page" arrow>
+                    <Typography variant="h4" style={{ color: "#212121" }} onClick={handleProfileClick}>
                         {authorName} 
                     </Typography>
+                </Tooltip>
                     &nbsp;
                     &nbsp;
                     <div>
@@ -336,14 +350,16 @@ const ListingDetails = () => {
                         )}
                     </div>
                 </div>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Rating 
+                        value = {rating}
+                        readOnly = {true}
+                        precision = {0.5}
+                    />
+                    &nbsp;
+                    <p>{numReviews} Review(s)</p>
+                </div>
                 
-                <Rating 
-                    value = {rating}
-                    readOnly = {true}
-                    precision = {0.5}
-                />
-                <br></br>
-                <br></br>
                 <Typography variant="h5" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
@@ -415,6 +431,8 @@ const ListingDetails = () => {
                 <Typography variant="p" style={{ color: "#212121" }}>
                     Details:
                 </Typography>
+                &nbsp;
+                &nbsp;
                 <Typography variant="p" fontWeight="fontWeightBold">
                      {desc}
                 </Typography>
