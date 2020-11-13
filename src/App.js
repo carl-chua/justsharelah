@@ -26,6 +26,7 @@ import NotificationsPage from "./Screens/NotificationsPage";
 import ChatPage from "./Components/ChatPage";
 import { useAlert } from "react-alert";
 import WalletPage from "./Screens/WalletPage";
+import ForgotPassword from "./Components/ForgotPassword";
 
 import Apparel from "./Components/subpages/Apparel";
 import Electronics from "./Components/subpages/Electronics";
@@ -57,6 +58,7 @@ function App() {
               <PrivateRoute exact path="/" component={HomePage} />
               <Route exact path="/login" component={LogIn} />
               <Route exact path="/signup" component={SignUp} />
+              <Route exact path="/forgotpassword" component={ForgotPassword} />
               <PrivateRoute exact path="/user/:username" component={UserPage} />
               <PrivateRoute exact path="/settings" component={SettingsPage} />
               <PrivateRoute exact path="/chat/:username" component={ChatPage} />
