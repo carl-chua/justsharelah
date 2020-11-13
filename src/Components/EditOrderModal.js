@@ -137,7 +137,7 @@ function EditOrderModal({ show, handleClose, orderRecord }) {
     });
 
     async function updateOrder() {
-      let result = await editOrder(items, orderRecord[0]);
+      let result = await editOrder(items, orderRecord[0], currentUser.username);
       if (result) {
         alert.show("Order edited successfully!");
         //history.push("/");

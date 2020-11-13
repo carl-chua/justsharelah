@@ -17,6 +17,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
+import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   getOrderItems,
@@ -157,15 +158,18 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
                 <TableCell align="right">
                   {orderRecord[1].deliveryFee}
                 </TableCell>
-                <TableCell align="right">{deliveryFee}</TableCell>
               </TableRow>
             </TableBody>
           )}
         </Table>
+        <Card>
+          <img
+            style={{ width: "100%", height: "auto" }}
+            src={orderRecord[1].receiptImage}
+          ></img>
+        </Card>
       </DialogContent>
-      <Container>
-        <img src={orderRecord[1].receiptImage}></img>
-      </Container>
+
       <DialogActions>
         {orderRecord[1].paymentStatus === "REQUESTED" ? (
           <Button

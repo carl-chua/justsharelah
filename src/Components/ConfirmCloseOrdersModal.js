@@ -69,11 +69,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ConfirmCloseOrdersModal({
-  show,
-  handleClose,
-  listingId,
-}) {
+function ConfirmCloseOrdersModal({ show, handleClose, listingId }) {
   const alert = useAlert();
   const styles = useStyles();
   const theme = useTheme();
@@ -133,3 +129,5 @@ export default function ConfirmCloseOrdersModal({
     </div>
   );
 }
+
+export default ConfirmCloseOrdersModal;

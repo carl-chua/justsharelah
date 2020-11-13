@@ -49,6 +49,7 @@ export async function addOrder(items, listingId, currentUserUsername) {
       var listingOwner = (
         await getUserById2(listingDoc.data().listingOwner)
       ).data();
+
       var message =
         currentUserUsername +
         " has added an order to your listing " +
@@ -95,6 +96,7 @@ export async function addOrder(items, listingId, currentUserUsername) {
     return false;
   }
 }
+
 export async function getOrderRecord(orderRecordId, setOrderRecord) {
   var snapshot = await db.doc(orderRecordId).get();
   setOrderRecord(snapshot.data());
@@ -152,7 +154,7 @@ export async function deleteOrderRecord(orderRecordId) {
   }
 }
 
-export async function editOrder(items, orderRecordId) {
+export async function editOrder(items, orderRecordId, currentUserUsername) {
   var batch = firebase.firestore().batch();
 
   var existingOrdersItemsRef = firebase
@@ -160,6 +162,12 @@ export async function editOrder(items, orderRecordId) {
     .collection("orderRecords")
     .doc(orderRecordId)
     .collection("items");
+
+  var listingRef = await firebase
+    .firestore()
+    .collection("listings")
+    .where("orderRecords", "array-contains", orderRecordId)
+    .get();
 
   try {
     await existingOrdersItemsRef.get().then((querySnapshot) => {
@@ -178,6 +186,20 @@ export async function editOrder(items, orderRecordId) {
         date: new Date(),
       });
     }
+
+    var listingOwnerName;
+
+    listingRef.docs.map((doc) => {
+      listingOwnerName = doc.data().listingOwner;
+    });
+
+    var message =
+      currentUserUsername +
+      " has edited an order to your listing " +
+      listingOwnerName;
+
+    console.log(message);
+    addNotification(listingOwnerName, message);
 
     await batch.commit();
 

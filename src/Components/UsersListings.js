@@ -163,7 +163,11 @@ export default function UsersListings() {
               <TableBody>
                 {usersListings.map(
                   (listing) =>
-                    !listing[1].isClosed && listing[1].title && listing[1].title.toLowerCase().includes(searchString.toLowerCase()) && (
+                    !listing[1].isClosed &&
+                    listing[1].title &&
+                    listing[1].title
+                      .toLowerCase()
+                      .includes(searchString.toLowerCase()) && (
                       <TableRow
                         key={listing[0]}
                         hover
@@ -214,7 +218,11 @@ export default function UsersListings() {
               <TableBody>
                 {usersListings.map(
                   (listing) =>
-                    listing[1].isClosed && listing[1].title && listing[1].title.toLowerCase().includes(searchString.toLowerCase()) && (
+                    listing[1].isClosed &&
+                    listing[1].title &&
+                    listing[1].title
+                      .toLowerCase()
+                      .includes(searchString.toLowerCase()) && (
                       <TableRow
                         key={listing[0]}
                         hover
