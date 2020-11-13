@@ -128,7 +128,9 @@ function ChatBox({
           <Typography variant="h6" color="inherit">
             {selectedChat[1].groupName}
           </Typography>
-          {selectedListing.isClosed ? (
+          {selectedListing.listingOwner === chatUser.id ? (
+            ""
+          ) : selectedListing.isClosed ? (
             <h4>Order has been closed!</h4>
           ) : isEmpty(orderRecord) ? (
             <button className="OrderButton" onClick={openCreateOrderModal}>
