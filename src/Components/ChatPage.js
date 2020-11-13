@@ -63,6 +63,7 @@ function Chat({ history }) {
   const [chatGroups, setChatGroups] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
   const [selectedListing, setSelectedListing] = useState({});
+  const [chatUser, setChatUser] = useState({});
 
   const userToken = useSelector((state) => state.userToken);
   const currentUser = useSelector((state) => state.currentUser);
@@ -117,12 +118,6 @@ function Chat({ history }) {
     }
   }
 
-  var chatUser = {
-    id: userToken,
-    name: currentUser.username,
-    avatar: currentUser.photo,
-  };
-
   /*useEffect(() => {
     if (!isEmpty(chatUser)) {
       chatUser = loadPhoto(chatUser);
@@ -143,29 +138,32 @@ function Chat({ history }) {
   }
 
   useEffect(() => {
-    async function fetch() {
-      const storageRef = firebase.storage().ref();
-      let snapshot = await getChatGroups(userToken);
-      let temp = []
-      snapshot.forEach((doc) => {
-        var photoRef = storageRef.child("image").child(doc.data().photo);
-        photoRef.getDownloadURL().then(function (url) {
-          var chatGroup = {
-            ...doc.data(),
-            photo: url,
-          };
-          console.log(JSON.stringify(chatGroup))
-          temp.push([doc.id, chatGroup])
-        }).then(() => {
-          setChatGroups(temp)
-          if(temp.length > 0) {
-            setSelectedChat(temp[0])
-          }
+    getChatGroups(userToken).then(function (querySnapshot) {
+      let temp = [];
+
+      async function fetch(temp) {
+        const storageRef = firebase.storage().ref();
+        querySnapshot.forEach(function (doc) {
+          var photoRef = storageRef.child("image").child(doc.data().photo);
+          photoRef
+            .getDownloadURL()
+            .then(function (url) {
+              var chatGroup = {
+                ...doc.data(),
+                photo: url,
+              };
+              temp.push([doc.id, chatGroup]);
+            })
+            .then(() => {
+              setChatGroups(temp);
+              if (temp.length !== 0) {
+                setSelectedChat(temp[0]);
+              }
+            });
         });
-      });
-    }
-    fetch()
-    
+      }
+      fetch(temp);
+    });
   }, []);
 
   /*useEffect(() => {
@@ -173,6 +171,20 @@ function Chat({ history }) {
       setSelectedChat(chatGroups[0]);
     }
   },[chatGroups])*/
+
+  useEffect(() => {
+    if (userToken && currentUser) {
+      const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(currentUser.imageUrl);
+      photoRef.getDownloadURL().then(function (url) {
+        setChatUser({
+          id: userToken,
+          name: currentUser.username,
+          avatar: url,
+        });
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (selectedChat.length !== 0 && !isEmpty(chatUser)) {

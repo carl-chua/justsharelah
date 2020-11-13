@@ -17,6 +17,8 @@ import Rating from "@material-ui/lab/Rating";
 
 import moment from "moment";
 
+import firebase from "../API/Firebase"
+
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import FollowButton from "./FollowButton";
@@ -52,6 +54,7 @@ const useStyles = makeStyles({
 export default function UserListCard({ data, handleClose }) {
   const styles = useStyles();
   const [user, setUser] = React.useState();
+  const [imgUrl, setImgUrl] = React.useState();
 
   const currentUser = useSelector(state => state.currentUser)
 
@@ -69,6 +72,27 @@ export default function UserListCard({ data, handleClose }) {
     //history.push("/")
   }
 
+  React.useEffect(() => {
+    if(user) {
+      loadPhoto()
+    }
+  },[user])
+
+  function loadPhoto() {
+    // Create a reference to the file we want to download
+    try {
+      const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(user.imageUrl);
+
+      // Get the download URL
+      photoRef.getDownloadURL().then(function (url) {
+        setImgUrl(url);
+      });
+    } catch (err) {
+      setImgUrl(null);
+    }
+  }
+
   return user ? (
     <Card className={styles.root}>
       <CardActionArea onClick={handleOnPress}>
@@ -76,7 +100,7 @@ export default function UserListCard({ data, handleClose }) {
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent = "space-between">
           <div style = {{display : "flex", flexDirection : "row", alignItems : "center"}}>
           <Avatar
-            src={user.imageUrl}
+            src={imgUrl}
             style={{
               width: 45,
               height: 45,
