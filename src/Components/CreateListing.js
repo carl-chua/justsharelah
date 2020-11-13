@@ -226,7 +226,7 @@ function CreateListing({ history }) {
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
             
-            <h2  style={{ textAlign: "center" }}>What would you like to list today? <CardGiftcardOutlinedIcon fontSize="medium"/></h2>
+            <h2  style={{ textAlign: "center", marginTop : 0 }}>What would you like to list today? <CardGiftcardOutlinedIcon fontSize="medium"/></h2>
             <form onSubmit={handleSubmit} className={classes.root} noValidate autoComplete="off">
             <Grid container spacing={0}  justify="center" alignItems="Stretch">
                
