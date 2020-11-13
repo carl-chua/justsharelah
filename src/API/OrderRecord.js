@@ -176,6 +176,14 @@ export async function editOrder(items, orderRecordId, currentUserUsername) {
       });
     });
 
+    var listingOwnerId;
+
+    listingRef.docs.map((doc) => {
+      listingOwnerId = doc.data().listingOwner;
+    });
+
+    var listingOwnerName = (await getUserById2(listingOwnerId)).data().username;
+
     for (const item of items) {
       var newOrderItem = existingOrdersItemsRef.doc();
 
@@ -186,12 +194,6 @@ export async function editOrder(items, orderRecordId, currentUserUsername) {
         date: new Date(),
       });
     }
-
-    var listingOwnerName;
-
-    listingRef.docs.map((doc) => {
-      listingOwnerName = doc.data().listingOwner;
-    });
 
     var message =
       currentUserUsername +
