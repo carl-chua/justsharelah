@@ -99,11 +99,11 @@ export default function Profile({user}) {
     var phoneno = /^\d{7}$/;
     const phoneerror = !phone.match(phoneno);
 
-    const [region, setRegion] = React.useState(user.region);
+    const [city, setCity] = React.useState(user.city);
 
 
     const [img, setImg] = React.useState('');
-    const [photoId, setPhotoId] = React.useState('');
+    const [photoId, setPhotoId] = React.useState(user.imageUrl);
 
     const profileUrl = '';
 
@@ -116,7 +116,7 @@ export default function Profile({user}) {
       await firebase.firestore().collection('users').doc(curruser.uid).set({
         username : username,
         phoneNumber : phone,
-        region : region,
+        city : city,
         country : country,
         imageUrl : photoId,
       }, { merge: true })
@@ -186,6 +186,7 @@ export default function Profile({user}) {
                   style = {{
                     display : "flex",
                     flexDirection : "column",
+                    justifyContent : "flex-start",
                     alignItems: "center",
                     fontSize: '1.6rem',
                     fontWeight: '800',
@@ -277,34 +278,40 @@ export default function Profile({user}) {
                     />
                 </div>
                 
-                <div>
-        <CountryDropdown
-          value={country}
-          onChange={(val) => setCountry(val)} 
-          whitelist={["SG", "HK", "MY", "ID"]} 
-          style = {{
-            margin: "1%",
-            marginBottom: '5%',
-            minWidth: '44vw',
-            maxWidth: '44vw',
-            minHeight: '6vh',
-            textAlign: "start",
-          }}
-          />
-        <RegionDropdown
-          country={country}
-          value={user.region}
-          onChange={(val) => setRegion(val)} 
-          style = {{
-            margin: "1%",
-            marginBottom: '5%',
-            minWidth: '14vw',
-            maxWidth: '14vw',
-            minHeight: '6vh',
-            textAlign: "start",
-          }}
-          />
-      </div>
+                <div
+                  style = {{
+                    marginTop: '2%',
+                  }}
+                >
+                  <CountryDropdown
+                    value={country}
+                    onChange={(val) => setCountry(val)} 
+                    whitelist={["SG", "HK", "MY", "ID"]} 
+                    style = {{
+                      margin: "1%",
+                      marginBottom: '5%',
+                      minWidth: '44.5vw',
+                      maxWidth: '44.5vw',
+                      minHeight: '6.5vh',
+                      textAlign: "start",
+                      padding: '1%',
+                    }}
+                    />
+                  <RegionDropdown
+                    country={country}
+                    value={user.city}
+                    onChange={(val) => setCity(val)} 
+                    style = {{
+                      margin: "1%",
+                      marginBottom: '5%',
+                      minWidth: '14vw',
+                      maxWidth: '14vw',
+                      minHeight: '6.5vh',
+                      textAlign: "start",
+                      padding: '1%',
+                    }}
+                    />
+              </div>
             </form>
             
               <Button 

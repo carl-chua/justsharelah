@@ -4,6 +4,7 @@ export const SIGN_OUT = "SIGN_OUT";
 export const RE_SIGN_IN = "RE_SIGN_IN";
 export const CURRENT_USER = "CURRENT_USER";
 export const SET_SEARCH_STRING = "SET_SEARCH_STRING";
+export const CATEGORY = "CATEGORY";
 
 export const signIn = (userId) => ({
   type: SIGN_IN,
@@ -27,4 +28,9 @@ export const currentUser = (userData) => ({
 export const reduxSetSearchString = (newSearchString) => ({
   type: SET_SEARCH_STRING,
   payload: newSearchString,
+});
+
+export const reduxSetCategory = (currentCategory) => ({
+  type: CATEGORY,
+  payload: currentCategory,
 });

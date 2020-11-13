@@ -171,11 +171,6 @@ export default function UserPage({ history }) {
     history.push(`/settings`);
   }
 
-  function handleEditProfile() {
-    console.log("GOING TO EDIT PROFILE:");
-    history.push(`/settings`);
-}
-
   return user ? (
     <Box className={styles.root}>
       <Grid

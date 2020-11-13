@@ -110,7 +110,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                 </Avatar>
                 <div>
                     <p className = {styles.nameText}>{user.username}</p>
-                    <p className = {styles.subText}>{user.region}</p>
+                    <p className = {styles.subText}>{user.city}</p>
                 </div>
                 <Box
                     style = {{

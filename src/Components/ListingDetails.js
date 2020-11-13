@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import firebase from "../API/Firebase";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -275,7 +275,19 @@ const ListingDetails = () => {
             setButton(button1);
         }
     }
-  
+    let history = useHistory();
+
+    function handleCategoryClick(category) {
+        if (firebase.auth().currentUser != null) {
+          history.push(`/categories/${category}`);
+        }
+      }
+
+    function handleProfileClick(authorName) {
+        if (firebase.auth().currentUser != null) {
+            history.push(`/user/${authorName}`);
+        }
+    }
     
     return (
         <div className={classes.root} style={{ background: "#f1f8e9" }}>
@@ -313,8 +325,13 @@ const ListingDetails = () => {
                 </Avatar>
                 &nbsp;
                 &nbsp;
-                    <Typography variant="h4" style={{ color: "#212121" }}>
-                        {authorName} 
+                    <Typography variant="h4">
+                        <Link onClick= {() => handleProfileClick(authorName)}
+                        style = {{
+                            textDecoration: 'none',
+                            color: '#212121',
+                        }}
+                        >{authorName}</Link>
                     </Typography>
                     &nbsp;
                     &nbsp;
@@ -348,8 +365,12 @@ const ListingDetails = () => {
                     {listingTitle}
                 </Typography>
                 <Typography variant="p" style={{ color: "#4db6ac" }}>
-                    Category: {category}
-                    
+                    Category: <Link onClick= {() => handleCategoryClick(category)}
+                    style = {{
+                        textDecoration: 'none',
+                        color: '#212121',
+                    }}
+                    >{category}</Link>
                 </Typography>
                 <br></br>
                 <a href={shopLink} target="_blank" rel="noopener noreferrer">{shopLink}</a>
