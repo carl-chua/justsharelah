@@ -46,12 +46,15 @@ export function messagesListener(selectedChat, setMessages) {
       querySnapshot.docChanges().forEach(async function (changes) {
         const user = await getUserByIdForChat(changes.doc.data().user);
 
+        console.log(user);
+
         var userObj = {
           id: changes.doc.data().user,
           name: user.username,
-          avatar: user.imageUrl,
+          avatar: user.photo,
         };
-        userObj = loadPhoto(userObj);
+        //userObj = loadPhoto(userObj);
+        //console.log(userObj);
         var msg = {
           ...changes.doc.data(),
           createdAt: changes.doc.data().createdAt.toDate(),
