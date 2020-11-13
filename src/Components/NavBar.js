@@ -10,6 +10,7 @@ import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRo
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
+import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
@@ -211,7 +212,7 @@ export default function NavBar() {
       </MenuItem>
       <MenuItem onClick={handleEditProfile}>
         <IconButton color="inherit">
-          <AccountCircle />
+          <EditIcon />
         </IconButton>
         <p>Edit Profile</p>
       </MenuItem>
