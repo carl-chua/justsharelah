@@ -89,12 +89,10 @@ const AuthProvider = ({ children, dispatch, alert }) => {
                 phoneNumber: data.phoneNumber,
                 country: data.country,
                 city: data.city,
-                photo: null,
+                imageUrl: null,
                 followers: [],
                 following: [],
                 userReviews: [],
-                listingsAsMember: [],
-                listingsAsOP: [],
                 orderRecords: [],
                 usernameLower: data.username.toLowerCase(),
               });

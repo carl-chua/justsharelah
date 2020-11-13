@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import firebase from "../API/Firebase";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -288,7 +288,6 @@ const ListingDetails = () => {
             setButton(button1);
         }
     }
-    let history = useHistory();
 
     function handleCategoryClick(category) {
         if (firebase.auth().currentUser != null) {

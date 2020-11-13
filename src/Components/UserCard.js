@@ -77,6 +77,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
 
     function loadPhoto() {
         // Create a reference to the file we want to download
+        try {
         const storageRef = firebase.storage().ref();
         var photoRef = storageRef.child("image").child(user.imageUrl);
 
@@ -84,6 +85,9 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
         photoRef.getDownloadURL().then(function (url) {
             setImgUrl(url);
         });
+        } catch (err) {
+            setImgUrl(null);
+        } 
     }
 
     React.useEffect(() => {
