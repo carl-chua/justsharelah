@@ -71,7 +71,9 @@ export default function UsersListingsPage() {
 
   return (
     <div>
-      <h2>My Listings</h2>
+      <Typography variant="h4" component="h4">
+        My Listings
+      </Typography>
 
       <Container maxWidth="lg">
         <Paper>
@@ -124,10 +126,14 @@ export default function UsersListingsPage() {
                     )}
                   </TableBody>
                 ) : (
-                  <p>
-                    You do not have any ongoing listings at the moment. Create
-                    one now!
-                  </p>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        You do not have any ongoing listings at the moment.
+                        Create one now!
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
                 )}
               </Table>
             </TableContainer>
@@ -175,10 +181,14 @@ export default function UsersListingsPage() {
                     )}
                   </TableBody>
                 ) : (
-                  <p>
-                    You do not have any past listings at the moment. Create one
-                    now!
-                  </p>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        You do not have any past listings at the moment. Create
+                        one now!
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
                 )}
               </Table>
             </TableContainer>

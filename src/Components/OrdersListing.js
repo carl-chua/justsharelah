@@ -82,7 +82,6 @@ export default function OrdersListing() {
     return unsubscribe;
   }, []);
 
-
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -105,88 +104,109 @@ export default function OrdersListing() {
 
   return (
     <Paper>
-    <AppBar
-      position="static"
-      style={{
-        backgroundColor: "white",
-        boxShadow: "none",
-        paddingRight: 20,
-      }}
-    >
-      <div
+      <AppBar
+        position="static"
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
+          backgroundColor: "white",
+          boxShadow: "none",
+          paddingRight: 20,
         }}
       >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          style={{ paddingTop: 20 }}
-        >
-          <Tab label="Ongoing" />
-          <Tab label="Past" />
-        </Tabs>
-        <TextField
-          placeholder="Search"
-          value={searchString}
-          onChange={handleChangeSearch}
-          style={{ width: "30%" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="disabled" />
-              </InputAdornment>
-            ),
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
-        />
-      </div>
-    </AppBar>
+        >
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            style={{ paddingTop: 20 }}
+          >
+            <Tab label="Ongoing" />
+            <Tab label="Past" />
+          </Tabs>
+          <TextField
+            placeholder="Search"
+            value={searchString}
+            onChange={handleChangeSearch}
+            style={{ width: "30%" }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="disabled" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+      </AppBar>
 
-    <TabPanel value={value} index={0}>
-      <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
-        <Table stickyHeader className={styles.table} aria-label="simple table">
-          <TableHead>
-            <TableRow className={styles.head}>
-              <TableCell>Listing Title</TableCell>
-              <TableCell align="right">Date</TableCell>
-              <TableCell align="right">Total Price</TableCell>
-              <TableCell align="right">Payment Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders
-              ? orders.filter((order) => order[1].paymentStatus !== "PAID").map((order) => 
-              <OrderRow key={order[0]} order={order} filter = {searchString}/>)
-              : null}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </TabPanel>
+      <TabPanel value={value} index={0}>
+        <TableContainer component={Paper} style={{ maxHeight: "70%" }}>
+          <Table
+            stickyHeader
+            className={styles.table}
+            aria-label="simple table"
+          >
+            <TableHead>
+              <TableRow className={styles.head}>
+                <TableCell>Listing Title</TableCell>
+                <TableCell align="right">Date</TableCell>
+                <TableCell align="right">Total Price</TableCell>
+                <TableCell align="right">Payment Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {orders
+                ? orders
+                    .filter((order) => order[1].paymentStatus !== "PAID")
+                    .map((order) => (
+                      <OrderRow
+                        key={order[0]}
+                        order={order}
+                        filter={searchString}
+                      />
+                    ))
+                : null}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </TabPanel>
 
-    <TabPanel value={value} index={1}>
-    <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
-        <Table stickyHeader className={styles.table} aria-label="simple table">
-          <TableHead>
-            <TableRow className={styles.head}>
-              <TableCell>Listing Title</TableCell>
-              <TableCell align="right">Date</TableCell>
-              <TableCell align="right">Total Price</TableCell>
-              <TableCell align="right">Payment Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders
-              ? orders.filter((order) => order[1].paymentStatus === "PAID").map((order) => 
-              <OrderRow key = {order[0]} order={order} filter = {searchString}/>)
-              : null}
-          </TableBody>
-          
-        </Table>
-      </TableContainer>
-    </TabPanel>
-  </Paper>
+      <TabPanel value={value} index={1}>
+        <TableContainer component={Paper} style={{ maxHeight: "70%" }}>
+          <Table
+            stickyHeader
+            className={styles.table}
+            aria-label="simple table"
+          >
+            <TableHead>
+              <TableRow className={styles.head}>
+                <TableCell>Listing Title</TableCell>
+                <TableCell align="right">Date</TableCell>
+                <TableCell align="right">Total Price</TableCell>
+                <TableCell align="right">Payment Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {orders
+                ? orders
+                    .filter((order) => order[1].paymentStatus === "PAID")
+                    .map((order) => (
+                      <OrderRow
+                        key={order[0]}
+                        order={order}
+                        filter={searchString}
+                      />
+                    ))
+                : null}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </TabPanel>
+    </Paper>
   );
 }
