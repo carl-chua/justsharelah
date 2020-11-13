@@ -8,7 +8,7 @@ import { store, persistor } from "./Redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { transitions, positions, Provider as AlertProvider } from "react-alert";
+import { positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -20,7 +20,6 @@ const options = {
   timeout: 5000,
   offset: "30px",
   // you can also just use 'scale'
-  transition: transitions.SCALE,
 };
 
 ReactDOM.render(

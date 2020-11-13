@@ -9,8 +9,10 @@ import UserListCard from './UserListCard';
 const useStyles = makeStyles({
     listingList : {
         display : "flex",
+        width : "100%",
         flexWrap : "wrap",
         overflow : "auto",
+        maxHeight : 500,
     },
     noListText : {
         display : "flex",

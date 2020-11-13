@@ -1,5 +1,5 @@
 import { Avatar, Card, Box, CardContent, CardActions, Button, Modal } from "@material-ui/core";
-
+import firebase from "../API/Firebase";
 import Rating from '@material-ui/lab/Rating';
 import React from "react";
 
@@ -7,12 +7,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from "react-redux";
 import { followUser, unfollowUser } from "../API/Users";
 import UserList from "./UserList";
+import FollowButton from "./FollowButton";
 
 
 const useStyles = makeStyles({
     root: {
         background : 'linear-gradient(to bottom, #FFD076 30%, white 20%, white)',
-        //minWidth : 220,
+        minWidth : 260,
         paddingLeft : "5%",
         paddingRight : "5%",
         maxHeight : "auto",
@@ -61,18 +62,6 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
 
     const [rating, setRating] = React.useState(0.0);
 
-    async function handleFollow() {
-        console.log("clicked")
-       var result = await followUser(userToken, userId);
-       console.log("FOLLOWED? : " + result)
-    }
-
-    async function handleUnfollow() {
-        console.log("unfollowing");
-        var result = await unfollowUser(userToken, userId);
-
-    }
-
     React.useEffect(() => {
         let total = 0.0;
         console.log("REVIEWS: " + JSON.stringify(reviews))
@@ -84,7 +73,22 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
        setRating(total)
     },[reviews])
 
+    var [imgUrl, setImgUrl] = React.useState("");
 
+    function loadPhoto() {
+        // Create a reference to the file we want to download
+        const storageRef = firebase.storage().ref();
+        var photoRef = storageRef.child("image").child(user.imageUrl);
+
+        // Get the download URL
+        photoRef.getDownloadURL().then(function (url) {
+            setImgUrl(url);
+        });
+    }
+
+    React.useEffect(() => {
+        loadPhoto();
+    }, []);
 
 
     return (
@@ -96,7 +100,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                 className = {styles.cardContent}
             >
                 <Avatar 
-                    src = {user.imageUrl} 
+                    src = {imgUrl} 
                     style = {{
                         width:100,
                         height:100,
@@ -130,27 +134,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                             {reviews ? reviews.length : "0"}
                     </p>
                 </Box>
-                {user.username != currentUser.username ?
-                 (user.followers == null || !user.followers.includes(userToken) ?
-                <Button 
-                    size="small"
-                    className = {styles.buttonPrimary}
-                    onClick = {handleFollow}
-                >
-                    <span style = {{color:"white"}}>Follow</span>
-                </Button>
-                :
-                <Button 
-                    size="small"
-                    className = {styles.buttonPrimary}
-                    onClick = {handleUnfollow}
-                >
-                    <span style = {{color:"white"}}>Unfollow</span>
-                </Button>
-                )
-                :
-                null
-                }
+                <FollowButton user = {user} userId = {userId}/>
                 <Box
                     display="flex"
                     flexDirection = "row"

@@ -127,6 +127,21 @@ export async function addReview(data) {
   return true;
 }
 
+export async function getListingsByCategory(category, setListingResults) {
+  const listings = firebase.firestore().collection('listings');
+  const snapshot = await listings.where('category', '==', category).get();
+  if (snapshot.empty) {
+    console.log('No listings here');
+    return;
+  }
+  var temp = []
+
+  snapshot.forEach((doc) => {
+    temp.push([doc.id, doc.data()])
+  });
+
+  setListingResults(temp);
+}
 export function getListingListener(listingId, setListing) {
   //console.log("LISTING ID" + listingId);
   const unsubscribe = firebase

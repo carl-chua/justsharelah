@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { withRouter, Redirect } from "react-router";
+import { withRouter, Redirect, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import firebase from "../API/Firebase";
 import { AuthContext } from "../Auth";
@@ -16,10 +16,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "../Styles/LogIn.css";
 
-import loginImage from "../Media/Capture.PNG";
+import loginImage from "../images/loginImage.svg";
+
 
 import { signIn, currentUser as currUser } from "../Redux/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,45 +68,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ history }) => {
+export default function Login() {
   const classes = useStyles();
 
-  const dispatch = useDispatch();
+  const userToken = useSelector(state => state.userToken)
 
-  const handleLogin = useCallback(
-    async (event) => {
-      event.preventDefault();
-      const { email, password } = event.target.elements;
-      try {
-        await firebase
-          .auth()
-          .signInWithEmailAndPassword(email.value, password.value);
+  const {signIn} = useContext(AuthContext)
+  const history = useHistory()
 
-        var user = firebase.auth().currentUser;
-        if (user) {
-          let userData = await firebase
-            .firestore()
-            .collection("users")
-            .doc(user.uid)
-            .get();
+  async function handleLogin(e) {
+    e.preventDefault()
+    let {email, password} = e.target.elements;
+    await signIn({email : email.value, password : password.value});
 
-          dispatch(currUser(userData.data()));
-          dispatch(signIn(user.uid));
-        }
-
-        history.push("/");
-      } catch (error) {
-        alert(error);
-      }
-    },
-    [history]
-  );
-
-  const { currentUser } = useContext(AuthContext);
-
-  if (currentUser) {
-    return <Redirect to="/" />;
   }
+
+  React.useEffect(() => {
+    if(userToken != null) {
+      history.push("/")
+    }
+  },[userToken]) 
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -176,8 +158,6 @@ const Login = ({ history }) => {
     </Grid>
   );
 };
-
-export default withRouter(Login);
 
 /*const Login = ({ history }) => {
   const handleLogin = useCallback(

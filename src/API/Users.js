@@ -155,3 +155,22 @@ export async function getAllUsers() {
   const snapshot = await db.get();
   return snapshot;
 }
+
+export function changePassword(newPassword) {
+  var user = firebase.auth().currentUser;
+
+  user.updatePassword(newPassword).then(function() {
+    // Update successful.
+  }).catch(function(error) {
+    // An error happened.
+  });
+}
+
+export async function getAllUsersExcept(username) {
+  const db = firebase
+    .firestore()
+    .collection("users")
+    .where("username", "!=", username);
+  const snapshot = await db.get();
+  return snapshot;
+}

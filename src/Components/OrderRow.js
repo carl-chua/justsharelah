@@ -4,13 +4,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Moment from "moment";
 import { getListingListener } from "../API/Listings";
 import OrderCardModal from "./OrderCardModal";
+import { ClickAwayListener } from "@material-ui/core";
 
-export default function OrderRow({ order, handleOpenModal, filter }) {
+export default function OrderRow({ order, filter }) {
   const [parentListing, setParentListing] = React.useState();
 
   const [showModal, setShowModal] = React.useState(false);
 
   React.useEffect(() => {
+    console.log("orderrow refiring")
     const unsubscribe = getListingListener(
       order[1].listingId,
       setParentListing
@@ -19,21 +21,20 @@ export default function OrderRow({ order, handleOpenModal, filter }) {
     return unsubscribe;
   }, []);
 
-  function handleOnClick() {
-    let data = {
-        order : order,
-        parentListing : parentListing,
+  const handleClose = (e) => {
+    if(e) {
+      e.stopPropagation();
+      e.preventDefault();
     }
-    handleOpenModal(data, order[0])
-    setShowModal(true)
-  }
-
-  function handleClose() {
       setShowModal(false);
   }
 
+  function handleOpen() {
+    setShowModal(true)
+  }
+
   return (parentListing && parentListing.title && parentListing.title.toLowerCase().includes(filter.toLowerCase())) ? (
-    <TableRow key={order[0]} hover onClick={handleOnClick}>
+    <TableRow key={order[0]} hover onClick={handleOpen}>
       <TableCell component="th" scope="row">
         {parentListing ? parentListing.title : ""}
       </TableCell>
@@ -44,8 +45,10 @@ export default function OrderRow({ order, handleOpenModal, filter }) {
         {order[1].price ? order[1].price : "-"}
       </TableCell>
       <TableCell align="right">
-        {order[1].hasPaid ? "Paid" : "Unpaid"}
-      </TableCell>
+        {order[1].paymentStatus ? order[1].paymentStatus : "UNPAID"}
+      </TableCell> 
+      <OrderCardModal show = {showModal} handleClose = {handleClose} data = {{order : order, parentListing: parentListing}} dataId = {order[0]}/>
     </TableRow>
   ): null;
 }
+//

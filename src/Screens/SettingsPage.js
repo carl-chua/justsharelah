@@ -9,7 +9,10 @@ import Box from '@material-ui/core/Box';
 
 import ProfileCard from "../Components/ProfileCard";
 import ChangePassword from "../Components/ChangePassword";
-import ListingList from "../Components/ListingList";
+
+import NavBar from "../Components/NavBar";
+import { useSelector } from 'react-redux';
+import { getUserByIdListener } from '../API/Users';
 
 
 
@@ -49,35 +52,34 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
+    margin: "5%",
+    display: "inline",
+    padding: 0,
+    margin: 0,
+  },
+  content: {
     display: 'flex',
-    margin: "5%"
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     paddingLeft: 10,
     minWidth: "18vw",
-    height: 190,
+    height: 160,
   },
   tabPanel: {
   },
   tabContainer : {
     marginLeft: "5%",
     padding: "2%",
-    maxHeight: "85vh", 
-    minWidth: "60VW",
+    maxHeight: "75vh", 
+    minWidth: "65VW",
     overflow: "auto",
     borderRadius : 16,
     borderColor : "#BEBEBE",
     boxShadow : "-10px 10px 4px rgba(0, 0, 0, 0.05)",
-},
+  },
 }));
 
-const dummyData = {
-        name: "MAX",
-        mobileNum: "999999",
-        password: "xxxx",
-        country: "MSIA"
-    }
 
 export default function VerticalTabs() {
   const classes = useStyles();
@@ -87,56 +89,56 @@ export default function VerticalTabs() {
     setValue(newValue);
   };
 
+  const userToken = useSelector(state => state.userToken);
+
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+    
+    const unsubscribe = getUserByIdListener(userToken, setUser) 
+    
+    return unsubscribe
+  },[])
+
   return (
 
-    <div className={classes.root}>
-      <Tabs
-        orientation="vertical"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        className={classes.tabs}
-      >
-        <Tab label="Edit Profile" {...a11yProps(0)} />
-        <Tab label="Change Password" {...a11yProps(1)} />
-        <Tab label="History" {...a11yProps(2)} />
-        <Tab label="Settings" {...a11yProps(3)} />
-        
-      </Tabs>
-      <TabPanel value={value} index={0} className = {classes.tabPanel}>
+    user ? <div className={classes.root}>
+      <div className = {classes.content}>
+        <Tabs
+          orientation="vertical"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          className={classes.tabs}
+        >
+          <Tab label="Edit Profile" {...a11yProps(0)} />
+          <Tab label="Change Password" {...a11yProps(1)} />
+          
+        </Tabs>
+        <TabPanel value={value} index={0} className = {classes.tabPanel}>
+          <Box
+              m = {1}
+              border = {1}
+              bgcolor = "background-paper"
+              className = {classes.tabContainer}
+              >
+              <ProfileCard user = {user}/>
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={1} className = {classes.tabPanel}>
         <Box
-            m = {1}
-            border = {1}
-            bgcolor = "background-paper"
-            className = {classes.tabContainer}
-            >
-            <ProfileCard data = {dummyData}/>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={1} className = {classes.tabPanel}>
-      <Box
-            m = {1}
-            border = {1}
-            bgcolor = "background-paper"
-            className = {classes.tabContainer}
-            >
-            <ChangePassword data = {dummyData}/>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={2} className = {classes.tabPanel}>
-      <Box
-            m = {1}
-            border = {1}
-            bgcolor = "background-paper"
-            className = {classes.tabContainer}
-            >
-            <ListingList dataList = {dummyData} colSize = {3}/>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={3} className = {classes.tabPanel}>
-        Settings
-      </TabPanel>
-      
+              m = {1}
+              border = {1}
+              bgcolor = "background-paper"
+              className = {classes.tabContainer}
+              >
+              <ChangePassword user = {user}/>
+          </Box>
+        </TabPanel>
+        
+      </div>
     </div>
+    :
+    null
   );
 }

@@ -69,10 +69,10 @@ export default function UsersListingPage() {
     setIsOpen(false);
   };
 
-  const getKupperUsername = (kupperId) => {
-    getUserById(kupperId, setKupper);
-    return kupper.username;
-  };
+  // const getKupperUsername = (kupperId) => {
+  //   getUserById(kupperId, setKupper);
+  //   return kupper.username;
+  // };
 
   return (
     <div>
@@ -83,7 +83,7 @@ export default function UsersListingPage() {
             component="button"
             variant="body2"
             onClick={() => {
-              history.push("/usersListingsPage/");
+              history.goBack();
             }}
           >
             <ArrowBackIcon />
@@ -110,7 +110,7 @@ export default function UsersListingPage() {
                         onClick={() => handleOpen()}
                       >
                         <TableCell component="th" scope="row">
-                          {() => getKupperUsername(orderRecord[1].user)}
+                          {orderRecord[1].user}
                         </TableCell>
                         <TableCell align="right">
                           {new Date(

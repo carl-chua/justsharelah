@@ -4,25 +4,22 @@ import Modal from "@material-ui/core/Modal";
 import UserList from "./UserList";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
   innerContainer : {
-    display: "flex",
-    width : "100%",
-    maxHeight: "90%",
-    flexDirection: "column",
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center",
-    background: "#FFD076",
-    borderRadius: "30px",
-    paddingBottom: "8%",
+    maxWidth : 600,
+    minWidth : 300,
+    width : "40%",
+    background : "white",
   },
   modalTitle : {
     display: "flex",
     height: "20%",
+    width : "100%",
     justifyContent: "center",
     alignItems: "center",
+    background: "#7AA18A",
   },
 
 
@@ -43,20 +40,23 @@ export default function FollowModal({ title, show, dataList, handleClose }) {
       style = {{
         display: "flex",
         position: "absolute",
-        justifyContent : "flex-start",
+        justifyContent : "center",
         alignItems : "center",
-        width: 300,
+        width : "100%",
         maxHeight: "60%",
         top: "20%",
-        left: isNotSmallScreen ? "40%" : "20%",
         alignSelf : "center",
       }}
     >
       <div className={styles.innerContainer}>
         <div className = {styles.modalTitle}>
-          <h2>{dataList ? dataList.length : 0} {title}</h2>
+          <Button disabled = {true}/>
+          <h2 style = {{textAlign : "center", width : "90%"}}>{dataList ? dataList.length : 0} {title}</h2>
+          <Button style ={{backgroundColor : 'transparent'}} onClick = {handleClose}>X</Button>
         </div>
-        <UserList dataList={dataList} title={title} handleClose = {handleClose}/>
+        <div style = {{display : "flex", width : "100%", justifyContent : "center", alignItems : "center", marginTop : 20, marginBottom : 20, maxHeight : 500, overflow : "scroll",}}>
+          <UserList dataList={dataList} title={title} handleClose = {handleClose}/>
+        </div>
       </div>
     </Modal>
   );

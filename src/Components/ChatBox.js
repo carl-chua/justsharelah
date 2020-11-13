@@ -23,9 +23,11 @@ const styles = {
 function ChatBox({
   selectedChat,
   chatUser,
-  showCreateOrderModal,
+  orderRecord,
+  selectedListing,
   openCreateOrderModal,
-  closeCreateOrderModal,
+  openEditOrderModal,
+  openWithdrawOrderModal,
 }) {
   const [messages, setMessages] = useState([]);
   const [tempMessages, setTempMessages] = useState([]);
@@ -102,6 +104,13 @@ function ChatBox({
     },
   };
 
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
   function onSend(messages) {
     for (const message of messages) {
       sendMessage(message, selectedChat[0]);
@@ -115,9 +124,25 @@ function ChatBox({
           <Typography variant="h6" color="inherit">
             {selectedChat[1].groupName}
           </Typography>
-          <button className="OrderButton" onClick={openCreateOrderModal}>
-            Order
-          </button>
+          {selectedListing.isClosed ? (
+            <h4>Order has been closed!</h4>
+          ) : isEmpty(orderRecord) ? (
+            <button className="OrderButton" onClick={openCreateOrderModal}>
+              Order
+            </button>
+          ) : (
+            <div>
+              <button
+                className="WithdrawOrderButton"
+                onClick={openWithdrawOrderModal}
+              >
+                Withdraw Order
+              </button>
+              <button className="OrderButton" onClick={openEditOrderModal}>
+                Edit Order
+              </button>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
     );

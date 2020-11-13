@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     width: "100%",
     flexWrap: "wrap",
     overflow: "auto",
-    paddingLeft: "2.5%",
+    paddingLeft: "1.5%",
   },
   noListText: {
     display: "flex",
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ListingSearchResult({ colSize, dataList }) {
+export default function CategoryCard({ colSize, dataList }) {
   const styles = useStyles();
   const theme = useTheme();
   const isNotSmallScreen = useMediaQuery(theme.breakpoints.up("md"));
@@ -31,8 +31,7 @@ export default function ListingSearchResult({ colSize, dataList }) {
   console.log("DATALIST:" + JSON.stringify(dataList));
 
   return (
-    <div className="ListingSearchResult">
-      <h1>Listings</h1>
+    <div>
       {dataList && dataList.length > 0 ? (
         <GridList
           cols={colSize}

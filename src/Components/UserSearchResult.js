@@ -33,12 +33,15 @@ export default function UserSearchResult({ users }) {
   return (
     <div className="UserSearchResult">
       <h1>Users</h1>
-      <Box display="flex" flexDirection="column">
-        {users.map((data) => (
-          <UserSearchResultItem key={data[0]} user={data[1]} />
-        ))}
-      </Box>
-      {users.length == 0 ? <p>No such user found!</p> : ""}
+      {users && users.length > 0 ? (
+        <Box display="flex" flexDirection="column">
+          {users.map((data) => (
+            <UserSearchResultItem key={data[0]} user={data[1]} />
+          ))}
+        </Box>
+      ) : (
+        <p>No users found!</p>
+      )}
     </div>
   );
 }
