@@ -58,7 +58,7 @@ export async function addOrder(items, listingId, currentUserUsername) {
 
       tn.set(newOrderRef, {
         listingId: listingId,
-        paymentStatus: "UNPAID",
+        paymentStatus: "REQUESTED",
         datePaid: null,
         price: null,
         receiptImage: null,
