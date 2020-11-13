@@ -76,6 +76,12 @@ export default function Login() {
   const {signIn} = useContext(AuthContext)
   const history = useHistory()
 
+  function forgotPassword() {
+    if (firebase.auth().currentUser == null) {
+      history.push('/forgotpassword');
+    }
+  }
+
   async function handleLogin(e) {
     e.preventDefault()
     let {email, password} = e.target.elements;
@@ -143,7 +149,9 @@ export default function Login() {
             </Button>
             <Grid container direction="column">
               <Grid item>
-                <Link className="forgotPassword">Forgot password?</Link>
+                <Link className="forgotPassword"
+                onClick={forgotPassword}
+                >Forgot password?</Link>
               </Grid>
               <Grid item>
                 <Link className="createAccount" to="/signup">

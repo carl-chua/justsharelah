@@ -166,6 +166,12 @@ function Chat({ history }) {
     });
   }, []);
 
+  /*useEffect(() => {
+    if (chatGroups.length !== 0) {
+      setSelectedChat(chatGroups[0]);
+    }
+  },[chatGroups])*/
+
   useEffect(() => {
     if (userToken && currentUser) {
       const storageRef = firebase.storage().ref();
