@@ -184,7 +184,7 @@ export default function UsersListings() {
                           {listing[1].orderRecords.length}
                         </TableCell>
                         <TableCell align="right">
-                          {listing[1].kuppers.length}
+                          {/*listing[1].kuppers.length*/}
                         </TableCell>
                       </TableRow>
                     )
