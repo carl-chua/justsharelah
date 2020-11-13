@@ -252,8 +252,8 @@ export async function getOrderItems(orderId, setItems) {
   setItems(temp);
 }
 
-export async function getOrderItemsListener(orderId, setItems) {
-  let unsubscribe = await firebase
+export function getOrderItemsListener(orderId, setItems) {
+  let unsubscribe = firebase
     .firestore()
     .collection("orderRecords")
     .doc(orderId)
