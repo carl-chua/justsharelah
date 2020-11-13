@@ -49,7 +49,7 @@ function App() {
           {userToken && <NavBar />}
           <div
             style={{
-              height: "100%",
+              height: "95vh",
               overflow: "scroll",
             }}
           >
