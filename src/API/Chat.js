@@ -23,6 +23,19 @@ export async function sendMessage(message, selectedChat) {
     .set(message);
 }
 
+function loadPhoto(userObj) {
+  try {
+    const storageRef = firebase.storage().ref();
+    var photoRef = storageRef.child("image").child(userObj.avatar);
+    photoRef.getDownloadURL().then(function (url) {
+      userObj.avatar = url;
+      return userObj;
+    });
+  } catch (err) {
+    console.log("Error loading photo for chat:" + err);
+  }
+}
+
 // I need a function that retrieves messages of a ChatGroup and listens
 export function messagesListener(selectedChat, setMessages) {
   const unsubscribe = firebase
@@ -32,12 +45,13 @@ export function messagesListener(selectedChat, setMessages) {
     .onSnapshot(function (querySnapshot) {
       querySnapshot.docChanges().forEach(async function (changes) {
         const user = await getUserByIdForChat(changes.doc.data().user);
-        console.log(user);
-        const userObj = {
+
+        var userObj = {
           id: changes.doc.data().user,
           name: user.username,
-          avatar: user.photo,
+          avatar: user.imageUrl,
         };
+        userObj = loadPhoto(userObj);
         var msg = {
           ...changes.doc.data(),
           createdAt: changes.doc.data().createdAt.toDate(),
