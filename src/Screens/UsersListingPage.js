@@ -13,9 +13,9 @@ import Link from "@material-ui/core/Link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-
+import { ConfirmCloseOrdersModal } from "../Components/ConfirmCloseOrdersModal";
 import { useSelector } from "react-redux";
-import { getListingById } from "../API/Listings";
+import { getListingById, closeOrdersForListing } from "../API/Listings";
 import { getUserById } from "../API/Users";
 
 import {
@@ -43,9 +43,22 @@ export default function UsersListingPage() {
   const currentUser = useSelector((state) => state.currentUser);
 
   const [listing, setListing] = React.useState({});
-  const [kuppers, setKuppers] = React.useState([]);
+  const [kupper, setKupper] = React.useState({});
   const [orderRecords, setOrderRecords] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const [
+    showConfirmCloseOrdersModal,
+    setShowConfirmCloseOrdersModal,
+  ] = React.useState(false);
+
+  function openConfirmCloseOrdersModal() {
+    setShowConfirmCloseOrdersModal(true);
+  }
+
+  function closeConfirmCloseOrdersModal() {
+    setShowConfirmCloseOrdersModal(false);
+  }
 
   React.useEffect(() => {
     getListingById(listingId).then((listing) => {
@@ -58,15 +71,18 @@ export default function UsersListingPage() {
       listingId,
       setOrderRecords
     );
+    // orderRecords.forEach((orderRecord) => {
+    //   getUserById(orderRecord[1].user, setKupper);
+    //   orderRecord[1].userName = kupper.username;
+    // });
     return unsubscribe;
   }, []);
 
   // React.useEffect(() => {
-  //   orderRecords.map((orderRecord) => {
-
-  //   })
-
-  // }, [listingId]);
+  //   if (orderRecords) {
+  //     getUserById(orderRecords[1].user, setKupper);
+  //   }
+  // }, [orderRecords]);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -90,6 +106,7 @@ export default function UsersListingPage() {
             component="button"
             variant="body2"
             onClick={() => {
+              // history.push("/myWallet");
               history.goBack();
             }}
           >
@@ -144,7 +161,36 @@ export default function UsersListingPage() {
             </Table>
           </TableContainer>
         </Paper>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          {!listing.isClosed ? (
+            <button
+              style={{
+                backgroundColor: "#cc7f5d",
+                color: "#ffffff",
+                border: "none",
+                cursor: "pointer",
+                overflow: "hidden",
+                outline: "none",
+                fontSize: "25px",
+                marginTop: "18px",
+                height: "48px",
+                width: "280px",
+                borderRadius: "5px",
+              }}
+              onClick={openConfirmCloseOrdersModal}
+            >
+              CLOSE ORDERS
+            </button>
+          ) : (
+            <h3>Orders Closed!</h3>
+          )}
+        </div>
       </Container>
+      <closeConfirmCloseOrdersModal
+        show={showConfirmCloseOrdersModal}
+        handleClose={closeConfirmCloseOrdersModal}
+        listingId={listingId}
+      />
     </div>
   );
 }
