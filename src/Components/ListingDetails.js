@@ -286,11 +286,6 @@ const ListingDetails = () => {
 
   const history = useHistory();
 
-  function handleProfileClick() {
-    history.push(`/user/${authorName}`);
-  }
-
-
   const[showPhotoModal, setShowPhotoModal] = React.useState(false);
 
   function handlePhotoModal() {
@@ -305,7 +300,11 @@ const ListingDetails = () => {
     }
   }
 
-
+  function handleProfileClick(authorName) {
+    if (firebase.auth().currentUser != null) {
+      history.push(`/user/${authorName}`);
+    }
+  }
 
   return (
     <div className={classes.root} >
@@ -334,13 +333,18 @@ const ListingDetails = () => {
               ></Avatar>
               &nbsp; &nbsp;
               <Tooltip title="Click to view profile page" arrow>
-                <Typography
-                  variant="h4"
-                  style={{ color: "#212121" }}
-                  onClick={handleProfileClick}
-                >
+                
+                    <Link
+                        onClick={() => handleProfileClick(authorName)}
+                        style={{
+                        textDecoration: "none",
+                        color: "#212121",
+                        fontSize: "50px",
+                        }}
+                    >
                   {authorName}
-                </Typography>
+                  </Link>
+                
               </Tooltip>
               &nbsp; &nbsp;
               <div>
