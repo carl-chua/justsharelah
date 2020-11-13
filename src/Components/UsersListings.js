@@ -174,6 +174,7 @@ export default function UsersListings() {
                         onClick={() => {
                           history.push("/usersListingPage/" + listing[0]);
                         }}
+                        style={{ cursor: "pointer" }}
                       >
                         <TableCell component="th" scope="row">
                           {listing[1].title}
@@ -229,6 +230,7 @@ export default function UsersListings() {
                         onClick={() => {
                           history.push("/usersListingPage/" + listing[0]);
                         }}
+                        style={{ cursor: "pointer" }}
                       >
                         <TableCell component="th" scope="row">
                           {listing[1].title}

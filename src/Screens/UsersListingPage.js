@@ -130,6 +130,7 @@ export default function UsersListingPage() {
                         key={orderRecord[0]}
                         hover
                         onClick={() => handleOpen()}
+                        style={{ cursor: "pointer" }}
                       >
                         <TableCell component="th" scope="row">
                           {orderRecord[1].user}

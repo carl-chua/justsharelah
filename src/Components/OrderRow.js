@@ -12,7 +12,7 @@ export default function OrderRow({ order, filter }) {
   const [showModal, setShowModal] = React.useState(false);
 
   React.useEffect(() => {
-    console.log("orderrow refiring")
+    console.log("orderrow refiring");
     const unsubscribe = getListingListener(
       order[1].listingId,
       setParentListing
@@ -22,19 +22,26 @@ export default function OrderRow({ order, filter }) {
   }, []);
 
   const handleClose = (e) => {
-    if(e) {
+    if (e) {
       e.stopPropagation();
       e.preventDefault();
     }
-      setShowModal(false);
-  }
+    setShowModal(false);
+  };
 
   function handleOpen() {
-    setShowModal(true)
+    setShowModal(true);
   }
 
-  return (parentListing && parentListing.title && parentListing.title.toLowerCase().includes(filter.toLowerCase())) ? (
-    <TableRow key={order[0]} hover onClick={handleOpen}>
+  return parentListing &&
+    parentListing.title &&
+    parentListing.title.toLowerCase().includes(filter.toLowerCase()) ? (
+    <TableRow
+      key={order[0]}
+      hover
+      onClick={handleOpen}
+      style={{ cursor: "pointer" }}
+    >
       <TableCell component="th" scope="row">
         {parentListing ? parentListing.title : ""}
       </TableCell>
@@ -46,9 +53,14 @@ export default function OrderRow({ order, filter }) {
       </TableCell>
       <TableCell align="right">
         {order[1].paymentStatus ? order[1].paymentStatus : "UNPAID"}
-      </TableCell> 
-      <OrderCardModal show = {showModal} handleClose = {handleClose} data = {{order : order, parentListing: parentListing}} dataId = {order[0]}/>
+      </TableCell>
+      <OrderCardModal
+        show={showModal}
+        handleClose={handleClose}
+        data={{ order: order, parentListing: parentListing }}
+        dataId={order[0]}
+      />
     </TableRow>
-  ): null;
+  ) : null;
 }
 //
