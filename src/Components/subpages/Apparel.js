@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "3%",
     padding: "1%",
     minHeight: "75vh", 
+    maxHeight: "75vh", 
     minWidth: "60VW",
     overflow: "auto",
     borderRadius : 16,

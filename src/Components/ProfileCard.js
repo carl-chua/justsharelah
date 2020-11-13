@@ -129,6 +129,7 @@ export default function Profile({ user }) {
         },
         { merge: true }
       );
+      alert("Image saved!");
       return true;
     } catch (error) {
       console.log(error);
@@ -317,6 +318,9 @@ export default function Profile({ user }) {
         <div
           style={{
             marginTop: "2%",
+            display: 'flex',
+            justifyContent: 'flex-start',
+            marginLeft: '5%',
           }}
         >
           <CountryDropdown
@@ -326,8 +330,8 @@ export default function Profile({ user }) {
             style={{
               margin: "1%",
               marginBottom: "5%",
-              minWidth: "44.5vw",
-              maxWidth: "44.5vw",
+              minWidth: "44vw",
+              maxWidth: "44vw",
               minHeight: "6.5vh",
               textAlign: "start",
               padding: "1%",
@@ -340,8 +344,8 @@ export default function Profile({ user }) {
             style={{
               margin: "1%",
               marginBottom: "5%",
-              minWidth: "14vw",
-              maxWidth: "14vw",
+              minWidth: "13vw",
+              maxWidth: "13vw",
               minHeight: "6.5vh",
               textAlign: "start",
               padding: "1%",
