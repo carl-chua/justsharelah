@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(1),
       textAlign: 'center',
       color: theme.palette.text.secondary,
+      
     },
   }));
 
@@ -92,8 +93,8 @@ const useStyles = makeStyles((theme) => ({
     border: 0,
     color: 'white',
     height: 48,
-    padding: '0 30px',
-    
+    padding: '30px',
+    marginBottom: '80px',
   };
 
 //const CreateListing = () => {
@@ -181,7 +182,7 @@ function CreateListing({ history }) {
             createdDate: new Date(),
             photo: photoId,
             members: [],
-            kuppers: [],
+            //kuppers: [],
             isClosed: false,
             orderRecords: [],
             chatGroup: "",
@@ -224,7 +225,7 @@ function CreateListing({ history }) {
     };
 
     return (
-        <div className={classes.root} style={{ background: "#f1f8e9" }}>
+        <div className={classes.root} >
             
             <h2  style={{ textAlign: "center", marginTop : 0 }}>What would you like to list today? <CardGiftcardOutlinedIcon fontSize="medium"/></h2>
             <form onSubmit={handleSubmit} className={classes.root} noValidate autoComplete="off">
@@ -249,7 +250,6 @@ function CreateListing({ history }) {
                                 <option value={"Beauty"}>Beauty</option>
                                 <option value={"Living"}>Living</option>
                                 <option value={"Babies&Kids"}>Babies&Kids</option>
-                                <option value={"Food"}>Food</option>
                                 <option value={"Others"}>Others</option>
                                 
                             </NativeSelect>
@@ -279,7 +279,7 @@ function CreateListing({ history }) {
                         required
                         id="outlined-required"
                         label="Listing Tags"
-                        placeholder="Add up to 10 keywords to help people find your listing"
+                        placeholder="Add keywords for your listing!"
                         variant="outlined"
                         value={listingTags}
                         onChange={handleTags}
@@ -412,13 +412,7 @@ function CreateListing({ history }) {
                     </Paper>
                 </Grid>
                 
-                <Grid item md={8}>
-                    <Paper className={classes.paper}>
-                    <div className={classes.root}>
-                    <p>JustShareLah</p>
-                    </div>
-                    </Paper>
-                </Grid>
+            
             
             </Grid>
             </form>

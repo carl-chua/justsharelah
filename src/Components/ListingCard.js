@@ -116,7 +116,7 @@ export default function ListingCard({ key, data }) {
                 color: "black",
               }}
             >
-              {data[1].kuppers ? data[1].kuppers.length : 0} Kuppers
+              {data[1].orderRecords ? data[1].orderRecords.length : 0} Kuppers
             </div>
           </Box>
         </CardContent>
