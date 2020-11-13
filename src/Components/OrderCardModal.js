@@ -180,16 +180,16 @@ export default function OrderCardModal({
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "flex-start",
+                  justifyContent: "space-between",
                   width: "100%",
                   paddingLeft: 10,
-                  paddingRight: 10,
+                  paddingRight: 20,
                 }}
               >
-                <p>
-                  Total :{" "}
-                  {data.order[1].price ? data.order[1].price : "-"}
-                </p>
+                <p>Total : {data.order[1].price ? data.order[1].price : "-"}</p>
+                <p>{`Delivery Fee : ${
+                  data.order[1].deliveryFee ? data.order[1].deliveryFee : 0
+                }`}</p>
               </div>
               <Dropzone
                 handlePhotoModal={handlePhotoModal}
@@ -197,7 +197,10 @@ export default function OrderCardModal({
                 setUrl={setUrl}
                 setAllUploads={setAllUploads}
                 setIsUploading={setIsUploading}
-                disabled = {(data.order[1].paymentStatus === "PAID" || (data.order[1].price <= 0))}
+                disabled={
+                  data.order[1].paymentStatus === "PAID" ||
+                  data.order[1].price <= 0
+                }
               />
             </div>
           </CardContent>
@@ -209,20 +212,23 @@ export default function OrderCardModal({
               paddingBottom: 20,
             }}
           >
-            { data.order[1].paymentStatus !== "PAID" ? <Button
-              className={styles.button}
-              onClick={handleSubmit}
-              disabled={
-                !isUploading &&
-                (data.order[1].receiptImage
-                  ? data.order[1].receiptImage === url
-                  : !url) && !(data.order[1].price > 0)
-              }
-            >
-              {data.order[1].price > 0 ? "SEND PAYMENT" : "NO PRICE"}
-            </Button>
-            :
-            <h3>PAYMENT CONFIRMED</h3>}
+            {data.order[1].paymentStatus !== "PAID" ? (
+              <Button
+                className={styles.button}
+                onClick={handleSubmit}
+                disabled={
+                  (isUploading === true ||
+                  (data.order[1].receiptImage
+                    ? (data.order[1].receiptImage === url)
+                    : !url) ||
+                  data.order[1].price <= 0)
+                }
+              >
+                {data.order[1].price > 0 ? "SEND PAYMENT" : "NO PRICE"}
+              </Button>
+            ) : (
+              <h3>PAYMENT CONFIRMED</h3>
+            )}
           </div>
         </Card>
       </Modal>
