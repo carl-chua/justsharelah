@@ -115,7 +115,10 @@ function WithdrawOrderModal({ show, handleClose, orderRecord }) {
     evt.preventDefault();
 
     async function deleteOrder() {
-      let result = await deleteOrderRecord(orderRecord[0]);
+      let result = await deleteOrderRecord(
+        orderRecord[0],
+        currentUser.username
+      );
       if (result) {
         alert.show("Order withdrawn successfully");
         handleClose();

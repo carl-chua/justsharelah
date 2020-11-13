@@ -123,7 +123,7 @@ export async function getOrderRecordItems(orderRecordId) {
   return snapshot;
 }
 
-export async function deleteOrderRecord(orderRecordId) {
+export async function deleteOrderRecord(orderRecordId, currentUserUsername) {
   var batch = firebase.firestore().batch();
 
   const existingOrdersItemsRef = firebase
@@ -138,6 +138,19 @@ export async function deleteOrderRecord(orderRecordId) {
     .doc(orderRecordId);
 
   const orderRecord = await (await orderRecordRef.get()).data();
+  const listing = (
+    await firebase
+      .firestore()
+      .collection("listings")
+      .doc(orderRecord.listingId)
+      .get()
+  ).data();
+  var listingOwner = (await getUserById2(listing.listingOwner)).data();
+
+  var message =
+    currentUserUsername + " withdrew order from your listing " + listing.title;
+
+  addNotification(listingOwner.username, message);
 
   try {
     await existingOrdersItemsRef.get().then((querySnapshot) => {

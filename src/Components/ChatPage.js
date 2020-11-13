@@ -105,19 +105,6 @@ function Chat({ history }) {
     setShowWithdrawOrderModal(false);
   }
 
-  function loadPhoto(userObj) {
-    try {
-      const storageRef = firebase.storage().ref();
-      var photoRef = storageRef.child("image").child(userObj.avatar);
-      photoRef.getDownloadURL().then(function (url) {
-        userObj.avatar = url;
-        return userObj;
-      });
-    } catch (err) {
-      console.log("Error loading photo for chat:" + err);
-    }
-  }
-
   /*useEffect(() => {
     if (!isEmpty(chatUser)) {
       chatUser = loadPhoto(chatUser);
@@ -131,8 +118,6 @@ function Chat({ history }) {
       var photoRef = storageRef.child("image").child(chatGroup[1].photo);
       photoRef.getDownloadURL().then(function (url) {
         chatGroup[1].photo = url;
-        console.log("Group Name:" + chatGroup[1].groupName);
-        console.log("image url:" + chatGroup[1].photo);
       });
     }
   }
