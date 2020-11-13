@@ -4,7 +4,7 @@ export function getUserByUsernameListener(username, setUser) {
   const snapshot = firebase
     .firestore()
     .collection("users")
-    .where("usernameLower", "==", username)
+    .where("usernameLower", "==", username.toLowerCase())
     .limit(1);
 
   const unsubscribe = snapshot.onSnapshot((docSnapshot) => {
@@ -21,7 +21,7 @@ export async function getUserByUsername(username, setUser) {
   const snapshot = await firebase
     .firestore()
     .collection("users")
-    .where("usernameLower", "==", username)
+    .where("usernameLower", "==", username.toLowerCase())
     .limit(1)
     .get();
 
