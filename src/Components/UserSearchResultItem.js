@@ -9,6 +9,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import firebase from "../API/Firebase"
 
 const useStyles = makeStyles({
   root: {
@@ -44,6 +45,26 @@ const useStyles = makeStyles({
 export default function UserSearchResultItem({ user }) {
   const styles = useStyles();
   const history = useHistory();
+  const [imgUrl, setImgUrl] = React.useState();
+
+  React.useEffect(() => {
+    loadPhoto()
+  },[])
+
+  function loadPhoto() {
+    // Create a reference to the file we want to download
+    try {
+      const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(user.imageUrl);
+
+      // Get the download URL
+      photoRef.getDownloadURL().then(function (url) {
+        setImgUrl(url);
+      });
+    } catch (err) {
+      setImgUrl(null);
+    }
+  }
 
   const linkString = "/user/" + user.username;
 
@@ -55,7 +76,7 @@ export default function UserSearchResultItem({ user }) {
             <CardContent>
               <Box display="flex" flexDirection="row" alignItems="center">
                 <Avatar
-                  src={user.imageUrl}
+                  src={imgUrl}
                   style={{
                     width: 60,
                     height: 60,
