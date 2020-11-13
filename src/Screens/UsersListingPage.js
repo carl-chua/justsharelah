@@ -64,14 +64,13 @@ export default function UsersListingPage() {
     getListingById(listingId).then((listing) => {
       setListing(listing.data());
     });
-  }, [listingId]);
+  }, [listingId, showConfirmCloseOrdersModal]);
 
   React.useEffect(() => {
     const unsubscribe = getOrderRecordsByListingIdListener(
       listingId,
       setOrderRecords
     );
-
     return unsubscribe;
   }, []);
 

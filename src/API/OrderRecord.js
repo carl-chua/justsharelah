@@ -163,7 +163,7 @@ export async function editOrder(items, orderRecordId, currentUserUsername) {
     .doc(orderRecordId)
     .collection("items");
 
-  var listingRef = await firebase
+  const listingRef = await firebase
     .firestore()
     .collection("listings")
     .where("orderRecords", "array-contains", orderRecordId)
@@ -177,9 +177,11 @@ export async function editOrder(items, orderRecordId, currentUserUsername) {
     });
 
     var listingOwnerId;
+    var listingName;
 
-    listingRef.docs.map((doc) => {
+    listingRef.forEach((doc) => {
       listingOwnerId = doc.data().listingOwner;
+      listingName = doc.data().title;
     });
 
     var listingOwnerName = (await getUserById2(listingOwnerId)).data().username;
@@ -198,9 +200,8 @@ export async function editOrder(items, orderRecordId, currentUserUsername) {
     var message =
       currentUserUsername +
       " has edited an order to your listing " +
-      listingOwnerName;
+      listingName;
 
-    console.log(message);
     addNotification(listingOwnerName, message);
 
     await batch.commit();
