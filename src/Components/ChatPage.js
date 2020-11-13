@@ -105,23 +105,6 @@ function Chat({ history }) {
     setShowWithdrawOrderModal(false);
   }
 
-  /*useEffect(() => {
-    if (!isEmpty(chatUser)) {
-      chatUser = loadPhoto(chatUser);
-    }
-  }, [chatUser]);*/
-
-  async function loadPhotos(temp) {
-    var chatGroup;
-    const storageRef = firebase.storage().ref();
-    for (chatGroup of temp) {
-      var photoRef = storageRef.child("image").child(chatGroup[1].photo);
-      photoRef.getDownloadURL().then(function (url) {
-        chatGroup[1].photo = url;
-      });
-    }
-  }
-
   useEffect(() => {
     getChatGroups(userToken).then(function (querySnapshot) {
       let temp = [];
@@ -129,22 +112,26 @@ function Chat({ history }) {
       async function fetch(temp) {
         const storageRef = firebase.storage().ref();
         querySnapshot.forEach(function (doc) {
-          var photoRef = storageRef.child("image").child(doc.data().photo);
-          photoRef
-            .getDownloadURL()
-            .then(function (url) {
-              var chatGroup = {
-                ...doc.data(),
-                photo: url,
-              };
-              temp.push([doc.id, chatGroup]);
-            })
-            .then(() => {
-              setChatGroups(temp);
-              if (temp.length !== 0) {
-                setSelectedChat(temp[0]);
-              }
-            });
+          try {
+            var photoRef = storageRef.child("image").child(doc.data().photo);
+            photoRef
+              .getDownloadURL()
+              .then(function (url) {
+                var chatGroup = {
+                  ...doc.data(),
+                  photo: url,
+                };
+                temp.push([doc.id, chatGroup]);
+              })
+              .then(() => {
+                setChatGroups(temp);
+                if (temp.length !== 0) {
+                  setSelectedChat(temp[0]);
+                }
+              });
+          } catch (err) {
+            console.log(err);
+          }
         });
       }
       fetch(temp);
@@ -160,25 +147,21 @@ function Chat({ history }) {
   useEffect(() => {
     if (userToken && currentUser) {
       try {
-        if (currentUser.imageUrl) {
-          const storageRef = firebase.storage().ref();
-          var photoRef = storageRef.child("image").child(currentUser.imageUrl);
-          photoRef.getDownloadURL().then(function (url) {
-            setChatUser({
-              id: userToken,
-              name: currentUser.username,
-              avatar: url,
-            });
-          });
-        } else {
+        const storageRef = firebase.storage().ref();
+        var photoRef = storageRef.child("image").child(currentUser.imageUrl);
+        photoRef.getDownloadURL().then(function (url) {
           setChatUser({
             id: userToken,
             name: currentUser.username,
-            avatar: null,
+            avatar: url,
           });
-        }
+        });
       } catch (err) {
-        console.log(err);
+        setChatUser({
+          id: userToken,
+          name: currentUser.username,
+          avatar: null,
+        });
       }
     }
   }, []);
