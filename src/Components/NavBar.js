@@ -144,6 +144,15 @@ export default function NavBar() {
     handleMenuClose();
   }
 
+  function handleEditProfile() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push('/settings');
+    } else {
+      history.push("/login");
+    }
+    handleMenuClose();
+  }
+
   function handleCategoryClick(category) {
     if (firebase.auth().currentUser != null) {
       history.push(`/categories/${category}`);
@@ -199,6 +208,12 @@ export default function NavBar() {
           <AccountCircle />
         </IconButton>
         <p>My Profile</p>
+      </MenuItem>
+      <MenuItem onClick={handleEditProfile}>
+        <IconButton color="inherit">
+          <AccountCircle />
+        </IconButton>
+        <p>Edit Profile</p>
       </MenuItem>
       <MenuItem onClick={handleSignOut}>
         <IconButton color="inherit">
