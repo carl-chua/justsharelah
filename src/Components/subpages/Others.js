@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "3%",
     padding: "1%",
-    maxHeight: "75vh", 
+    minHeight: "75vh", 
     minWidth: "60VW",
     overflow: "auto",
     borderRadius : 16,
