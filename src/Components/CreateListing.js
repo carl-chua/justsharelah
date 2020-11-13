@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import CardGiftcardOutlinedIcon from '@material-ui/icons/CardGiftcardOutlined';
 import { Redirect } from "react-router";
+import { useAlert } from "react-alert";
 
 const BootstrapInput = withStyles((theme) => ({
     root: {
@@ -100,6 +101,7 @@ const useStyles = makeStyles((theme) => ({
 //const CreateListing = () => {
 function CreateListing({ history }) {
     const classes = useStyles();
+    const alert = useAlert();
     const [category, setCategory] = React.useState('');
     const handleChange = (event) => {
         setCategory(event.target.value);
@@ -123,7 +125,7 @@ function CreateListing({ history }) {
         setShopLink(event.target.value);
     };
 
-    const [photoId, setPhotoId] = React.useState('');
+    const [photoId, setPhotoId] = React.useState('noimage.JPG');
 
     // const handleImg = async (e) => {
     function useHandleImg (e) {
@@ -141,7 +143,7 @@ function CreateListing({ history }) {
         const fileRef = storageRef.child('image');
         fileRef.child(imgId).put(file);
         //console.log(typeof file.name);
-        alert("Image saved!");
+        alert.show("Image saved!");
 
     };
 
@@ -211,7 +213,7 @@ function CreateListing({ history }) {
                 })
                 .then(function() {
                     console.log("Document successfully updated!");
-                    alert("Listing created! Click ok to view listing");
+                    alert.show("Listing created!");
                     //redirect to listing details page
                     history.push(`/listingDetails/${listing}`);
                 })
