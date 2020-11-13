@@ -15,6 +15,8 @@ import Rating from "@material-ui/lab/Rating";
 import { getReviews } from "../API/Reviews";
 import { Avatar } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
+import PhotoModal from "./PhotoModal";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,8 +89,10 @@ const ListingDetails = () => {
   let { id } = useParams();
   var listingId = id;
 
+  const userToken = useSelector(state => state.userToken)
+
   async function handleLeave() {
-    //const index = membersArray.indexOf(user.uid);
+    //const index = membersArray.indexOf(userToken);
     //remove user id from members
     //if (index > -1) {
     // membersArray.splice(index, 1);
@@ -97,7 +101,7 @@ const ListingDetails = () => {
     //update db
     //var listingRef = firebase.firestore().collection("listings").doc(id);
     //return listingRef.update({
-    //members: firebase.firestore.FieldValue.arrayRemove(user.uid),
+    //members: firebase.firestore.FieldValue.arrayRemove(userToken),
     //})
     var listingRef = firebase.firestore().collection("listings").doc(id);
     var chatGroupRef = firebase
@@ -107,10 +111,10 @@ const ListingDetails = () => {
     try {
       await firebase.firestore().runTransaction(async (tn) => {
         tn.update(listingRef, {
-          members: firebase.firestore.FieldValue.arrayRemove(user.uid),
+          members: firebase.firestore.FieldValue.arrayRemove(userToken),
         });
         tn.update(chatGroupRef, {
-          members: firebase.firestore.FieldValue.arrayRemove(user.uid),
+          members: firebase.firestore.FieldValue.arrayRemove(userToken),
         });
 
         //alert("Left listing!");
@@ -125,12 +129,12 @@ const ListingDetails = () => {
   }
 
   async function handleJoin() {
-    //membersArray.push(user.uid);
+    //membersArray.push(userToken);
 
     //update db
     //var listingRef = firebase.firestore().collection("listings").doc(id);
     //return listingRef.update({
-    //members: firebase.firestore.FieldValue.arrayUnion(user.uid),
+    //members: firebase.firestore.FieldValue.arrayUnion(userToken),
     //})
     var listingRef = firebase.firestore().collection("listings").doc(id);
     var chatGroupRef = firebase
@@ -140,10 +144,10 @@ const ListingDetails = () => {
     try {
       await firebase.firestore().runTransaction(async (tn) => {
         tn.update(listingRef, {
-          members: firebase.firestore.FieldValue.arrayUnion(user.uid),
+          members: firebase.firestore.FieldValue.arrayUnion(userToken),
         });
         tn.update(chatGroupRef, {
-          members: firebase.firestore.FieldValue.arrayUnion(user.uid),
+          members: firebase.firestore.FieldValue.arrayUnion(userToken),
         });
 
         //alert("Joined listing!");
@@ -278,13 +282,20 @@ const ListingDetails = () => {
     history.push(`/user/${authorName}`);
   }
 
+
+  const[showPhotoModal, setShowPhotoModal] = React.useState(false);
+
+  function handlePhotoModal() {
+    setShowPhotoModal(true)
+  }
+
   //not working
   function loadButton() {
     //listingOwner wont see join or leave listing buttons
-    if (user.uid !== listingOwner) {
+    if (userToken !== listingOwner) {
       let button1;
       //kuppers cant leave
-      if (kuppersArray.includes(user.uid)) {
+      if (kuppersArray.includes(userToken)) {
         button1 = (
           <Button
             disabled="true"
@@ -296,7 +307,7 @@ const ListingDetails = () => {
             Leave Listing
           </Button>
         );
-      } else if (membersArray.includes(user.uid)) {
+      } else if (membersArray.includes(userToken)) {
         button1 = (
           <Button
             onClick={handleLeave}
@@ -342,7 +353,7 @@ const ListingDetails = () => {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Card className={classes.root}>
-            <CardActionArea>
+            <CardActionArea onClick={handlePhotoModal}>
               <CardMedia
                 className={classes.media}
                 image={imgUrl}
@@ -374,9 +385,9 @@ const ListingDetails = () => {
               </Tooltip>
               &nbsp; &nbsp;
               <div>
-                {user.uid !== listingOwner &&
-                membersArray.includes(user.uid) &&
-                !kuppersArray.includes(user.uid) ? (
+                {userToken !== listingOwner &&
+                membersArray.includes(userToken) &&
+                !kuppersArray.includes(userToken) ? (
                   <Button
                     onClick={handleLeave}
                     className={classes.joinChatButton}
@@ -389,9 +400,9 @@ const ListingDetails = () => {
                 ) : (
                   ""
                 )}
-                {user.uid !== listingOwner &&
-                !membersArray.includes(user.uid) &&
-                !kuppersArray.includes(user.uid) ? (
+                {userToken !== listingOwner &&
+                !membersArray.includes(userToken) &&
+                !kuppersArray.includes(userToken) ? (
                   <Button
                     onClick={handleJoin}
                     className={classes.joinChatButton}
@@ -404,8 +415,8 @@ const ListingDetails = () => {
                 ) : (
                   ""
                 )}
-                {user.uid !== listingOwner &&
-                kuppersArray.includes(user.uid) ? (
+                {userToken !== listingOwner &&
+                kuppersArray.includes(userToken) ? (
                   <Button
                     disabled="true"
                     className={classes.joinChatButton}
@@ -491,6 +502,7 @@ const ListingDetails = () => {
           </Paper>
         </Grid>
       </Grid>
+      <PhotoModal show={showPhotoModal} handleClose = {() => setShowPhotoModal(false)} url = {imgUrl}/>
     </div>
   );
 };
