@@ -190,13 +190,6 @@ export default function UserPage({ history }) {
               reviews={userReview}
             />
           </Box>
-          <Button 
-            variant="contained" 
-            className = {styles.button}
-            onClick = {handleEditProfile}
-            >
-            Edit Profile
-          </Button>
         </Grid>
         <Grid item xs={12} md={9}>
           <Box className={styles.tabBar}>

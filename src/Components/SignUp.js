@@ -236,12 +236,13 @@ export default function SignUp() {
             value={country}
             required
             fullWidth
+            id="country"
             onChange={(val) => setCountry(val)}
             whitelist={["SG", "HK", "MY", "ID"]}
             style={{
               margin: "1%",
               marginBottom: "5%",
-              minWidth: "21vw",
+              width: "21vw",
               minHeight: "6.5vh",
               textAlign: "start",
               padding: "1%",
@@ -254,13 +255,14 @@ export default function SignUp() {
             country={country}
             value={city}
             onChange={(val) => setCity(val)}
+            id="city"
             required
             fullWidth
             style={{
               marginTop: "6%",
               marginBottom: "4%",
               marginLeft: '3%',
-              minWidth: "14vw",
+              width: "14vw",
               minHeight: "6.5vh",
               textAlign: "start",
               padding: "1%",
