@@ -22,6 +22,7 @@ import { getOrderRecordByListingIdAndUserId } from "../API/OrderRecord";
 import { getListingById } from "../API/Listings";
 import EditOrderModal from "./EditOrderModal";
 import WithdrawOrderModal from "./WithdrawOrderModal";
+import firebase from "../API/Firebase";
 
 const styles = {
   container: {
@@ -102,9 +103,23 @@ function Chat({ history }) {
     avatar: currentUser.photo,
   };
 
+  async function loadPhotos(temp) {
+    var chatGroup;
+    const storageRef = firebase.storage().ref();
+    for (chatGroup of temp) {
+      var photoRef = storageRef.child("image").child(chatGroup[1].photo);
+      photoRef.getDownloadURL().then(function (url) {
+        chatGroup[1].photo = url;
+        console.log("Group Name:" + chatGroup[1].groupName);
+        console.log("image url:" + chatGroup[1].photo);
+      });
+    }
+  }
+
   useEffect(() => {
     getChatGroups(userToken).then((querySnapshot) => {
       let temp = [];
+      const storageRef = firebase.storage().ref();
       querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
       setChatGroups(temp);
       if (temp.length != 0) {

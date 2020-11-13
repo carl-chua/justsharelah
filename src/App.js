@@ -17,6 +17,16 @@ import ListingDetails from "./Components/ListingDetails";
 import CreateListing from "./Components/CreateListing";
 import SearchResultsPage from "./Screens/SearchResultsPage";
 import NavBar from "./Components/NavBar";
+
+import UsersListingsPage from "./Screens/UsersListingsPage";
+import UsersListingsPage2 from "./Screens/UsersListingsPage2";
+import UsersListingPage from "./Screens/UsersListingPage";
+import OrdersListingPage from "./Screens/OrdersListingPage";
+import NotificationsPage from "./Screens/NotificationsPage";
+import ChatPage from "./Components/ChatPage";
+import { useAlert } from "react-alert";
+import WalletPage from "./Screens/WalletPage";
+
 import Apparel from "./Components/subpages/Apparel";
 import Electronics from "./Components/subpages/Electronics";
 import Accessories from "./Components/subpages/Accessories";
@@ -25,14 +35,6 @@ import Beauty from "./Components/subpages/Beauty";
 import Living from "./Components/subpages/Living";
 import BabiesKids from "./Components/subpages/BabiesKids";
 import Others from "./Components/subpages/Others";
-
-import UsersListingsPage from "./Screens/UsersListingsPage";
-import UsersListingsPage2 from "./Screens/UsersListingsPage2";
-import UsersListingPage from "./Screens/UsersListingPage";
-import OrdersListingPage from "./Screens/OrdersListingPage";
-import ChatPage from "./Components/ChatPage";
-import { useAlert } from "react-alert";
-import WalletPage from "./Screens/WalletPage";
 
 function App() {
   const userToken = useSelector((state) => state.userToken);
@@ -45,17 +47,18 @@ function App() {
       <AuthProvider dispatch={dispatch} alert={alert}>
         <Router>
           {userToken && <NavBar />}
-          <div style={{ height: "100%", overflow: "scroll" }}>
+          <div
+            style={{
+              height: "100%",
+              overflow: "scroll",
+            }}
+          >
             <Switch>
               <PrivateRoute exact path="/" component={HomePage} />
               <Route exact path="/login" component={LogIn} />
               <Route exact path="/signup" component={SignUp} />
               <PrivateRoute exact path="/user/:username" component={UserPage} />
-              <PrivateRoute
-                exact
-                path="/settings/:username"
-                component={SettingsPage}
-              />
+              <PrivateRoute exact path="/settings" component={SettingsPage} />
               <PrivateRoute exact path="/chat/:username" component={ChatPage} />
               <PrivateRoute
                 exact
@@ -93,6 +96,59 @@ function App() {
                 component={UsersListingsPage2}
               />
               <PrivateRoute exact path="/myWallet" component={WalletPage} />
+              <PrivateRoute
+                exact
+                path="/categories/Electronics"
+                component={Electronics}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Accessories"
+                component={Accessories}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Apparel"
+                component={Apparel}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Education"
+                component={Education}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Living"
+                component={Living}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Beauty"
+                component={Beauty}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Babies&Kids"
+                component={BabiesKids}
+              />
+              <PrivateRoute
+                exact
+                path="/categories/Others"
+                component={Others}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: "12px",
+                }}
+              >
+                <PrivateRoute
+                  exact
+                  path="/notifications"
+                  component={NotificationsPage}
+                />
+              </div>
             </Switch>
           </div>
         </Router>

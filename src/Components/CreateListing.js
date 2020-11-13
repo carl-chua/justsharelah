@@ -234,7 +234,7 @@ function CreateListing({ history }) {
                     <Paper className={classes.paper}>
                     <h4>Select category</h4>
                         <FormControl className={classes.margin}>
-                            <InputLabel htmlFor="demo-customized-select-native">Select Category</InputLabel>
+                            <InputLabel htmlFor="demo-customized-select-native">Select</InputLabel>
                             <NativeSelect
                                 id="demo-customized-select-native"
                                 value={category}
@@ -411,7 +411,14 @@ function CreateListing({ history }) {
                     </div>
                     </Paper>
                 </Grid>
-
+                
+                <Grid item md={8}>
+                    <Paper className={classes.paper}>
+                    <div className={classes.root}>
+                    <p>JustShareLah</p>
+                    </div>
+                    </Paper>
+                </Grid>
             
             </Grid>
             </form>

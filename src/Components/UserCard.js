@@ -1,5 +1,5 @@
 import { Avatar, Card, Box, CardContent, CardActions, Button, Modal } from "@material-ui/core";
-
+import firebase from "../API/Firebase";
 import Rating from '@material-ui/lab/Rating';
 import React from "react";
 
@@ -73,7 +73,22 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
        setRating(total)
     },[reviews])
 
+    const [imgUrl, setImgUrl] = React.useState(user.imageUrl);
 
+    function loadPhoto() {
+        // Create a reference to the file we want to download
+        const storageRef = firebase.storage().ref();
+        var photoRef = storageRef.child("image").child(user.imageUrl);
+
+        // Get the download URL
+        photoRef.getDownloadURL().then(function (url) {
+            setImgUrl(url);
+        });
+    }
+
+    React.useEffect(() => {
+        loadPhoto();
+    }, []);
 
 
     return (
@@ -85,7 +100,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                 className = {styles.cardContent}
             >
                 <Avatar 
-                    src = {user.imageUrl} 
+                    src = {imgUrl} 
                     style = {{
                         width:100,
                         height:100,
@@ -95,7 +110,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                 </Avatar>
                 <div>
                     <p className = {styles.nameText}>{user.username}</p>
-                    <p className = {styles.subText}>{user.city}</p>
+                    <p className = {styles.subText}>{user.region}</p>
                 </div>
                 <Box
                     style = {{

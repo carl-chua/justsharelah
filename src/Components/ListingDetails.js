@@ -13,6 +13,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { useParams } from "react-router";
 import Rating from '@material-ui/lab/Rating';
 import { getReviews} from "../API/Reviews";
+import { Avatar} from "@material-ui/core";
+import { useHistory } from "react-router";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'left',
       color: theme.palette.text.secondary,
       height: 500,
-      maxheight: "100%"
+      //maxheight: "100%"
     },
 
     joinChatButton: {
@@ -80,6 +83,8 @@ const ListingDetails = () => {
     var [listingOwner, setListingOwner] = React.useState('');
     var [reviews, setReviews] = React.useState([]);
     var [button, setButton] = React.useState();
+    var [profileUrl, setProfileUrl] = React.useState('');
+    var [numReviews, setNumReviews] = React.useState('');
     let user = firebase.auth().currentUser;
     //get listing id from params
     let { id } = useParams();
@@ -110,7 +115,7 @@ const ListingDetails = () => {
                     members: firebase.firestore.FieldValue.arrayRemove(user.uid),
                 });
                
-                alert("Left listing!");
+                //alert("Left listing!");
                 
                 return true;
             });
@@ -142,7 +147,7 @@ const ListingDetails = () => {
                     members: firebase.firestore.FieldValue.arrayUnion(user.uid),
                 });
                 
-                alert("Joined listing!");
+                //alert("Joined listing!");
                 
                 return true;
             });
@@ -203,7 +208,7 @@ const ListingDetails = () => {
 
                 case 'storage/unknown':
                 // Unknown error occurred, inspect the server response
-                alert("Unknown error occurred/no listing photo uploaded");
+                //alert("Unknown error occurred/no listing photo uploaded");
                 break;
             }
             });
@@ -211,15 +216,24 @@ const ListingDetails = () => {
             firebase.firestore().collection("users").doc(doc.data().listingOwner).get().then(function(doc) {
                 if (doc.exists) {
                    setAuthorName(doc.data().username);
-                 
+                   //get profile pic if any
+                   if(doc.data().imageUrl) {
+                        const storageRef2 = firebase.storage().ref();
+                        var photoRef2 = storageRef2.child("image").child(doc.data().imageUrl);
+
+                        // Get the download URL
+                        photoRef2.getDownloadURL().then(function (url) {
+                            setProfileUrl(url);
+                        });
+                    }
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
                     alert("No such document!");
                 }
             }).catch(function(error) {
-                console.log("Error getting document:", error);
-                alert("Error getting document");
+                console.log("No profile pic, Error getting document:", error);
+                //alert("Error getting document/no profile photo");
             });
         } else {
             // doc.data() will be undefined in this case
@@ -244,8 +258,18 @@ const ListingDetails = () => {
             total = reviews.reduce((a,b) => a + b[1].numStars, 0.0)/reviews.length;
         }
 
-        setRating(total)
+        setNumReviews(reviews.length);
+        setRating(total);
     },[reviews])
+
+    const history = useHistory();
+
+    function handleProfileClick() {
+        
+        history.push(`/user/${authorName}`);
+    
+    }
+    
 
     //not working
     function loadButton() {
@@ -291,9 +315,21 @@ const ListingDetails = () => {
             <Grid item xs={6}>
             <Paper className={classes.paper}>
                 <div style={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h4" style={{ color: "#212121" }}>
+                <Avatar 
+                    src = {profileUrl} 
+                    style = {{
+                        width:50,
+                        height:50,
+                        }}
+                    >
+                </Avatar>
+                &nbsp;
+                &nbsp;
+                <Tooltip title="Click to view profile page" arrow>
+                    <Typography variant="h4" style={{ color: "#212121" }} onClick={handleProfileClick}>
                         {authorName} 
                     </Typography>
+                </Tooltip>
                     &nbsp;
                     &nbsp;
                     <div>
@@ -314,15 +350,17 @@ const ListingDetails = () => {
                         )}
                     </div>
                 </div>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <Rating 
+                        value = {rating}
+                        readOnly = {true}
+                        precision = {0.5}
+                    />
+                    &nbsp;
+                    <p>{numReviews} Review(s)</p>
+                </div>
                 
-                <Rating 
-                    value = {rating}
-                    readOnly = {true}
-                    precision = {0.5}
-                />
-                <br></br>
-                <br></br>
-                <Typography variant="h4" style={{ color: "#212121" }}>
+                <Typography variant="h5" style={{ color: "#212121" }}>
                     {listingTitle}
                 </Typography>
                 <Typography variant="p" style={{ color: "#4db6ac" }}>
@@ -331,70 +369,72 @@ const ListingDetails = () => {
                 </Typography>
                 <br></br>
                 <a href={shopLink} target="_blank" rel="noopener noreferrer">{shopLink}</a>
-                
+                <br></br>
                 
                 <br></br>
                 <div style={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h6" style={{ color: "#212121" }}>
+                    <Typography variant="p" style={{ color: "#212121" }}>
                         Target order date:
                     </Typography>
                     &nbsp;
                     &nbsp;
-                    <Typography variant="h6">
+                    <Typography variant="p">
                         {targetOrderDate}
                     </Typography>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h6" style={{ color: "#212121" }}>
+                    <Typography variant="p" style={{ color: "#212121" }}>
                         Target amount:
                     </Typography>
                     &nbsp;
                     &nbsp;
-                    <Typography variant="h6">
+                    <Typography variant="p">
                     $ {minQty}
                     </Typography>
                 </div>
                 
                 <div style={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h6" style={{ color: "#212121" }}>
+                    <Typography variant="p" style={{ color: "#212121" }}>
                         Location:
                     </Typography>
                     &nbsp;
                     &nbsp;
-                    <Typography variant="h6">
+                    <Typography variant="p">
                         {location}
                     </Typography>
                 </div>
                
                 <div style={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h6" style={{ color: "#212121" }}>
+                    <Typography variant="p" style={{ color: "#212121" }}>
                         Number of members:
                     </Typography>
                     &nbsp;
                     &nbsp;
-                    <Typography variant="h6">
+                    <Typography variant="p">
                         {members}
                     </Typography>
                 </div>
                 
                 <div style={{ display: "flex", alignItems: "baseline" }}>
-                    <Typography variant="h6" style={{ color: "#212121" }}>
+                    <Typography variant="p" style={{ color: "#212121" }}>
                         Number of kuppers:
                     </Typography>
                     &nbsp;
                     &nbsp;
-                    <Typography variant="h6">
+                    <Typography variant="p">
                         {kuppers}
                     </Typography>
                 </div>
                 
                 
-                <Typography variant="h6" style={{ color: "#212121" }}>
+                <Typography variant="p" style={{ color: "#212121" }}>
                     Details:
                 </Typography>
+                &nbsp;
+                &nbsp;
                 <Typography variant="p" fontWeight="fontWeightBold">
-                    {desc}
+                     {desc}
                 </Typography>
 
             </Paper>

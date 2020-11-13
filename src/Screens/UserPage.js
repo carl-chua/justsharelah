@@ -1,6 +1,5 @@
 import { Grid, Box, Button, Modal, Card } from "@material-ui/core";
 import React from "react";
-import firebase from "../API/Firebase";
 
 import UserCard from "../Components/UserCard";
 import { makeStyles } from "@material-ui/core/styles";
@@ -172,6 +171,11 @@ export default function UserPage({ history }) {
     history.push(`/settings`);
   }
 
+  function handleEditProfile() {
+    console.log("GOING TO EDIT PROFILE:");
+    history.push(`/settings`);
+}
+
   return user ? (
     <Box className={styles.root}>
       <Grid
@@ -191,6 +195,13 @@ export default function UserPage({ history }) {
               reviews={userReview}
             />
           </Box>
+          <Button 
+            variant="contained" 
+            className = {styles.button}
+            onClick = {handleEditProfile}
+            >
+            Edit Profile
+          </Button>
         </Grid>
         <Grid item xs={12} md={9}>
           <Box className={styles.tabBar}>

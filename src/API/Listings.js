@@ -65,6 +65,16 @@ export async function getUserListing(userId) {
   return temp;
 }
 
+export async function getUserListing2(userId) {
+  const snapshot = await db.where("listingOwner", "==", userId).get();
+
+  return snapshot;
+}
+
+/*export async function getFollowingListing(userIdList) {
+
+}*/
+
 export async function getListingById(listingId) {
   const snapshot = await db.doc(listingId).get();
 

@@ -1,4 +1,6 @@
 import firebase from "./Firebase.js";
+import { addNotification } from "./Notification";
+import { getUserById2 } from "./Users";
 
 const db = firebase.firestore().collection("orderRecords");
 
@@ -30,7 +32,7 @@ const db = firebase.firestore().collection("orderRecords");
     });
 }*/
 
-export async function addOrder(items, listingId) {
+export async function addOrder(items, listingId, currentUserUsername) {
   var newOrderRef = firebase.firestore().collection("orderRecords").doc();
   var newOrderItemsCollectionRef = newOrderRef.collection("items");
   var userRef = firebase
@@ -43,6 +45,16 @@ export async function addOrder(items, listingId) {
     await firebase.firestore().runTransaction(async (tn) => {
       var userDoc = await tn.get(userRef);
       var listingDoc = await tn.get(listingRef);
+
+      var listingOwner = (
+        await getUserById2(listingDoc.data().listingOwner)
+      ).data();
+      var message =
+        currentUserUsername +
+        " has added an order to your listing " +
+        listingDoc.data().title;
+
+      addNotification(listingOwner.username, message);
 
       tn.set(newOrderRef, {
         listingId: listingId,
@@ -83,6 +95,25 @@ export async function addOrder(items, listingId) {
     return false;
   }
 }
+export async function getOrderRecord(orderRecordId, setOrderRecord) {
+  var snapshot = await db.doc(orderRecordId).get();
+  setOrderRecord(snapshot.data());
+}
+
+export async function getOrderRecordsByListingId(listingId, setOrderRecords) {
+  let temp = [];
+
+  var snapshot = await db.where("listingId", "==", listingId).get();
+
+  snapshot.forEach((doc) => {
+    temp.push([doc.id, doc.data()]);
+  });
+
+  setOrderRecords(temp);
+}
+
+// export async function getItemsFromOrderRecord(orderRecord) {
+//   const snapshot = await db.doc(orderRecord).collection("items").get();
 
 export async function getOrderRecordItems(orderRecordId) {
   const snapshot = await db.doc(orderRecordId).collection("items").get();
@@ -204,11 +235,6 @@ export async function getOrderRecordByListingIdAndUserId(listingId, userId) {
   return snapshot;
 }
 
-export async function getOrderRecordsByListingId(listingId) {
-  const snapshot = await db.where("listingId", "==", listingId).get();
-  return snapshot;
-}
-
 export async function getOrderItems(orderId, setItems) {
   let temp = [];
 
@@ -259,6 +285,51 @@ export async function getOrderItemsListener(orderId, setItems) {
           );
         } else if (changes.type === "removed") {
           setItems((prevData) =>
+            prevData.map((data) => {
+              if (data[0] !== changes.doc.id) {
+                return data;
+              }
+            })
+          );
+        }
+      });
+    });
+
+  return unsubscribe;
+}
+
+export function getOrderRecordsByListingIdListener(listingId, setOrderRecords) {
+  let unsubscribe = firebase
+    .firestore()
+    .collection("orderRecords")
+    .where("listingId", "==", listingId)
+    .onSnapshot(function (querySnapshot) {
+      querySnapshot.docChanges().forEach(function (changes) {
+        if (changes.type === "added") {
+          setOrderRecords((prevData) => {
+            if (prevData.some((data) => data[0] === changes.doc.id)) {
+              return prevData;
+            } else {
+              return setOrderRecords([
+                ...prevData,
+                [changes.doc.id, changes.doc.data()],
+              ]);
+            }
+          });
+        } else if (changes.type === "modified") {
+          //console.log('chats modified :', changes.doc.data())
+          setOrderRecords((prevData) =>
+            prevData.map((data) => {
+              //console.log('UPDATING?', message)
+              if (data[0] === changes.doc.id) {
+                return [changes.doc.id, changes.doc.data()];
+              } else {
+                return data;
+              }
+            })
+          );
+        } else if (changes.type === "removed") {
+          setOrderRecords((prevData) =>
             prevData.map((data) => {
               if (data[0] !== changes.doc.id) {
                 return data;
@@ -328,6 +399,55 @@ export async function setOrderPayment(orderId, receiptUrl) {
       },
       { merge: true }
     );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+export async function setOrderRequest(orderId, price, deliveryFee) {
+  try {
+    await firebase.firestore().collection("orderRecords").doc(orderId).set(
+      {
+        paymentStatus: "PENDING",
+        price: price,
+        deliveryFee: deliveryFee,
+      },
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function setOrderPaid(orderId) {
+  try {
+    await firebase.firestore().collection("orderRecords").doc(orderId).set(
+      {
+        paymentStatus: "PAID",
+      },
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function setOrderItemPrice(orderId, itemId, price) {
+  try {
+    await firebase
+      .firestore()
+      .collection("orderRecords")
+      .doc(orderId)
+      .collection("items")
+      .doc(itemId)
+      .set(
+        {
+          itemPrice: price,
+        },
+        { merge: true }
+      );
     return true;
   } catch (err) {
     return false;

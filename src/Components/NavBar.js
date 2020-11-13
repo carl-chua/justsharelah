@@ -8,23 +8,30 @@ import {
 } from "../Redux/actions";
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
-import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import ChatTwoToneIcon from "@material-ui/icons/ChatTwoTone";
 import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 import PersonOutlineTwoToneIcon from "@material-ui/icons/PersonOutlineTwoTone";
+import { Badge } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
+import { useAlert } from "react-alert";
 import { getUserById, getUserByIdListener } from "../API/Users";
 import { AccountCircle } from "@material-ui/icons";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { AuthContext } from "../Auth";
+import {
+  notificationListener,
+  setAllUserNotificationsAsRead,
+} from "../API/Notification";
 
 import { currentUser as currUser } from "../Redux/actions";
 
@@ -35,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NavBar() {
+  const alert = useAlert();
+
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
@@ -48,6 +57,39 @@ export default function NavBar() {
   const [currentUser, setCurrentUser] = React.useState();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [notifications, setNotifications] = React.useState([]);
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
+  React.useEffect(() => {
+    if (!isEmpty(currentUser)) {
+      setNotifications([]);
+      const unsubscribe = notificationListener(
+        setNotifications,
+        currentUser.username
+      );
+
+      const test = () => {
+        return unsubscribe();
+      };
+      return test;
+    }
+  }, [currentUser]);
+
+  React.useEffect(() => {
+    if (
+      notifications.length !== 0 &&
+      notifications[notifications.length - 1] !== undefined
+    ) {
+      alert.show(notifications[notifications.length - 1][1].message);
+    }
+  }, [notifications]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -123,10 +165,24 @@ export default function NavBar() {
     }
   }
 
+  function handleUploadListingClick() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push("/createListing");
+    } else {
+      history.push("/login");
+    }
+  }
+
   async function handleSignOut(e) {
     e.preventDefault();
     await signOut();
     history.push("/login");
+  }
+
+  async function handleNotificationClick() {
+    await setAllUserNotificationsAsRead(currentUser.username);
+    await setNotifications([]);
+    history.push("/notifications");
   }
 
   const renderMenu = (
@@ -179,7 +235,16 @@ export default function NavBar() {
           </div>
         </form>
         <div className="SideButtons">
-          {/*<IconButton onClick={() => handleChatClick()}>
+          <IconButton onClick={() => handleNotificationClick()}>
+            <Badge badgeContent={notifications.length} color="secondary">
+              <NotificationsNoneIcon
+                style={{ color: "white" }}
+                fontSize="large"
+              />
+            </Badge>
+          </IconButton>
+
+          <IconButton onClick={() => handleChatClick()}>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
               fontSize="large"
@@ -187,7 +252,7 @@ export default function NavBar() {
           </IconButton>
 
           <IconButton onClick={handleWalletClick}>
-            <LocalMallOutlinedIcon
+            <AccountBalanceWalletOutlinedIcon
               style={{ color: "white" }}
               fontSize="large"
             />
@@ -195,17 +260,6 @@ export default function NavBar() {
 
           <IconButton onClick={handleProfileMenuOpen}>
             <PersonOutlineIcon style={{ color: "white" }} fontSize="large" />
-            </IconButton>*/}
-          <IconButton onClick={() => handleChatClick()}>
-            <ChatTwoToneIcon fontSize="large" />
-          </IconButton>
-
-          <IconButton onClick={handleWalletClick}>
-            <AccountBalanceWalletTwoToneIcon fontSize="large" />
-          </IconButton>
-
-          <IconButton onClick={handleProfileMenuOpen}>
-            <PersonOutlineTwoToneIcon fontSize="large" />
           </IconButton>
         </div>
       </div>
@@ -232,7 +286,12 @@ export default function NavBar() {
           </button>
           <button onClick={() => handleCategoryClick("Others")}>OTHERS</button>
         </div>
-        <button className="UploadListing">UPLOAD LISTING</button>
+        <button
+          className="UploadListing"
+          onClick={() => handleUploadListingClick()}
+        >
+          UPLOAD LISTING
+        </button>
       </div>
       {renderMenu}
     </div>
