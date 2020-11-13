@@ -300,7 +300,11 @@ const ListingDetails = () => {
     }
   }
 
-
+  function handleProfileClick(authorName) {
+    if (firebase.auth().currentUser != null) {
+      history.push(`/user/${authorName}`);
+    }
+  }
 
   return (
     <div className={classes.root} >
