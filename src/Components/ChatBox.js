@@ -7,6 +7,7 @@ import { sendMessage, messagesListener } from "../API/Chat";
 import { getUserByIdForChat } from "../API/Users";
 import { DateSeparator } from "stream-chat-react";
 import "../Styles/ChatBox.css";
+import { useHistory } from "react-router";
 
 const styles = {
   chat: {
@@ -31,6 +32,8 @@ function ChatBox({
 }) {
   const [messages, setMessages] = useState([]);
   const [tempMessages, setTempMessages] = useState([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     console.log(selectedChat[0]);
@@ -113,6 +116,7 @@ function ChatBox({
 
   function onSend(messages) {
     for (const message of messages) {
+      message.text = chatUser.name + ": " + message.text;
       sendMessage(message, selectedChat[0]);
     }
   }
@@ -154,6 +158,10 @@ function ChatBox({
         user={chatUser}
         messages={messages.slice().reverse()}
         onSend={(messages) => onSend(messages)}
+        onPressAvatar={(user) => {
+          var linkString = "/user/" + user.name;
+          history.push(linkString);
+        }}
       />
     );
   }
