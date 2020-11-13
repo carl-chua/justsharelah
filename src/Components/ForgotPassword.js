@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   
     textfield: {
       margin: "3%",
-      minWidth: "60vw",
+      width: "40vw",
       textAlign: "start",
     },
 
@@ -39,6 +39,10 @@ const useStyles = makeStyles({
         textDecoration: 'none',
         color: '#7AA18A',
         fontSize: '1.3rem',
+    },
+
+    alert: {
+        color: '#6B0B0B',
     }
   });
 
@@ -80,13 +84,14 @@ export default function PasswordReset() {
             fontWeight: "800",
         }}
     >
-      <h2>
+    
+      <div className="border border-blue-300 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
+        <h2>
         Reset your Password
       </h2>
-      <div className="border border-blue-300 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
         <form action="">
           {emailHasBeenSent && (
-            <div className="py-3 bg-green-400 w-full text-white text-center mb-3">
+            <div className={classes.alert}>
               An email has been sent to you!
             </div>
           )}
