@@ -174,6 +174,7 @@ function Chat({ history }) {
 
   useEffect(() => {
     if (userToken && currentUser) {
+      try {
       const storageRef = firebase.storage().ref();
       var photoRef = storageRef.child("image").child(currentUser.imageUrl);
       photoRef.getDownloadURL().then(function (url) {
@@ -183,6 +184,9 @@ function Chat({ history }) {
           avatar: url,
         });
       });
+    } catch(err) {
+      console.log(err);
+    }
     }
   }, []);
 
