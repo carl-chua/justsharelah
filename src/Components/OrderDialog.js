@@ -15,6 +15,8 @@ import TableRow from "@material-ui/core/TableRow";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   getOrderItems,
@@ -66,13 +68,13 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
   };
 
   const handlePaymentRequest = (event) => {
-    var totalPrice = 0;
+    var totalPrice = parseInt("0");
     for (const [key, value] of Object.entries(prices)) {
       console.log(key, value);
-      totalPrice += value;
+      totalPrice += parseInt(value);
       setOrderItemPrice(orderRecord[0], key, value);
     }
-    totalPrice += deliveryFee;
+    totalPrice += parseInt(deliveryFee);
     setOrderRequest(orderRecord[0], totalPrice, deliveryFee);
     handleClose();
   };
@@ -98,7 +100,7 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
               <TableCell align="right">Price</TableCell>
             </TableRow>
           </TableHead>
-          {orderRecord[1].paymentStatus === "UNPAID" ? (
+          {orderRecord[1].paymentStatus === "REQUESTED" ? (
             <TableBody>
               {items.length > 0 &&
                 items.map((item) => (
@@ -122,9 +124,7 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
                 <TableCell component="th" scope="row">
                   Delivery Fee
                 </TableCell>
-                <TableCell component="right" scope="row">
-                  -
-                </TableCell>
+                <TableCell align="right">-</TableCell>
                 <TableCell align="right">
                   <OutlinedInput
                     value={deliveryFee}
@@ -153,7 +153,8 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
                 <TableCell component="th" scope="row">
                   Delivery Fee
                 </TableCell>
-                <TableCell component="right" scope="row">
+                <TableCell align="right">-</TableCell>
+                <TableCell align="right">
                   {orderRecord[1].deliveryFee}
                 </TableCell>
                 <TableCell align="right">{deliveryFee}</TableCell>
@@ -162,8 +163,11 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
           )}
         </Table>
       </DialogContent>
+      <Container>
+        <img src={orderRecord[1].receiptImage}></img>
+      </Container>
       <DialogActions>
-        {orderRecord[1].paymentStatus === "UNPAID" ? (
+        {orderRecord[1].paymentStatus === "REQUESTED" ? (
           <Button
             onClick={(event) => handlePaymentRequest(event)}
             color="primary"
