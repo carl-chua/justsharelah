@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Avatar, Button } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 
-import IconButton from '@material-ui/core/IconButton';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import Paper from '@material-ui/core/Paper';
+import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -90,9 +88,9 @@ export default function Profile({user}) {
     };
 
     const [country, setCountry] = React.useState(user.country);
-    const handleCountryChange = (event) => {
+    const handleCountry = (event) => {
       setCountry(event.target.value);
-    };
+    };    
 
     const [phone, setPhone] = React.useState(user.phoneNumber);
     const handlePhoneChange = (event) => {
@@ -101,10 +99,8 @@ export default function Profile({user}) {
     var phoneno = /^\d{7}$/;
     const phoneerror = !phone.match(phoneno);
 
-    const [city, setCity] = React.useState(user.city);
-    const handleCityChange = (event) => {
-      setCity(event.target.value);
-    };
+    const [region, setRegion] = React.useState(user.region);
+
 
     const [img, setImg] = React.useState('');
     const [photoId, setPhotoId] = React.useState('');
@@ -120,7 +116,7 @@ export default function Profile({user}) {
       await firebase.firestore().collection('users').doc(curruser.uid).set({
         username : username,
         phoneNumber : phone,
-        city : city,
+        region : region,
         country : country,
         imageUrl : photoId,
       }, { merge: true })
@@ -280,49 +276,35 @@ export default function Profile({user}) {
                     className = {classes.textfield}
                     />
                 </div>
+                
                 <div>
-                    <TextField
-                    id="outlined-select-currency-native"
-                    select
-                    label="Country"
-                    defaultValue= {user.country}
-                    value = {country}
-                    onChange={handleCountryChange}
-                    SelectProps={{
-                      native: true,
-                    }}
-                    variant="outlined"
-                    className = {classes.dropdown}
-                  >
-                    {countries.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                    </TextField>
-                    </div>
-                    <div>
-                    <TextField
-                    id="outlined-select-currency-native"
-                    select
-                    label="City"
-                    defaultValue= {user.city}
-                    value = {city}
-                    onChange={handleCityChange}
-                    SelectProps={{
-                      native: true,
-                    }}
-                    variant="outlined"
-                    className = {classes.dropdown}
-                  >
-                    {countries.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                    </TextField>
-                </div>
-
+        <CountryDropdown
+          value={country}
+          onChange={(val) => setCountry(val)} 
+          whitelist={["SG", "HK", "MY", "ID"]} 
+          style = {{
+            margin: "1%",
+            marginBottom: '5%',
+            minWidth: '44vw',
+            maxWidth: '44vw',
+            minHeight: '6vh',
+            textAlign: "start",
+          }}
+          />
+        <RegionDropdown
+          country={country}
+          value={user.region}
+          onChange={(val) => setRegion(val)} 
+          style = {{
+            margin: "1%",
+            marginBottom: '5%',
+            minWidth: '14vw',
+            maxWidth: '14vw',
+            minHeight: '6vh',
+            textAlign: "start",
+          }}
+          />
+      </div>
             </form>
             
               <Button 
