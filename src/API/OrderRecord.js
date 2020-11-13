@@ -137,6 +137,8 @@ export async function deleteOrderRecord(orderRecordId) {
     .collection("orderRecords")
     .doc(orderRecordId);
 
+  const orderRecord = await (await orderRecordRef.get()).data();
+
   try {
     await existingOrdersItemsRef.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -367,7 +369,6 @@ export function getOrderRecordsByListingIdListener(listingId, setOrderRecords) {
         }
       });
     });
-
   return unsubscribe;
 }
 

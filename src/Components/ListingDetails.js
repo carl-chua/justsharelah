@@ -350,7 +350,7 @@ const ListingDetails = () => {
               &nbsp; &nbsp;
               <div>
               {isClosed  ? (
-                 <h6>Listing is closed!</h6>
+                 <h4>Listing is closed!</h4>
                 ) : (
                   ""
                 )}
