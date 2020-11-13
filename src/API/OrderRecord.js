@@ -83,6 +83,10 @@ export async function addOrder(items, listingId) {
     return false;
   }
 }
+export async function getOrderRecord(orderRecordId, setOrderRecord) {
+  var snapshot = await db.doc(orderRecordId).get();
+  setOrderRecord(snapshot.data());
+}
 
 export async function getOrderRecordsByListingId(listingId, setOrderRecords) {
   let temp = [];
@@ -282,6 +286,51 @@ export async function getOrderItemsListener(orderId, setItems) {
   return unsubscribe;
 }
 
+export function getOrderRecordsByListingIdListener(listingId, setOrderRecords) {
+  let unsubscribe = firebase
+    .firestore()
+    .collection("orderRecords")
+    .where("listingId", "==", listingId)
+    .onSnapshot(function (querySnapshot) {
+      querySnapshot.docChanges().forEach(function (changes) {
+        if (changes.type === "added") {
+          setOrderRecords((prevData) => {
+            if (prevData.some((data) => data[0] === changes.doc.id)) {
+              return prevData;
+            } else {
+              return setOrderRecords([
+                ...prevData,
+                [changes.doc.id, changes.doc.data()],
+              ]);
+            }
+          });
+        } else if (changes.type === "modified") {
+          //console.log('chats modified :', changes.doc.data())
+          setOrderRecords((prevData) =>
+            prevData.map((data) => {
+              //console.log('UPDATING?', message)
+              if (data[0] === changes.doc.id) {
+                return [changes.doc.id, changes.doc.data()];
+              } else {
+                return data;
+              }
+            })
+          );
+        } else if (changes.type === "removed") {
+          setOrderRecords((prevData) =>
+            prevData.map((data) => {
+              if (data[0] !== changes.doc.id) {
+                return data;
+              }
+            })
+          );
+        }
+      });
+    });
+
+  return unsubscribe;
+}
+
 export function getUserOrders(userId, setOrders) {
   let unsubscribe = firebase
     .firestore()
@@ -338,6 +387,55 @@ export async function setOrderPayment(orderId, receiptUrl) {
       },
       { merge: true }
     );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+export async function setOrderRequest(orderId, price, deliveryFee) {
+  try {
+    await firebase.firestore().collection("orderRecords").doc(orderId).set(
+      {
+        paymentStatus: "PENDING",
+        price: price,
+        deliveryFee: deliveryFee,
+      },
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function setOrderPaid(orderId) {
+  try {
+    await firebase.firestore().collection("orderRecords").doc(orderId).set(
+      {
+        paymentStatus: "PAID",
+      },
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function setOrderItemPrice(orderId, itemId, price) {
+  try {
+    await firebase
+      .firestore()
+      .collection("orderRecords")
+      .doc(orderId)
+      .collection("items")
+      .doc(itemId)
+      .set(
+        {
+          itemPrice: price,
+        },
+        { merge: true }
+      );
     return true;
   } catch (err) {
     return false;

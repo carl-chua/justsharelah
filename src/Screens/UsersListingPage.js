@@ -18,7 +18,10 @@ import { useSelector } from "react-redux";
 import { getListingById } from "../API/Listings";
 import { getUserById } from "../API/Users";
 
-import { getOrderRecordsByListingId } from "../API/OrderRecord";
+import {
+  getOrderRecordsByListingId,
+  getOrderRecordsByListingIdListener,
+} from "../API/OrderRecord";
 import OrderDialog from "../Components/OrderDialog";
 
 const useStyles = makeStyles({
@@ -51,8 +54,12 @@ export default function UsersListingPage() {
   }, [listingId]);
 
   React.useEffect(() => {
-    getOrderRecordsByListingId(listingId, setOrderRecords);
-  }, [listingId]);
+    const unsubscribe = getOrderRecordsByListingIdListener(
+      listingId,
+      setOrderRecords
+    );
+    return unsubscribe;
+  }, []);
 
   // React.useEffect(() => {
   //   orderRecords.map((orderRecord) => {

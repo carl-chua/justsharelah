@@ -16,7 +16,15 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
-import { getOrderItems, getUserOrders } from "../API/OrderRecord";
+import {
+  getOrderItems,
+  getOrderItemsListener,
+  getUserOrders,
+  getOrderRecord,
+  setOrderItemPrice,
+  setOrderRequest,
+  setOrderPaid,
+} from "../API/OrderRecord";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,14 +47,40 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
   const classes = useStyles();
   const [items, setItems] = React.useState([]);
   const [values, setValues] = React.useState({});
+  const [prices, setPrices] = React.useState({});
+  const [deliveryFee, setDeliveryFee] = React.useState();
+  // const [orderRecord, setOrderRecord] = React.useState({});
 
   React.useEffect(() => {
-    getOrderItems(orderRecord[0], setItems);
+    const unsubscribe = getOrderItemsListener(orderRecord[0], setItems);
+    return unsubscribe;
   }, []);
 
   const handleChange = (itemId, event) => {
-    setValues({ ...values, [itemId]: event.target.value });
-    console.log(values);
+    console.log(itemId, event.target.value);
+    setPrices({ ...prices, [itemId]: event.target.value });
+  };
+
+  const handleDeliveryFeeChange = (event) => {
+    console.log(event.target.value);
+    setDeliveryFee(event.target.value);
+  };
+
+  const handlePaymentRequest = (event) => {
+    var totalPrice = 0;
+    for (const [key, value] of Object.entries(prices)) {
+      console.log(key, value);
+      totalPrice += value;
+      setOrderItemPrice(orderRecord[0], key, value);
+    }
+    totalPrice += deliveryFee;
+    setOrderRequest(orderRecord[0], totalPrice, deliveryFee);
+    handleClose();
+  };
+
+  const handleVerifyPayment = (event) => {
+    setOrderPaid(orderRecord[0]);
+    handleClose();
   };
 
   return (
@@ -65,44 +99,88 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
               <TableCell align="right">Price</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {items.length > 0 &&
-              items.map((item) => (
-                <TableRow key={item[0]}>
-                  <TableCell component="th" scope="row">
-                    {item[1].itemName}
-                  </TableCell>
-                  <TableCell align="right">{item[1].itemQty}</TableCell>
-                  <TableCell align="right">
-                    <OutlinedInput
-                      value={item[1].price}
-                      onChange={(event) => handleChange(item[0], event)}
-                      startAdornment={
-                        <InputAdornment position="start">$</InputAdornment>
-                      }
-                      labelWidth={60}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            <TableRow>
-              <TableCell component="th" scope="row">
-                Delivery Fee
-              </TableCell>
-              <TableCell align="right">-</TableCell>
-            </TableRow>
-          </TableBody>
+          {orderRecord[1].paymentStatus === "UNPAID" ? (
+            <TableBody>
+              {items.length > 0 &&
+                items.map((item) => (
+                  <TableRow key={item[0]}>
+                    <TableCell component="th" scope="row">
+                      {item[1].itemName}
+                    </TableCell>
+                    <TableCell align="right">{item[1].itemQty}</TableCell>
+                    <TableCell align="right">
+                      <OutlinedInput
+                        value={item[1].price}
+                        onChange={(event) => handleChange(item[0], event)}
+                        startAdornment={
+                          <InputAdornment position="start">$</InputAdornment>
+                        }
+                        labelWidth={60}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Delivery Fee
+                </TableCell>
+                <TableCell component="right" scope="row">
+                  -
+                </TableCell>
+                <TableCell align="right">
+                  <OutlinedInput
+                    value={deliveryFee}
+                    onChange={(event) => handleDeliveryFeeChange(event)}
+                    startAdornment={
+                      <InputAdornment position="start">$</InputAdornment>
+                    }
+                    labelWidth={60}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ) : (
+            <TableBody>
+              {items.length > 0 &&
+                items.map((item) => (
+                  <TableRow key={item[0]}>
+                    <TableCell component="th" scope="row">
+                      {item[1].itemName}
+                    </TableCell>
+                    <TableCell align="right">{item[1].itemQty}</TableCell>
+                    <TableCell align="right">{item[1].price}</TableCell>
+                  </TableRow>
+                ))}
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Delivery Fee
+                </TableCell>
+                <TableCell component="right" scope="row">
+                  {orderRecord[1].deliveryFee}
+                </TableCell>
+                <TableCell align="right">{deliveryFee}</TableCell>
+              </TableRow>
+            </TableBody>
+          )}
         </Table>
       </DialogContent>
       <DialogActions>
-        {orderRecord[1].paymentStatus === "unpaid" ? (
-          <Button onClick={handleClose} color="primary">
+        {orderRecord[1].paymentStatus === "UNPAID" ? (
+          <Button
+            onClick={(event) => handlePaymentRequest(event)}
+            color="primary"
+          >
             Send Payment Request
           </Button>
         ) : (
-          <Button onClick={handleClose} color="primary">
-            Verify Payment
-          </Button>
+          orderRecord[1].paymentStatus === "PENDING" && (
+            <Button
+              onClick={(event) => handleVerifyPayment(event)}
+              color="primary"
+            >
+              Verify Payment
+            </Button>
+          )
         )}
       </DialogActions>
     </Dialog>
