@@ -14,6 +14,8 @@ import { useParams } from "react-router";
 import Rating from '@material-ui/lab/Rating';
 import { getReviews} from "../API/Reviews";
 import { Avatar} from "@material-ui/core";
+import { useHistory } from "react-router";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -113,7 +115,7 @@ const ListingDetails = () => {
                     members: firebase.firestore.FieldValue.arrayRemove(user.uid),
                 });
                
-                alert("Left listing!");
+                //alert("Left listing!");
                 
                 return true;
             });
@@ -145,7 +147,7 @@ const ListingDetails = () => {
                     members: firebase.firestore.FieldValue.arrayUnion(user.uid),
                 });
                 
-                alert("Joined listing!");
+                //alert("Joined listing!");
                 
                 return true;
             });
@@ -260,6 +262,15 @@ const ListingDetails = () => {
         setRating(total);
     },[reviews])
 
+    const history = useHistory();
+
+    function handleProfileClick() {
+        
+        history.push(`/user/${authorName}`);
+    
+    }
+    
+
     //not working
     function loadButton() {
         
@@ -311,13 +322,14 @@ const ListingDetails = () => {
                         height:50,
                         }}
                     >
-                        
                 </Avatar>
                 &nbsp;
                 &nbsp;
-                    <Typography variant="h4" style={{ color: "#212121" }}>
+                <Tooltip title="Click to view profile page" arrow>
+                    <Typography variant="h4" style={{ color: "#212121" }} onClick={handleProfileClick}>
                         {authorName} 
                     </Typography>
+                </Tooltip>
                     &nbsp;
                     &nbsp;
                     <div>
