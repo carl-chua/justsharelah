@@ -77,6 +77,8 @@ export default function UserPage({history}) {
 
     let { username } = useParams();
 
+    const currentUser = useSelector(state => state.currentUser)
+
     const[showFollowingModal, setShowFollowingModal] = React.useState(false);
     const[showFollowersModal, setShowFollowersModal] = React.useState(false);
 

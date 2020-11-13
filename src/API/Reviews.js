@@ -23,7 +23,7 @@ export function getReviewsListener(userId, setReviews) {
     const unsubscribe = firebase
     .firestore()
     .collection("reviews")
-    .orderBy("date", "desc")
+    .where("reviewee", "==", userId)
     .onSnapshot(function (querySnapshot) {
       querySnapshot.docChanges().forEach(function (changes) {
         if (changes.type === "added") {

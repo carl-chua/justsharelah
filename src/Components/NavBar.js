@@ -11,6 +11,7 @@ import { IconButton } from "@material-ui/core";
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
+import { getUserById } from "../API/Users";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +28,16 @@ function NavBar() {
   const dispatch = useDispatch();
 
   const userToken = useSelector((state) => state.userToken);
-  const currentUser = useSelector((state) => state.currentUser);
+
+  //const currentUser = useSelector((state) => state.currentUser);
+
+  const[currentUser, setCurrentUser] = React.useState()
+
+  React.useEffect(() => {
+    const unsubscribe = getUserById(userToken, setCurrentUser);
+
+    return unsubscribe;
+  },[])
   
   const history = useHistory();
 

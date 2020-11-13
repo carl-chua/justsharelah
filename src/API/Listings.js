@@ -126,3 +126,22 @@ export async function addReview(data) {
   });
   return true;
 }
+
+export function getListingListener(listingId, setListing) {
+  //console.log("LISTING ID" + listingId);
+  const unsubscribe = firebase
+    .firestore()
+    .collection("listings")
+    .doc(listingId)
+    .onSnapshot(
+      (docSnapShot) => {
+        setListing(docSnapShot.data());
+      },
+      (error) => {
+        setListing(null);
+        console.log(error);
+      }
+    );
+
+  return unsubscribe;
+}

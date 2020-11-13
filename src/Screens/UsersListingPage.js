@@ -12,9 +12,12 @@ import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 
 import { useSelector } from "react-redux";
 import { getListingById } from "../API/Listings";
+import { getUserById } from "../API/Users";
+
 import { getOrderRecordsByListingId } from "../API/OrderRecord";
 import OrderDialog from "../Components/OrderDialog";
 
@@ -37,6 +40,7 @@ export default function UsersListingPage() {
   const currentUser = useSelector((state) => state.currentUser);
 
   const [listing, setListing] = React.useState({});
+  const [kuppers, setKuppers] = React.useState([]);
   const [orderRecords, setOrderRecords] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -47,16 +51,15 @@ export default function UsersListingPage() {
   }, [listingId]);
 
   React.useEffect(() => {
-    getOrderRecordsByListingId(listingId).then((querySnapshot) => {
-      var temp = [];
-      querySnapshot.forEach((orderRecord) => {
-        temp.push(orderRecord.data());
-      });
-      setOrderRecords(temp);
-    });
+    getOrderRecordsByListingId(listingId, setOrderRecords);
   }, [listingId]);
 
-  console.log(orderRecords);
+  // React.useEffect(() => {
+  //   orderRecords.map((orderRecord) => {
+
+  //   })
+
+  // }, [listingId]);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -64,6 +67,11 @@ export default function UsersListingPage() {
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const getKupperUsername = (kupperId) => {
+    getUserById(kupperId, setKupper);
+    return kupper.username;
   };
 
   return (
@@ -92,36 +100,40 @@ export default function UsersListingPage() {
                   <TableCell align="right">Payment Status</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {orderRecords.length > 0 ? (
-                  React.Children.toArray(
-                    orderRecords.map((orderRecord) => (
-                      <>
-                        <TableRow hover onClick={() => handleOpen()}>
-                          <TableCell component="th" scope="row">
-                            {orderRecord.user}
-                          </TableCell>
-                          <TableCell align="right">
-                            {new Date(
-                              1000 * orderRecord.date.seconds
-                            ).toDateString()}
-                          </TableCell>
-                          <TableCell align="right">
-                            {orderRecord.paymentStatus}
-                          </TableCell>
-                        </TableRow>
-                        <OrderDialog
-                          open={isOpen}
-                          handleClose={handleClose}
-                          orderRecord={orderRecord}
-                        />
-                      </>
-                    ))
-                  )
-                ) : (
-                  <p>There are no kuppers at the moment!</p>
-                )}
-              </TableBody>
+              {orderRecords.length > 0 ? (
+                orderRecords.map((orderRecord) => (
+                  <>
+                    <TableBody>
+                      <TableRow
+                        key={orderRecord[0]}
+                        hover
+                        onClick={() => handleOpen()}
+                      >
+                        <TableCell component="th" scope="row">
+                          {() => getKupperUsername(orderRecord[1].user)}
+                        </TableCell>
+                        <TableCell align="right">
+                          {new Date(
+                            1000 * orderRecord[1].date.seconds
+                          ).toDateString()}
+                        </TableCell>
+                        <TableCell align="right">
+                          {orderRecord[1].paymentStatus}
+                        </TableCell>
+                      </TableRow>
+                      <OrderDialog
+                        open={isOpen}
+                        handleClose={handleClose}
+                        orderRecord={orderRecord}
+                      />
+                    </TableBody>
+                  </>
+                ))
+              ) : (
+                <Typography align="centre" variant="h6" component="h6">
+                  There are no kuppers at the moment!
+                </Typography>
+              )}
             </Table>
           </TableContainer>
         </Paper>

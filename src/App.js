@@ -10,7 +10,6 @@ import HomePage from "./Components/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import LogIn from "./Components/LogIn";
 import SignUp from "./Components/SignUp";
-import Chat from "./Components/Chat";
 import UserPage from "./Screens/UserPage";
 import SettingsPage from "./Screens/SettingsPage";
 import { Container } from "@material-ui/core";
@@ -21,6 +20,7 @@ import NavBar from "./Components/NavBar";
 
 import UsersListingsPage from "./Screens/UsersListingsPage";
 import UsersListingPage from "./Screens/UsersListingPage";
+import OrdersListingPage from "./Screens/OrdersListingPage";
 import ChatPage from "./Components/ChatPage";
 
 function App() {
@@ -54,6 +54,11 @@ function App() {
               exact
               path="/usersListingPage/:listingId"
               component={UsersListingPage}
+            />
+            <Route
+              exact
+              path="/ordersListingPage"
+              component={OrdersListingPage}
             />
           </div>
         </Router>
