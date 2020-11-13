@@ -63,6 +63,7 @@ function Chat({ history }) {
   const [chatGroups, setChatGroups] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
   const [selectedListing, setSelectedListing] = useState({});
+  const [chatUser, setChatUser] = useState({});
 
   const userToken = useSelector((state) => state.userToken);
   const currentUser = useSelector((state) => state.currentUser);
@@ -72,6 +73,13 @@ function Chat({ history }) {
   const [showWithdrawOrderModal, setShowWithdrawOrderModal] = useState(false);
 
   const [orderRecord, setOrderRecord] = useState();
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
 
   function openCreateOrderModal() {
     setShowCreateOrderModal(true);
@@ -97,11 +105,24 @@ function Chat({ history }) {
     setShowWithdrawOrderModal(false);
   }
 
-  const chatUser = {
-    id: userToken,
-    name: currentUser.username,
-    avatar: currentUser.photo,
-  };
+  function loadPhoto(userObj) {
+    try {
+      const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(userObj.avatar);
+      photoRef.getDownloadURL().then(function (url) {
+        userObj.avatar = url;
+        return userObj;
+      });
+    } catch (err) {
+      console.log("Error loading photo for chat:" + err);
+    }
+  }
+
+  /*useEffect(() => {
+    if (!isEmpty(chatUser)) {
+      chatUser = loadPhoto(chatUser);
+    }
+  }, [chatUser]);*/
 
   async function loadPhotos(temp) {
     var chatGroup;
@@ -117,19 +138,56 @@ function Chat({ history }) {
   }
 
   useEffect(() => {
-    getChatGroups(userToken).then((querySnapshot) => {
+    getChatGroups(userToken).then(function (querySnapshot) {
       let temp = [];
-      const storageRef = firebase.storage().ref();
-      querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
-      setChatGroups(temp);
-      if (temp.length != 0) {
-        setSelectedChat(temp[0]);
+
+      async function fetch(temp) {
+        const storageRef = firebase.storage().ref();
+        querySnapshot.forEach(function (doc) {
+          var photoRef = storageRef.child("image").child(doc.data().photo);
+          photoRef
+            .getDownloadURL()
+            .then(function (url) {
+              var chatGroup = {
+                ...doc.data(),
+                photo: url,
+              };
+              temp.push([doc.id, chatGroup]);
+            })
+            .then(() => {
+              setChatGroups(temp);
+              if (temp.length !== 0) {
+                setSelectedChat(temp[0]);
+              }
+            });
+        });
       }
+      fetch(temp);
     });
   }, []);
 
+  /*useEffect(() => {
+    if (chatGroups.length !== 0) {
+      setSelectedChat(chatGroups[0]);
+    }
+  },[chatGroups])*/
+
   useEffect(() => {
-    if (selectedChat.length !== 0) {
+    if (userToken && currentUser) {
+      const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(currentUser.imageUrl);
+      photoRef.getDownloadURL().then(function (url) {
+        setChatUser({
+          id: userToken,
+          name: currentUser.username,
+          avatar: url,
+        });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedChat.length !== 0 && !isEmpty(chatUser)) {
       getOrderRecordByListingIdAndUserId(
         selectedChat[1].listing,
         chatUser.id
@@ -236,7 +294,15 @@ function Chat({ history }) {
               />
             </>
           ) : (
-            <Loading />
+            <h3
+              style={{
+                color: "gray",
+                textAlign: "center",
+                marginLeft: "18%",
+              }}
+            >
+              No messages to show
+            </h3>
           )}
         </div>
       </div>

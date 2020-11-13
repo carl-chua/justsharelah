@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     "& > *": {
       margin: theme.spacing(1),
+      marginBottom : 0,
     },
   },
   media: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   joinChatButton: {
-    margin: theme.spacing(3),
+    margin: theme.spacing(1),
   },
 
   image: {
@@ -323,14 +324,14 @@ const ListingDetails = () => {
 
         <Grid item xs={6}>
           <Paper className={classes.paper}>
-            <div style={{ display: "flex", alignItems: "baseline" }}>
+            <div style={{ display: "flex", alignItems: "center", flexDirection : "row", }}>
               <Avatar
                 src={profileUrl}
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: 80,
+                  height: 80,
                 }}
-              ></Avatar>
+              />
               &nbsp; &nbsp;
               <Tooltip title="Click to view profile page" arrow>
                 

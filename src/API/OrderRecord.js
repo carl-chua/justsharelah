@@ -326,7 +326,13 @@ export function getOrderRecordsByListingIdListener(listingId, setOrderRecords) {
     .collection("orderRecords")
     .where("listingId", "==", listingId)
     .onSnapshot(function (querySnapshot) {
-      querySnapshot.docChanges().forEach(function (changes) {
+      querySnapshot.docChanges().forEach(async function (changes) {
+        const user = await (await getUserById2(changes.doc.data().user)).data();
+        var orderRecordObj = {
+          ...changes.doc.data(),
+          user: user.username,
+        };
+
         if (changes.type === "added") {
           setOrderRecords((prevData) => {
             if (prevData.some((data) => data[0] === changes.doc.id)) {
@@ -334,7 +340,7 @@ export function getOrderRecordsByListingIdListener(listingId, setOrderRecords) {
             } else {
               return setOrderRecords([
                 ...prevData,
-                [changes.doc.id, changes.doc.data()],
+                [changes.doc.id, orderRecordObj],
               ]);
             }
           });
@@ -344,7 +350,7 @@ export function getOrderRecordsByListingIdListener(listingId, setOrderRecords) {
             prevData.map((data) => {
               //console.log('UPDATING?', message)
               if (data[0] === changes.doc.id) {
-                return [changes.doc.id, changes.doc.data()];
+                return [changes.doc.id, orderRecordObj];
               } else {
                 return data;
               }

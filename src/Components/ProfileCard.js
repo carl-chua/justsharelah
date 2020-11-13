@@ -129,7 +129,7 @@ export default function Profile({ user }) {
         },
         { merge: true }
       );
-      alert("Image saved!");
+      alert("Saved Changes!");
       return true;
     } catch (error) {
       console.log(error);

@@ -16,6 +16,7 @@ export async function getChatGroups(userToken) {
 export async function sendMessage(message, selectedChat) {
   message.user = message.user.id;
   message.chatGroup = selectedChat;
+  console.log(message);
   await firebase
     .firestore()
     .collection("messages")
@@ -37,7 +38,7 @@ function loadPhoto(userObj) {
 }
 
 // I need a function that retrieves messages of a ChatGroup and listens
-export function messagesListener(selectedChat, setMessages) {
+/*export function messagesListener(selectedChat, setMessages) {
   const unsubscribe = firebase
     .firestore()
     .collection("messages")
@@ -46,12 +47,19 @@ export function messagesListener(selectedChat, setMessages) {
       querySnapshot.docChanges().forEach(async function (changes) {
         const user = await getUserByIdForChat(changes.doc.data().user);
 
+        console.log(user);
+
         var userObj = {
           id: changes.doc.data().user,
           name: user.username,
-          avatar: user.imageUrl,
+          avatar: user.photo,
         };
-        userObj = loadPhoto(userObj);
+        const storageRef = firebase.storage().ref();
+        var photoRef = storageRef.child("image").child(userObj.avatar);
+        photoRef.getDownloadURL().then(function (url) {
+
+        });
+
         var msg = {
           ...changes.doc.data(),
           createdAt: changes.doc.data().createdAt.toDate(),
@@ -67,6 +75,67 @@ export function messagesListener(selectedChat, setMessages) {
               return setMessages([...prevMessages, msg]);
             }
           });
+        }
+      });
+    });
+  return unsubscribe;
+}*/
+
+export function messagesListener(selectedChat, setMessages) {
+  const unsubscribe = firebase
+    .firestore()
+    .collection("messages")
+    .where("chatGroup", "==", selectedChat)
+    .onSnapshot(function (querySnapshot) {
+      querySnapshot.docChanges().forEach(async function (changes) {
+        const user = await getUserByIdForChat(changes.doc.data().user);
+        if (user.imageUrl) {
+          const storageRef = firebase.storage().ref();
+          var photoRef = storageRef.child("image").child(user.imageUrl);
+          photoRef.getDownloadURL().then(function (url) {
+            var userObj = {
+              id: changes.doc.data().user,
+              name: user.username,
+              avatar: url,
+            };
+            console.log(userObj);
+            var msg = {
+              ...changes.doc.data(),
+              createdAt: changes.doc.data().createdAt.toDate(),
+              user: userObj,
+            };
+            if (changes.type === "added") {
+              console.log("adding");
+              setMessages((prevMessages) => {
+                if (prevMessages.some((message) => message.id === msg.id)) {
+                  return prevMessages;
+                } else {
+                  return setMessages([...prevMessages, msg]);
+                }
+              });
+            }
+          });
+        } else {
+          var userObj = {
+            id: changes.doc.data().user,
+            name: user.username,
+            avatar: user.photo,
+          };
+          var msg = {
+            ...changes.doc.data(),
+            createdAt: changes.doc.data().createdAt.toDate(),
+            user: userObj,
+          };
+          if (changes.type === "added") {
+            console.log("adding");
+            setMessages((prevMessages) => {
+              if (prevMessages.some((message) => message.id === msg.id)) {
+                return prevMessages;
+              } else {
+                return setMessages([...prevMessages, msg]);
+              }
+            });
+          }
         }
       });
     });

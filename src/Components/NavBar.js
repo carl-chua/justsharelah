@@ -10,6 +10,7 @@ import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRo
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
+import EditIcon from "@material-ui/icons/Edit";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
@@ -144,6 +145,15 @@ export default function NavBar() {
     handleMenuClose();
   }
 
+  function handleEditProfile() {
+    if (firebase.auth().currentUser != null && currentUser != null) {
+      history.push("/settings");
+    } else {
+      history.push("/login");
+    }
+    handleMenuClose();
+  }
+
   function handleCategoryClick(category) {
     if (firebase.auth().currentUser != null) {
       history.push(`/categories/${category}`);
@@ -200,6 +210,12 @@ export default function NavBar() {
         </IconButton>
         <p>My Profile</p>
       </MenuItem>
+      <MenuItem onClick={handleEditProfile}>
+        <IconButton color="inherit">
+          <EditIcon />
+        </IconButton>
+        <p>Edit Profile</p>
+      </MenuItem>
       <MenuItem onClick={handleSignOut}>
         <IconButton color="inherit">
           <ExitToAppIcon />
@@ -236,7 +252,10 @@ export default function NavBar() {
         </form>
         <div className="SideButtons">
           <IconButton onClick={() => handleNotificationClick()}>
-            <Badge badgeContent={notifications.length} color="secondary">
+            <Badge
+              badgeContent={notifications ? notifications.length : 0}
+              color="secondary"
+            >
               <NotificationsNoneIcon
                 style={{ color: "white" }}
                 fontSize="large"
