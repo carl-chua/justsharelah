@@ -143,31 +143,36 @@ function Chat({ history }) {
   }
 
   useEffect(() => {
-    getChatGroups(userToken).then(function (querySnapshot) {
-      let temp = [];
-
-      async function fetch(temp) {
-        const storageRef = firebase.storage().ref();
-        querySnapshot.forEach(async function (doc) {
-          var photoRef = storageRef.child("image").child(doc.data().photo);
-          photoRef.getDownloadURL().then(function (url) {
-            var chatGroup = {
-              ...doc.data(),
-              photo: url,
-            };
-            temp.push([doc.id, chatGroup]);
-          });
+    async function fetch() {
+      const storageRef = firebase.storage().ref();
+      let snapshot = await getChatGroups(userToken);
+      let temp = []
+      snapshot.forEach((doc) => {
+        var photoRef = storageRef.child("image").child(doc.data().photo);
+        photoRef.getDownloadURL().then(function (url) {
+          var chatGroup = {
+            ...doc.data(),
+            photo: url,
+          };
+          console.log(JSON.stringify(chatGroup))
+          temp.push([doc.id, chatGroup])
+        }).then(() => {
+          setChatGroups(temp)
+          if(temp.length > 0) {
+            setSelectedChat(temp[0])
+          }
         });
-      }
-      fetch(temp).then(() => {
-        console.log(temp);
-        setChatGroups(temp);
-        if (temp.length !== 0) {
-          setSelectedChat(temp[0]);
-        }
       });
-    });
+    }
+    fetch()
+    
   }, []);
+
+  /*useEffect(() => {
+    if (chatGroups.length !== 0) {
+      setSelectedChat(chatGroups[0]);
+    }
+  },[chatGroups])*/
 
   useEffect(() => {
     if (selectedChat.length !== 0 && !isEmpty(chatUser)) {
