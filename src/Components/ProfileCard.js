@@ -88,6 +88,11 @@ export default function Profile({ user }) {
     setName(event.target.value);
   };
 
+  const [usernameLower, setNameLower] = React.useState(user.usernameLower);
+  const handleNameLowerChange = (event) => {
+    setName(event.target.value);
+  };
+
   const [country, setCountry] = React.useState(user.country);
   const handleCountry = (event) => {
     setCountry(event.target.value);
@@ -116,6 +121,7 @@ export default function Profile({ user }) {
       await firebase.firestore().collection("users").doc(curruser.uid).set(
         {
           username: username,
+          usernameLower: username,
           phoneNumber: phone,
           city: city,
           country: country,
@@ -288,7 +294,7 @@ export default function Profile({ user }) {
             label="Username"
             id="outlined-size-small"
             defaultValue={user.username}
-            onChange={handleNameChange}
+            onChange={handleNameChange, handleNameLowerChange}
             variant="outlined"
             size="small"
             className={classes.textfield}
@@ -329,7 +335,7 @@ export default function Profile({ user }) {
           />
           <RegionDropdown
             country={country}
-            value={user.city}
+            value={city}
             onChange={(val) => setCity(val)}
             style={{
               margin: "1%",
