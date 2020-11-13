@@ -16,7 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import { ConfirmCloseOrdersModal } from "../Components/ConfirmCloseOrdersModal";
 import { useSelector } from "react-redux";
 import { getListingById, closeOrdersForListing } from "../API/Listings";
-import { getUserById } from "../API/Users";
+import { getUserById, getUsername } from "../API/Users";
 
 import {
   getOrderRecordsByListingId,
@@ -71,18 +71,17 @@ export default function UsersListingPage() {
       listingId,
       setOrderRecords
     );
-    // orderRecords.forEach((orderRecord) => {
-    //   getUserById(orderRecord[1].user, setKupper);
-    //   orderRecord[1].userName = kupper.username;
-    // });
+
     return unsubscribe;
   }, []);
 
   // React.useEffect(() => {
-  //   if (orderRecords) {
-  //     getUserById(orderRecords[1].user, setKupper);
-  //   }
-  // }, [orderRecords]);
+  //   orderRecords.forEach((orderRecord) => {
+  //     getUsername(orderRecord[1].user).then((username) => {
+  //       orderRecord[1].user = username;
+  //     });
+  //   });
+  // }, []);
 
   const handleOpen = () => {
     setIsOpen(true);
