@@ -43,7 +43,7 @@ export default function UsersListingPage() {
   const currentUser = useSelector((state) => state.currentUser);
 
   const [listing, setListing] = React.useState({});
-  const [kuppers, setKuppers] = React.useState([]);
+  const [kupper, setKupper] = React.useState({});
   const [orderRecords, setOrderRecords] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -58,15 +58,18 @@ export default function UsersListingPage() {
       listingId,
       setOrderRecords
     );
+    // orderRecords.forEach((orderRecord) => {
+    //   getUserById(orderRecord[1].user, setKupper);
+    //   orderRecord[1].userName = kupper.username;
+    // });
     return unsubscribe;
   }, []);
 
   // React.useEffect(() => {
-  //   orderRecords.map((orderRecord) => {
-
-  //   })
-
-  // }, [listingId]);
+  //   if (orderRecords) {
+  //     getUserById(orderRecords[1].user, setKupper);
+  //   }
+  // }, [orderRecords]);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -90,6 +93,7 @@ export default function UsersListingPage() {
             component="button"
             variant="body2"
             onClick={() => {
+              // history.push("/myWallet");
               history.goBack();
             }}
           >

@@ -65,7 +65,6 @@ export default function UsersListings() {
 
   const [usersListings, setUsersListings] = React.useState([]);
 
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -77,13 +76,11 @@ export default function UsersListings() {
     setSearchString(e.target.value);
   };
 
-  
   React.useEffect(() => {
     getUserListing(userToken).then((listings) => {
       setUsersListings(listings);
     });
   }, [userToken]);
-
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -106,147 +103,156 @@ export default function UsersListings() {
   }
 
   return (
-      <Paper>
-        <AppBar
-          position="static"
+    <Paper>
+      <AppBar
+        position="static"
+        style={{
+          backgroundColor: "white",
+          boxShadow: "none",
+          paddingRight: 20,
+        }}
+      >
+        <div
           style={{
-            backgroundColor: "white",
-            boxShadow: "none",
-            paddingRight: 20,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {<Tabs
+          {
+            <Tabs
               value={value}
               onChange={handleChange}
               style={{ paddingTop: 20 }}
             >
               <Tab label="Ongoing" />
               <Tab label="Past" />
-            </Tabs>}
-            <TextField
-              placeholder="Search"
-              value={searchString}
-              onChange={handleChangeSearch}
-              style={{ width: "30%" }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="disabled" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
-        </AppBar>
-        <TabPanel value={value} index={0}>
-            <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
-              <Table stickyHeader className={classes.table} aria-label="simple table">
-                <TableHead>
-                  <TableRow className={classes.head}>
-                    <TableCell>Listing</TableCell>
-                    <TableCell align="right">Created</TableCell>
-                    <TableCell align="right">Orders</TableCell>
-                    <TableCell align="right">Kuppers</TableCell>
-                  </TableRow>
-                </TableHead>
-                {usersListings.length > 0 ? (
-                  <TableBody>
-                    {usersListings.map(
-                      (listing) =>
-                        !listing[1].isClosed && (
-                          <TableRow
-                            key={listing[0]}
-                            hover
-                            onClick={() => {
-                              history.push("/usersListingPage/" + listing[0]);
-                            }}
-                          >
-                            <TableCell component="th" scope="row">
-                              {listing[1].title}
-                            </TableCell>
-                            <TableCell align="right">
-                              {new Date(
-                                1000 * listing[1].createdDate.seconds
-                              ).toDateString()}
-                            </TableCell>
-                            <TableCell align="right">
-                              {listing[1].orderRecords.length}
-                            </TableCell>
-                            <TableCell align="right">
-                              {listing[1].kuppers.length}
-                            </TableCell>
-                          </TableRow>
-                        )
-                    )}
-                  </TableBody>
-                ) : (
-                  <p>
-                    You do not have any ongoing listings at the moment. Create
-                    one now!
-                  </p>
+            </Tabs>
+          }
+          <TextField
+            placeholder="Search"
+            value={searchString}
+            onChange={handleChangeSearch}
+            style={{ width: "30%" }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="disabled" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        <TableContainer component={Paper} style={{ maxHeight: "70%" }}>
+          <Table
+            stickyHeader
+            className={classes.table}
+            aria-label="simple table"
+          >
+            <TableHead>
+              <TableRow className={classes.head}>
+                <TableCell>Listing</TableCell>
+                <TableCell align="right">Created</TableCell>
+                <TableCell align="right">Orders</TableCell>
+                <TableCell align="right">Kuppers</TableCell>
+              </TableRow>
+            </TableHead>
+            {usersListings.length > 0 ? (
+              <TableBody>
+                {usersListings.map(
+                  (listing) =>
+                    !listing[1].isClosed && (
+                      <TableRow
+                        key={listing[0]}
+                        hover
+                        onClick={() => {
+                          history.push("/usersListingPage/" + listing[0]);
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {listing[1].title}
+                        </TableCell>
+                        <TableCell align="right">
+                          {new Date(
+                            1000 * listing[1].createdDate.seconds
+                          ).toDateString()}
+                        </TableCell>
+                        <TableCell align="right">
+                          {listing[1].orderRecords.length}
+                        </TableCell>
+                        <TableCell align="right">
+                          {listing[1].kuppers.length}
+                        </TableCell>
+                      </TableRow>
+                    )
                 )}
-              </Table>
-            </TableContainer>
-          </TabPanel>
+              </TableBody>
+            ) : (
+              <p>
+                You do not have any ongoing listings at the moment. Create one
+                now!
+              </p>
+            )}
+          </Table>
+        </TableContainer>
+      </TabPanel>
 
-          <TabPanel value={value} index={1}>
-            <TableContainer component={Paper} style = {{maxHeight: "70%"}}>
-              <Table stickyHeader className={classes.table} aria-label="simple table">
-                <TableHead>
-                  <TableRow className={classes.head}>
-                    <TableCell>Listing</TableCell>
-                    <TableCell align="right">Created</TableCell>
-                    <TableCell align="right">Orders</TableCell>
-                    <TableCell align="right">Kuppers</TableCell>
-                  </TableRow>
-                </TableHead>
-                {usersListings.length > 0 ? (
-                  <TableBody>
-                    {usersListings.map(
-                      (listing) =>
-                        listing[1].isClosed && (
-                          <TableRow
-                            key={listing[0]}
-                            hover
-                            onClick={() => {
-                              history.push("/usersListingPage/" + listing[0]);
-                            }}
-                          >
-                            <TableCell component="th" scope="row">
-                              {listing[1].title}
-                            </TableCell>
-                            <TableCell align="right">
-                              {new Date(
-                                1000 * listing[1].createdDate.seconds
-                              ).toDateString()}
-                            </TableCell>
-                            <TableCell align="right">
-                              {listing[1].orderRecords.length}
-                            </TableCell>
-                            <TableCell align="right">
-                              {listing[1].kuppers.length}
-                            </TableCell>
-                          </TableRow>
-                        )
-                    )}
-                  </TableBody>
-                ) : (
-                  <p>
-                    You do not have any past listings at the moment. Create one
-                    now!
-                  </p>
+      <TabPanel value={value} index={1}>
+        <TableContainer component={Paper} style={{ maxHeight: "70%" }}>
+          <Table
+            stickyHeader
+            className={classes.table}
+            aria-label="simple table"
+          >
+            <TableHead>
+              <TableRow className={classes.head}>
+                <TableCell>Listing</TableCell>
+                <TableCell align="right">Created</TableCell>
+                <TableCell align="right">Orders</TableCell>
+                <TableCell align="right">Kuppers</TableCell>
+              </TableRow>
+            </TableHead>
+            {usersListings.length > 0 ? (
+              <TableBody>
+                {usersListings.map(
+                  (listing) =>
+                    listing[1].isClosed && (
+                      <TableRow
+                        key={listing[0]}
+                        hover
+                        onClick={() => {
+                          history.push("/usersListingPage/" + listing[0]);
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {listing[1].title}
+                        </TableCell>
+                        <TableCell align="right">
+                          {new Date(
+                            1000 * listing[1].createdDate.seconds
+                          ).toDateString()}
+                        </TableCell>
+                        <TableCell align="right">
+                          {listing[1].orderRecords.length}
+                        </TableCell>
+                        <TableCell align="right">
+                          {listing[1].kuppers.length}
+                        </TableCell>
+                      </TableRow>
+                    )
                 )}
-              </Table>
-            </TableContainer>
-          </TabPanel>
-      </Paper>
+              </TableBody>
+            ) : (
+              <p>
+                You do not have any past listings at the moment. Create one now!
+              </p>
+            )}
+          </Table>
+        </TableContainer>
+      </TabPanel>
+    </Paper>
   );
 }

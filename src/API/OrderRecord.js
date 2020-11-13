@@ -408,7 +408,7 @@ export async function setOrderRequest(orderId, price, deliveryFee) {
   try {
     await firebase.firestore().collection("orderRecords").doc(orderId).set(
       {
-        paymentStatus: "PENDING",
+        paymentStatus: "UNPAID",
         price: price,
         deliveryFee: deliveryFee,
       },

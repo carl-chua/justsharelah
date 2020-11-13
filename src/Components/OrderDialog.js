@@ -49,7 +49,6 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
   const [values, setValues] = React.useState({});
   const [prices, setPrices] = React.useState({});
   const [deliveryFee, setDeliveryFee] = React.useState();
-  // const [orderRecord, setOrderRecord] = React.useState({});
 
   React.useEffect(() => {
     const unsubscribe = getOrderItemsListener(orderRecord[0], setItems);
@@ -110,7 +109,6 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
                     <TableCell align="right">{item[1].itemQty}</TableCell>
                     <TableCell align="right">
                       <OutlinedInput
-                        value={item[1].price}
                         onChange={(event) => handleChange(item[0], event)}
                         startAdornment={
                           <InputAdornment position="start">$</InputAdornment>
@@ -148,7 +146,7 @@ export default function OrderDialog({ open, handleClose, orderRecord }) {
                       {item[1].itemName}
                     </TableCell>
                     <TableCell align="right">{item[1].itemQty}</TableCell>
-                    <TableCell align="right">{item[1].price}</TableCell>
+                    <TableCell align="right">{item[1].itemPrice}</TableCell>
                   </TableRow>
                 ))}
               <TableRow>
