@@ -123,7 +123,7 @@ export default function UsersListingPage() {
                   <TableCell align="right">Payment Status</TableCell>
                 </TableRow>
               </TableHead>
-              {orderRecords.length > 0 ? (
+              {orderRecords && orderRecords.length > 0 ? (
                 orderRecords.map((orderRecord) => (
                   <>
                     <TableBody>

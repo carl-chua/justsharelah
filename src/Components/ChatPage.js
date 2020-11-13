@@ -73,6 +73,13 @@ function Chat({ history }) {
 
   const [orderRecord, setOrderRecord] = useState();
 
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
   function openCreateOrderModal() {
     setShowCreateOrderModal(true);
   }
@@ -97,11 +104,30 @@ function Chat({ history }) {
     setShowWithdrawOrderModal(false);
   }
 
-  const chatUser = {
+  function loadPhoto(userObj) {
+    try {
+      const storageRef = firebase.storage().ref();
+      var photoRef = storageRef.child("image").child(userObj.avatar);
+      photoRef.getDownloadURL().then(function (url) {
+        userObj.avatar = url;
+        return userObj;
+      });
+    } catch (err) {
+      console.log("Error loading photo for chat:" + err);
+    }
+  }
+
+  var chatUser = {
     id: userToken,
     name: currentUser.username,
     avatar: currentUser.photo,
   };
+
+  /*useEffect(() => {
+    if (!isEmpty(chatUser)) {
+      chatUser = loadPhoto(chatUser);
+    }
+  }, [chatUser]);*/
 
   async function loadPhotos(temp) {
     var chatGroup;
@@ -117,19 +143,34 @@ function Chat({ history }) {
   }
 
   useEffect(() => {
-    getChatGroups(userToken).then((querySnapshot) => {
+    getChatGroups(userToken).then(function (querySnapshot) {
       let temp = [];
-      const storageRef = firebase.storage().ref();
-      querySnapshot.forEach((doc) => temp.push([doc.id, doc.data()]));
-      setChatGroups(temp);
-      if (temp.length != 0) {
-        setSelectedChat(temp[0]);
+
+      async function fetch(temp) {
+        const storageRef = firebase.storage().ref();
+        querySnapshot.forEach(async function (doc) {
+          var photoRef = storageRef.child("image").child(doc.data().photo);
+          photoRef.getDownloadURL().then(function (url) {
+            var chatGroup = {
+              ...doc.data(),
+              photo: url,
+            };
+            temp.push([doc.id, chatGroup]);
+          });
+        });
       }
+      fetch(temp).then(() => {
+        console.log(temp);
+        setChatGroups(temp);
+        if (temp.length !== 0) {
+          setSelectedChat(temp[0]);
+        }
+      });
     });
   }, []);
 
   useEffect(() => {
-    if (selectedChat.length !== 0) {
+    if (selectedChat.length !== 0 && !isEmpty(chatUser)) {
       getOrderRecordByListingIdAndUserId(
         selectedChat[1].listing,
         chatUser.id
@@ -236,7 +277,15 @@ function Chat({ history }) {
               />
             </>
           ) : (
-            <Loading />
+            <h3
+              style={{
+                color: "gray",
+                textAlign: "center",
+                marginLeft: "18%",
+              }}
+            >
+              No messages to show
+            </h3>
           )}
         </div>
       </div>
