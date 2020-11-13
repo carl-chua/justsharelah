@@ -1,4 +1,5 @@
 import firebase from "./Firebase.js";
+import { addNotification } from "./Notification";
 
 export function getUserByUsernameListener(username, setUser) {
   const snapshot = firebase
@@ -131,6 +132,13 @@ export async function followUser(user1Id, user2Id) {
         tn.update(user2Ref, { followers: [user1Id] });
       }
 
+      var followedUsername= user2Doc.get("username");
+      var personFollowingUsername= user1Doc.get("username");
+      var message = personFollowingUsername + " has followed you!";
+
+      addNotification(followedUsername, message);
+
+
       return true;
     });
   } catch (err) {
@@ -166,6 +174,12 @@ export async function unfollowUser(user1Id, user2Id) {
           followers: firebase.firestore.FieldValue.arrayRemove(user1Id),
         });
       }
+
+      var followedUsername= user2Doc.get("username");
+      var personFollowingUsername= user1Doc.get("username");
+      var message = personFollowingUsername + " has unfollowed you!";
+
+      addNotification(followedUsername, message);
 
       return true;
     });
