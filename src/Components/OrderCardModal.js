@@ -188,7 +188,7 @@ export default function OrderCardModal({
               >
                 <p>
                   Total :{" "}
-                  {data.parentListing.price ? data.parentListing.price : "-"}
+                  {data.order[1].price ? data.order[1].price : "-"}
                 </p>
               </div>
               <Dropzone

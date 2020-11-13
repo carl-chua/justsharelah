@@ -84,17 +84,6 @@ export default function Dropzone({
     //setIsPhotoModal(true);
   };
 
-  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-      <ul>
-        {errors.map((e) => (
-          <li key={e.code}>{e.message}</li>
-        ))}
-      </ul>
-    </li>
-  ));
-
   return (
     <section className={styles.container}>
       <div {...getRootProps({ className: styles.dropzone })}>

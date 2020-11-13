@@ -51,7 +51,7 @@ export default function UserSearchResultItem({ user }) {
     <Link to={linkString} style={{ textDecoration: "none" }}>
       <div className="UserSearchResultItem">
         <Card borderBottom={1} className={styles.root}>
-          <CardActionArea onClick={() => console.log("clicked listingcard")}>
+          <CardActionArea>
             <CardContent>
               <Box display="flex" flexDirection="row" alignItems="center">
                 <Avatar

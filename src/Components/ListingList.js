@@ -26,7 +26,6 @@ export default function ListingList({ colSize, dataList }) {
   const theme = useTheme();
   const isNotSmallScreen = useMediaQuery(theme.breakpoints.up("md"));
 
-
   return dataList && dataList.length > 0 ? (
     <GridList
       cols={colSize}
@@ -41,7 +40,7 @@ export default function ListingList({ colSize, dataList }) {
     </GridList>
   ) : (
     <Box className={styles.noListText}>
-      <p>User has no Listings</p>
+      <p>No Listings</p>
     </Box>
   );
 }

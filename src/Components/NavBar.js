@@ -12,21 +12,28 @@ import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import ChatTwoToneIcon from "@material-ui/icons/ChatTwoTone";
 import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 import PersonOutlineTwoToneIcon from "@material-ui/icons/PersonOutlineTwoTone";
+import { Badge } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
 
 import "../Styles/NavBar.css";
 import { useHistory } from "react-router";
+import { useAlert } from "react-alert";
 import { getUserById, getUserByIdListener } from "../API/Users";
 import { AccountCircle } from "@material-ui/icons";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { AuthContext } from "../Auth";
+import {
+  notificationListener,
+  setAllUserNotificationsAsRead,
+} from "../API/Notification";
 
-import {currentUser as currUser} from "../Redux/actions"
-
+import { currentUser as currUser } from "../Redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NavBar() {
+  const alert = useAlert();
+
   const [searchString, setSearchString] = useState(
     useSelector((state) => state.searchString)
   );
@@ -45,9 +54,42 @@ export default function NavBar() {
 
   //const currentUser = useSelector((state) => state.currentUser);
 
-  const[currentUser, setCurrentUser] = React.useState()
+  const [currentUser, setCurrentUser] = React.useState();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [notifications, setNotifications] = React.useState([]);
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
+  React.useEffect(() => {
+    if (!isEmpty(currentUser)) {
+      setNotifications([]);
+      const unsubscribe = notificationListener(
+        setNotifications,
+        currentUser.username
+      );
+
+      const test = () => {
+        return unsubscribe();
+      };
+      return test;
+    }
+  }, [currentUser]);
+
+  React.useEffect(() => {
+    if (
+      notifications.length !== 0 &&
+      notifications[notifications.length - 1] !== undefined
+    ) {
+      alert.show(notifications[notifications.length - 1][1].message);
+    }
+  }, [notifications]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -63,17 +105,17 @@ export default function NavBar() {
     const unsubscribe = getUserByIdListener(userToken, setCurrentUser);
 
     return unsubscribe;
-  },[])
+  }, []);
 
   React.useEffect(() => {
-    if(currentUser) {
-      dispatch(currUser(currentUser))
+    if (currentUser) {
+      dispatch(currUser(currentUser));
     }
-  },[currentUser])
-  
+  }, [currentUser]);
+
   const history = useHistory();
 
-  const {signOut} = React.useContext(AuthContext);
+  const { signOut } = React.useContext(AuthContext);
 
   function handleSearch() {
     if (firebase.auth().currentUser != null) {
@@ -86,7 +128,6 @@ export default function NavBar() {
   }
 
   function handleClickOnName() {
-    
     if (firebase.auth().currentUser != null && currentUser != null) {
       history.push("/");
     } else {
@@ -100,7 +141,7 @@ export default function NavBar() {
     } else {
       history.push("/login");
     }
-    handleMenuClose()
+    handleMenuClose();
   }
 
   function handleCategoryClick(category) {
@@ -131,10 +172,17 @@ export default function NavBar() {
       history.push("/login");
     }
   }
+
   async function handleSignOut(e) {
     e.preventDefault();
     await signOut();
     history.push("/login");
+  }
+
+  async function handleNotificationClick() {
+    await setAllUserNotificationsAsRead(currentUser.username);
+    await setNotifications([]);
+    history.push("/notifications");
   }
 
   const renderMenu = (
@@ -187,6 +235,15 @@ export default function NavBar() {
           </div>
         </form>
         <div className="SideButtons">
+          <IconButton onClick={() => handleNotificationClick()}>
+            <Badge badgeContent={notifications.length} color="secondary">
+              <NotificationsNoneIcon
+                style={{ color: "white" }}
+                fontSize="large"
+              />
+            </Badge>
+          </IconButton>
+
           <IconButton onClick={() => handleChatClick()}>
             <ChatBubbleOutlineRoundedIcon
               style={{ color: "white" }}
@@ -195,7 +252,7 @@ export default function NavBar() {
           </IconButton>
 
           <IconButton onClick={handleWalletClick}>
-            <LocalMallOutlinedIcon
+            <AccountBalanceWalletOutlinedIcon
               style={{ color: "white" }}
               fontSize="large"
             />
@@ -208,16 +265,33 @@ export default function NavBar() {
       </div>
       <div className="NavBarBottom">
         <div className="CategoryButtons">
-        <button onClick= {() => handleCategoryClick('Apparel')}>APPAREL</button>
-          <button onClick= {() => handleCategoryClick('Electronics')}> ELECTRONICS</button>
-          <button onClick= {() => handleCategoryClick('Accessories')}> ACCESSORIES</button>
-          <button onClick= {() => handleCategoryClick('Education')}>EDUCATION</button>
-          <button onClick= {() => handleCategoryClick('Beauty')}>BEAUTY</button>
-          <button onClick= {() => handleCategoryClick('Living')}>LIVING</button>
-          <button onClick= {() => handleCategoryClick('Babies&Kids')}>BABIES & KIDS</button>
-          <button onClick= {() => handleCategoryClick('Others')}>OTHERS</button>
+          <button onClick={() => handleCategoryClick("Apparel")}>
+            APPAREL
+          </button>
+          <button onClick={() => handleCategoryClick("Electronics")}>
+            {" "}
+            ELECTRONICS
+          </button>
+          <button onClick={() => handleCategoryClick("Accessories")}>
+            {" "}
+            ACCESSORIES
+          </button>
+          <button onClick={() => handleCategoryClick("Education")}>
+            EDUCATION
+          </button>
+          <button onClick={() => handleCategoryClick("Beauty")}>BEAUTY</button>
+          <button onClick={() => handleCategoryClick("Living")}>LIVING</button>
+          <button onClick={() => handleCategoryClick("Babies&Kids")}>
+            BABIES & KIDS
+          </button>
+          <button onClick={() => handleCategoryClick("Others")}>OTHERS</button>
         </div>
-        <button className="UploadListing" onClick={() => handleUploadListingClick()}>UPLOAD LISTING</button>
+        <button
+          className="UploadListing"
+          onClick={() => handleUploadListingClick()}
+        >
+          UPLOAD LISTING
+        </button>
       </div>
       {renderMenu}
     </div>

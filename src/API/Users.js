@@ -62,6 +62,16 @@ export async function getUserById(userId, setUser) {
   setUser(snapshot.data());
 }
 
+export async function getUserById2(userId) {
+  const snapshot = await firebase
+    .firestore()
+    .collection("users")
+    .doc(userId)
+    .get();
+
+  return snapshot;
+}
+
 export async function getUserByIdForChat(userId) {
   const snapshot = await firebase
     .firestore()
@@ -159,11 +169,14 @@ export async function getAllUsers() {
 export function changePassword(newPassword) {
   var user = firebase.auth().currentUser;
 
-  user.updatePassword(newPassword).then(function() {
-    // Update successful.
-  }).catch(function(error) {
-    // An error happened.
-  });
+  user
+    .updatePassword(newPassword)
+    .then(function () {
+      // Update successful.
+    })
+    .catch(function (error) {
+      // An error happened.
+    });
 }
 
 export async function getAllUsersExcept(username) {

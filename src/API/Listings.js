@@ -65,6 +65,16 @@ export async function getUserListing(userId) {
   return temp;
 }
 
+export async function getUserListing2(userId) {
+  const snapshot = await db.where("listingOwner", "==", userId).get();
+
+  return snapshot;
+}
+
+/*export async function getFollowingListing(userIdList) {
+
+}*/
+
 export async function getListingById(listingId) {
   const snapshot = await db.doc(listingId).get();
 
@@ -128,20 +138,21 @@ export async function addReview(data) {
 }
 
 export async function getListingsByCategory(category, setListingResults) {
-  const listings = firebase.firestore().collection('listings');
-  const snapshot = await listings.where('category', '==', category).get();
+  const listings = firebase.firestore().collection("listings");
+  const snapshot = await listings.where("category", "==", category).get();
   if (snapshot.empty) {
-    console.log('No listings here');
+    console.log("No listings here");
     return;
   }
-  var temp = []
+  var temp = [];
 
   snapshot.forEach((doc) => {
-    temp.push([doc.id, doc.data()])
+    temp.push([doc.id, doc.data()]);
   });
 
   setListingResults(temp);
 }
+
 export function getListingListener(listingId, setListing) {
   //console.log("LISTING ID" + listingId);
   const unsubscribe = firebase
@@ -159,4 +170,12 @@ export function getListingListener(listingId, setListing) {
     );
 
   return unsubscribe;
+}
+
+export function closeOrdersForListing(listingId) {
+  return firebase
+    .firestore()
+    .collection("listings")
+    .doc(listingId)
+    .update({ isClosed: true });
 }

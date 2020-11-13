@@ -12,10 +12,16 @@ import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Box from "@material-ui/core/Box";
-
+import Typography from "@material-ui/core/Typography";
+import { ConfirmCloseOrdersModal } from "../Components/ConfirmCloseOrdersModal";
 import { useSelector } from "react-redux";
-import { getListingById } from "../API/Listings";
-import { getOrderRecordsByListingId } from "../API/OrderRecord";
+import { getListingById, closeOrdersForListing } from "../API/Listings";
+import { getUserById } from "../API/Users";
+
+import {
+  getOrderRecordsByListingId,
+  getOrderRecordsByListingIdListener,
+} from "../API/OrderRecord";
 import OrderDialog from "../Components/OrderDialog";
 
 const useStyles = makeStyles({
@@ -37,8 +43,22 @@ export default function UsersListingPage() {
   const currentUser = useSelector((state) => state.currentUser);
 
   const [listing, setListing] = React.useState({});
+  const [kupper, setKupper] = React.useState({});
   const [orderRecords, setOrderRecords] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const [
+    showConfirmCloseOrdersModal,
+    setShowConfirmCloseOrdersModal,
+  ] = React.useState(false);
+
+  function openConfirmCloseOrdersModal() {
+    setShowConfirmCloseOrdersModal(true);
+  }
+
+  function closeConfirmCloseOrdersModal() {
+    setShowConfirmCloseOrdersModal(false);
+  }
 
   React.useEffect(() => {
     getListingById(listingId).then((listing) => {
@@ -47,16 +67,22 @@ export default function UsersListingPage() {
   }, [listingId]);
 
   React.useEffect(() => {
-    getOrderRecordsByListingId(listingId).then((querySnapshot) => {
-      var temp = [];
-      querySnapshot.forEach((orderRecord) => {
-        temp.push(orderRecord.data());
-      });
-      setOrderRecords(temp);
-    });
-  }, [listingId]);
+    const unsubscribe = getOrderRecordsByListingIdListener(
+      listingId,
+      setOrderRecords
+    );
+    // orderRecords.forEach((orderRecord) => {
+    //   getUserById(orderRecord[1].user, setKupper);
+    //   orderRecord[1].userName = kupper.username;
+    // });
+    return unsubscribe;
+  }, []);
 
-  console.log(orderRecords);
+  // React.useEffect(() => {
+  //   if (orderRecords) {
+  //     getUserById(orderRecords[1].user, setKupper);
+  //   }
+  // }, [orderRecords]);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -65,6 +91,11 @@ export default function UsersListingPage() {
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  // const getKupperUsername = (kupperId) => {
+  //   getUserById(kupperId, setKupper);
+  //   return kupper.username;
+  // };
 
   return (
     <div>
@@ -75,6 +106,7 @@ export default function UsersListingPage() {
             component="button"
             variant="body2"
             onClick={() => {
+              // history.push("/myWallet");
               history.goBack();
             }}
           >
@@ -92,40 +124,73 @@ export default function UsersListingPage() {
                   <TableCell align="right">Payment Status</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {orderRecords.length > 0 ? (
-                  React.Children.toArray(
-                    orderRecords.map((orderRecord) => (
-                      <>
-                        <TableRow hover onClick={() => handleOpen()}>
-                          <TableCell component="th" scope="row">
-                            {orderRecord.user}
-                          </TableCell>
-                          <TableCell align="right">
-                            {new Date(
-                              1000 * orderRecord.date.seconds
-                            ).toDateString()}
-                          </TableCell>
-                          <TableCell align="right">
-                            {orderRecord.paymentStatus}
-                          </TableCell>
-                        </TableRow>
-                        <OrderDialog
-                          open={isOpen}
-                          handleClose={handleClose}
-                          orderRecord={orderRecord}
-                        />
-                      </>
-                    ))
-                  )
-                ) : (
-                  <p>There are no kuppers at the moment!</p>
-                )}
-              </TableBody>
+              {orderRecords.length > 0 ? (
+                orderRecords.map((orderRecord) => (
+                  <>
+                    <TableBody>
+                      <TableRow
+                        key={orderRecord[0]}
+                        hover
+                        onClick={() => handleOpen()}
+                      >
+                        <TableCell component="th" scope="row">
+                          {orderRecord[1].user}
+                        </TableCell>
+                        <TableCell align="right">
+                          {new Date(
+                            1000 * orderRecord[1].date.seconds
+                          ).toDateString()}
+                        </TableCell>
+                        <TableCell align="right">
+                          {orderRecord[1].paymentStatus}
+                        </TableCell>
+                      </TableRow>
+                      <OrderDialog
+                        open={isOpen}
+                        handleClose={handleClose}
+                        orderRecord={orderRecord}
+                      />
+                    </TableBody>
+                  </>
+                ))
+              ) : (
+                <Typography align="centre" variant="h6" component="h6">
+                  There are no kuppers at the moment!
+                </Typography>
+              )}
             </Table>
           </TableContainer>
         </Paper>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          {!listing.isClosed ? (
+            <button
+              style={{
+                backgroundColor: "#cc7f5d",
+                color: "#ffffff",
+                border: "none",
+                cursor: "pointer",
+                overflow: "hidden",
+                outline: "none",
+                fontSize: "25px",
+                marginTop: "18px",
+                height: "48px",
+                width: "280px",
+                borderRadius: "5px",
+              }}
+              onClick={openConfirmCloseOrdersModal}
+            >
+              CLOSE ORDERS
+            </button>
+          ) : (
+            <h3>Orders Closed!</h3>
+          )}
+        </div>
       </Container>
+      <closeConfirmCloseOrdersModal
+        show={showConfirmCloseOrdersModal}
+        handleClose={closeConfirmCloseOrdersModal}
+        listingId={listingId}
+      />
     </div>
   );
 }

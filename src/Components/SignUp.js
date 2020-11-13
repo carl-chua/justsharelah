@@ -73,7 +73,7 @@ export default function SignUp() {
   const classes = useStyles();
   const alert = useAlert();
 
-  const { signUp } = React.useContext(AuthContext);
+  const { signIn, signUp } = React.useContext(AuthContext);
 
   const history = useHistory();
 
@@ -97,6 +97,7 @@ export default function SignUp() {
     });
 
     if(result) {
+      signIn({email : email.value, password : password.value})
       history.push("/login")
     }
   }
