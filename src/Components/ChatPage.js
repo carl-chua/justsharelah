@@ -175,18 +175,26 @@ function Chat({ history }) {
   useEffect(() => {
     if (userToken && currentUser) {
       try {
-      const storageRef = firebase.storage().ref();
-      var photoRef = storageRef.child("image").child(currentUser.imageUrl);
-      photoRef.getDownloadURL().then(function (url) {
-        setChatUser({
-          id: userToken,
-          name: currentUser.username,
-          avatar: url,
-        });
-      });
-    } catch(err) {
-      console.log(err);
-    }
+        if (currentUser.imageUrl) {
+          const storageRef = firebase.storage().ref();
+          var photoRef = storageRef.child("image").child(currentUser.imageUrl);
+          photoRef.getDownloadURL().then(function (url) {
+            setChatUser({
+              id: userToken,
+              name: currentUser.username,
+              avatar: url,
+            });
+          });
+        } else {
+          setChatUser({
+            id: userToken,
+            name: currentUser.username,
+            avatar: null,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
   }, []);
 
