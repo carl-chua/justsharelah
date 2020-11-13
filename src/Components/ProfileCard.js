@@ -121,7 +121,7 @@ export default function Profile({ user }) {
       await firebase.firestore().collection("users").doc(curruser.uid).set(
         {
           username: username,
-          usernameLower: username,
+          usernameLower: username.toLowerCase(),
           phoneNumber: phone,
           city: city,
           country: country,
@@ -129,7 +129,7 @@ export default function Profile({ user }) {
         },
         { merge: true }
       );
-      alert("Image saved!");
+      alert("Saved Changes!");
       return true;
     } catch (error) {
       console.log(error);

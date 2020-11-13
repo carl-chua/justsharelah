@@ -13,7 +13,7 @@ import Link from "@material-ui/core/Link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import { ConfirmCloseOrdersModal } from "../Components/ConfirmCloseOrdersModal";
+import ConfirmCloseOrdersModal from "../Components/ConfirmCloseOrdersModal";
 import { useSelector } from "react-redux";
 import { getListingById, closeOrdersForListing } from "../API/Listings";
 import { getUserById, getUsername } from "../API/Users";
@@ -185,7 +185,7 @@ export default function UsersListingPage() {
           )}
         </div>
       </Container>
-      <closeConfirmCloseOrdersModal
+      <ConfirmCloseOrdersModal
         show={showConfirmCloseOrdersModal}
         handleClose={closeConfirmCloseOrdersModal}
         listingId={listingId}
