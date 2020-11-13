@@ -31,7 +31,7 @@ export function notificationListener(setNotifications, username) {
         } else if (changes.type === "removed") {
           setNotifications((prevData) =>
             prevData.map((data) => {
-              if (data[0] !== changes.doc.id) {
+              if (data && data[0] !== changes.doc.id) {
                 return data;
               }
             })
