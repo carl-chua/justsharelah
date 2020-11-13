@@ -17,6 +17,7 @@ import { Avatar } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import PhotoModal from "./PhotoModal";
 import { useSelector } from "react-redux";
+import { getOrderRecordByListingIdAndUserId } from "../API/OrderRecord";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,9 +74,9 @@ const ListingDetails = () => {
   var [photo, setPhoto] = React.useState("");
   var [imgUrl, setImgUrl] = React.useState("");
   var [members, setMembers] = React.useState("");
-  var [kuppers, setKuppers] = React.useState("");
+  var [orderRecords, setOrderRecords] = React.useState("");
   var [membersArray, setMembersArray] = React.useState([]);
-  var [kuppersArray, setKuppersArray] = React.useState([]);
+  var [orderRecordsArray, setOrderRecordsArray] = React.useState([]);
   var [chatGroup, setChatGroup] = React.useState("");
   var [createdDate, setCreatedDate] = React.useState(new Date());
   var [rating, setRating] = React.useState(0.0);
@@ -84,6 +85,8 @@ const ListingDetails = () => {
   var [button, setButton] = React.useState();
   var [profileUrl, setProfileUrl] = React.useState("");
   var [numReviews, setNumReviews] = React.useState("");
+  var [isClosed, setIsClosed] = React.useState(false);
+  var [orderSize, setOrderSize] = React.useState(0);
   let user = firebase.auth().currentUser;
   //get listing id from params
   let { id } = useParams();
@@ -180,12 +183,13 @@ const ListingDetails = () => {
           setShopLink(doc.data().websiteLink);
           setPhoto(doc.data().photo);
           setMembers(doc.data().members.length);
-          setKuppers(doc.data().kuppers.length);
+          setOrderRecords(doc.data().orderRecords.length);
           setMembersArray(doc.data().members);
-          setKuppersArray(doc.data().kuppers);
+          setOrderRecordsArray(doc.data().orderRecords);
           setChatGroup(doc.data().chatGroup);
           setCreatedDate(doc.data().createdDate);
           setListingOwner(doc.data().listingOwner);
+          setIsClosed(doc.data().isClosed);
           // Create a reference to the file we want to download
           const storageRef = firebase.storage().ref();
           var photoRef = storageRef.child("image").child(doc.data().photo);
@@ -258,6 +262,10 @@ const ListingDetails = () => {
           alert("No such document!");
         }
       });
+
+      getOrderRecordByListingIdAndUserId(id, userToken).then(snap => {
+        setOrderSize(snap.size) // will return the collection size
+     });;
   }
 
   React.useEffect(() => {
@@ -278,63 +286,13 @@ const ListingDetails = () => {
 
   const history = useHistory();
 
-  function handleProfileClick() {
-    history.push(`/user/${authorName}`);
-  }
-
-
   const[showPhotoModal, setShowPhotoModal] = React.useState(false);
 
   function handlePhotoModal() {
     setShowPhotoModal(true)
   }
 
-  //not working
-  function loadButton() {
-    //listingOwner wont see join or leave listing buttons
-    if (userToken !== listingOwner) {
-      let button1;
-      //kuppers cant leave
-      if (kuppersArray.includes(userToken)) {
-        button1 = (
-          <Button
-            disabled="true"
-            className={classes.joinChatButton}
-            variant="contained"
-            color="primary"
-            style={{ background: "#4db6ac" }}
-          >
-            Leave Listing
-          </Button>
-        );
-      } else if (membersArray.includes(userToken)) {
-        button1 = (
-          <Button
-            onClick={handleLeave}
-            className={classes.joinChatButton}
-            variant="contained"
-            color="primary"
-            style={{ background: "#4db6ac" }}
-          >
-            Leave Listing
-          </Button>
-        );
-      } else {
-        button1 = (
-          <Button
-            onClick={handleJoin}
-            className={classes.joinChatButton}
-            variant="contained"
-            color="primary"
-            style={{ background: "#4db6ac" }}
-          >
-            Join Listing
-          </Button>
-        );
-      }
-      setButton(button1);
-    }
-  }
+ 
 
   function handleCategoryClick(category) {
     if (firebase.auth().currentUser != null) {
@@ -349,7 +307,7 @@ const ListingDetails = () => {
   }
 
   return (
-    <div className={classes.root} style={{ background: "#f1f8e9" }}>
+    <div className={classes.root} >
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Card className={classes.root}>
@@ -375,19 +333,29 @@ const ListingDetails = () => {
               ></Avatar>
               &nbsp; &nbsp;
               <Tooltip title="Click to view profile page" arrow>
-                <Typography
-                  variant="h4"
-                  style={{ color: "#212121" }}
-                  onClick={handleProfileClick}
-                >
+                
+                    <Link
+                        onClick={() => handleProfileClick(authorName)}
+                        style={{
+                        textDecoration: "none",
+                        color: "#212121",
+                        fontSize: "50px",
+                        }}
+                    >
                   {authorName}
-                </Typography>
+                  </Link>
+                
               </Tooltip>
               &nbsp; &nbsp;
               <div>
-                {userToken !== listingOwner &&
+              {isClosed  ? (
+                 <h6>Listing is closed!</h6>
+                ) : (
+                  ""
+                )}
+                {!isClosed && userToken !== listingOwner &&
                 membersArray.includes(userToken) &&
-                !kuppersArray.includes(userToken) ? (
+                orderSize == 0 ? (
                   <Button
                     onClick={handleLeave}
                     className={classes.joinChatButton}
@@ -400,9 +368,9 @@ const ListingDetails = () => {
                 ) : (
                   ""
                 )}
-                {userToken !== listingOwner &&
+                {!isClosed && userToken !== listingOwner &&
                 !membersArray.includes(userToken) &&
-                !kuppersArray.includes(userToken) ? (
+                 orderSize == 0 ? (
                   <Button
                     onClick={handleJoin}
                     className={classes.joinChatButton}
@@ -415,8 +383,8 @@ const ListingDetails = () => {
                 ) : (
                   ""
                 )}
-                {userToken !== listingOwner &&
-                kuppersArray.includes(userToken) ? (
+                {!isClosed && userToken !== listingOwner &&
+                orderSize > 0 ? (
                   <Button
                     disabled="true"
                     className={classes.joinChatButton}
@@ -490,7 +458,7 @@ const ListingDetails = () => {
                 Number of kuppers:
               </Typography>
               &nbsp; &nbsp;
-              <Typography variant="p">{kuppers}</Typography>
+              <Typography variant="p">{orderRecords}</Typography>
             </div>
             <Typography variant="p" style={{ color: "#212121" }}>
               Details:
