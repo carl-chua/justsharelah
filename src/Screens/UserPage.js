@@ -200,7 +200,7 @@ export default function UserPage({ history }) {
             className = {styles.button}
             onClick = {handleEditProfile}
             >
-            Edit
+            Edit Profile
           </Button>
         </Grid>
         <Grid item xs={12} md={9}>

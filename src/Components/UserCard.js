@@ -73,7 +73,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
        setRating(total)
     },[reviews])
 
-    var [imgUrl, setImgUrl] = React.useState("");
+    const [imgUrl, setImgUrl] = React.useState(user.imageUrl);
 
     function loadPhoto() {
         // Create a reference to the file we want to download
@@ -110,7 +110,7 @@ export default function UserCard({user, userId, openFollowingModal, openFollower
                 </Avatar>
                 <div>
                     <p className = {styles.nameText}>{user.username}</p>
-                    <p className = {styles.subText}>{user.city}</p>
+                    <p className = {styles.subText}>{user.region}</p>
                 </div>
                 <Box
                     style = {{

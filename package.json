@@ -21,6 +21,7 @@
     "react-alert-template-basic": "^1.0.0",
     "react-bootstrap": "^1.4.0",
     "react-chat-widget": "^3.0.5",
+    "react-country-region-selector": "^3.0.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.2.4",
     "react-dropzone-uploader": "^2.11.0",
