@@ -100,12 +100,11 @@ export default function Dropzone({
         >
           {url && (
             <IconButton
-              style={{ maxHeight: 190, maxWidth: "100%" }}
               disableRipple={true}
               onClick={handleOpen}
               style={{ backgroundColor: "transparent" }}
             >
-              <img src={url} style={{ maxHeight: 190, maxWidth: "100%" }} />
+              <img src={url} style={{ maxHeight: 100, maxWidth: "100%" }} />
             </IconButton>
           )}
         </div>

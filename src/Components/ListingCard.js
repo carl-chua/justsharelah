@@ -47,6 +47,8 @@ export default function ListingCard({ key, data }) {
   const history = useHistory();
   //console.log("DATA IN LISTINGCARD :" + JSON.stringify(data))
 
+  const[loading, setLoading] = React.useState(false);
+
   function handleNavigate() {
     history.push(`/listingDetails/${data[0]}`);
   }
@@ -57,11 +59,13 @@ export default function ListingCard({ key, data }) {
     // Create a reference to the file we want to download
     const storageRef = firebase.storage().ref();
     if (data[1] && data[1].photo) {
+      setLoading(true)
       var photoRef = storageRef.child("image").child(data[1].photo);
 
       // Get the download URL
       photoRef.getDownloadURL().then(function (url) {
         setImgUrl(url);
+        setLoading(false);
       });
     }
   }
@@ -70,7 +74,7 @@ export default function ListingCard({ key, data }) {
     loadPhoto();
   }, []);
 
-  return data[1] ? (
+  return data[1] && !loading ? (
     <Card className={styles.root}>
       <CardActionArea onClick={handleNavigate}>
         <CardMedia
