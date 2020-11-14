@@ -139,37 +139,26 @@ export default function Profile({ user }) {
     }
   }
 
-  function useHandleImg(e) {
-    //generate random string for reference to image stored in storage
-    var imgId = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < 8; i++) {
-      imgId += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    try {
-      setPhotoId(imgId);
-      firebase
-        .storage()
-        .ref()
-        .child("image")
-        .child(imgId)
-        .getDownloadURL()
-        .then((url) => {
-          console.log(url);
-          profileUrl = url;
-        });
-      const file = e.target.files[0];
-      const storageRef = firebase.storage().ref();
-      const fileRef = storageRef.child("image");
-      fileRef.child(imgId).put(file);
-      //console.log(typeof file.name);
-      alert("Image uploaded!");
-    } catch (err) {
-      setPhotoId(null);
-    }
-  }
+
+    // const handleImg = async (e) => {
+    function useHandleImg (e) {
+        //generate random string for reference to image stored in storage
+        var imgId = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < 8; i++ ) {
+           imgId += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        
+        setPhotoId(imgId);
+        const file = e.target.files[0];
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child('image');
+        fileRef.child(imgId).put(file);
+        //console.log(typeof file.name);
+        alert.show("Image saved!");
+
+    };
 
   var [imgUrl, setImgUrl] = React.useState("");
 
