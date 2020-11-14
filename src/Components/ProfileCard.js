@@ -3,6 +3,7 @@ import firebase from "../API/Firebase";
 import PropTypes from "prop-types";
 import { Box, Avatar, Button } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import { useAlert } from "react-alert";
 
 import {
   CountryDropdown,
@@ -82,6 +83,7 @@ const SGcities = [
 
 export default function Profile({ user }) {
   const classes = useStyles();
+  const alert = useAlert();
 
   const [username, setName] = React.useState(user.username);
   const handleNameChange = (event) => {
@@ -129,7 +131,7 @@ export default function Profile({ user }) {
         },
         { merge: true }
       );
-      alert("Saved Changes!");
+      alert.show("Changes Saved Successfully!");
       return true;
     } catch (error) {
       console.log(error);
@@ -335,6 +337,9 @@ export default function Profile({ user }) {
               minHeight: "6.5vh",
               textAlign: "start",
               padding: "1%",
+              backgroundColor: 'transparent',
+              borderColor: '#7AA18A',
+              borderRadius: '3px'
             }}
           />
           <RegionDropdown
@@ -349,6 +354,9 @@ export default function Profile({ user }) {
               minHeight: "6.5vh",
               textAlign: "start",
               padding: "1%",
+              backgroundColor: 'transparent',
+              borderColor: '#7AA18A',
+              borderRadius: '3px'
             }}
           />
         </div>
