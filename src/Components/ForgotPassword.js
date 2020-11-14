@@ -4,6 +4,7 @@ import firebase from "../API/Firebase";
 import { Box, Button } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useAlert } from "react-alert";
 
 
 
@@ -50,6 +51,7 @@ export default function PasswordReset() {
   const [email, setEmail] = useState("");
   const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);
   const [error, setError] = useState(null);
+  const alert = useAlert();
 
   const classes = useStyles();
   
@@ -68,7 +70,8 @@ export default function PasswordReset() {
         setTimeout(() => {setEmailHasBeenSent(false)}, 3000);
       })
       .catch(() => {
-        setError("Error resetting password");
+        setError();
+        alert.show("Error resetting password, please try again!")
       });
   };
 
