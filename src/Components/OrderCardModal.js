@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: "30%",
     minWidth: 350,
     maxWidth: 800,
-    maxHeight: "100%",
+    maxHeight: "80%",
     overflow: "scroll",
   },
   cardContent: {
@@ -148,8 +148,8 @@ export default function OrderCardModal({
       <Modal open={show} onClose={handleCloseModal} className={styles.root}>
         <Card className={styles.cardContainer}>
           <CardContent className={styles.cardContent}>
-            <div style={{ maxHeight: 500, width: "100%", paddingBottom: 20 }}>
-              <h2 style={{ textAlign: "center" }}>
+            <div style={{ maxHeight : 500, width: "100%", }}>
+              <h2 style={{ textAlign: "center", marginTop : 0, }}>
                 {data.parentListing ? data.parentListing.title : ""}
               </h2>
               <TableContainer>
@@ -182,8 +182,6 @@ export default function OrderCardModal({
                   display: "flex",
                   justifyContent: "space-between",
                   width: "100%",
-                  paddingLeft: 10,
-                  paddingRight: 20,
                 }}
               >
                 <p>Total : {data.order[1].price ? data.order[1].price : "-"}</p>
