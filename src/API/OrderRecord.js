@@ -152,6 +152,19 @@ export async function deleteOrderRecord(orderRecordId, currentUserUsername) {
 
   addNotification(listingOwner.username, message);
 
+  const listingRef = firebase
+    .firestore()
+    .collection("listings")
+    .doc(orderRecord.listingId);
+
+  const userRef = firebase
+    .firestore()
+    .collection("users")
+    .doc(orderRecord.user);
+
+  //listingRef.update("orderRecords", FieldValue.arrayRemove(orderRecordId));
+  //userRef.update("orderRecords", FieldValue.arrayRemove(orderRecordId));
+
   try {
     await existingOrdersItemsRef.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -160,6 +173,14 @@ export async function deleteOrderRecord(orderRecordId, currentUserUsername) {
     });
 
     await batch.delete((await orderRecordRef.get()).ref);
+
+    await batch.update(listingRef, {
+      orderRecords: firebase.firestore.FieldValue.arrayRemove(orderRecordId),
+    });
+
+    await batch.update(userRef, {
+      orderRecords: firebase.firestore.FieldValue.arrayRemove(orderRecordId),
+    });
 
     await batch.commit();
 
@@ -449,6 +470,7 @@ export async function setOrderPayment(orderId, receiptUrl) {
     return false;
   }
 }
+
 export async function setOrderRequest(orderId, price, deliveryFee) {
   try {
     await firebase.firestore().collection("orderRecords").doc(orderId).set(
