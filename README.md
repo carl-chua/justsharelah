@@ -1,3 +1,8 @@
+## Demo
+This app is deployed on heroku.
+Click on this link to view the demo
+https://justsharelah.herokuapp.com/
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
