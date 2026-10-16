@@ -5,7 +5,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { sendMessage, messagesListener } from "../API/Chat";
 import { getUserByIdForChat } from "../API/Users";
-import { DateSeparator } from "stream-chat-react";
 import "../Styles/ChatBox.css";
 import { useHistory } from "react-router";
 

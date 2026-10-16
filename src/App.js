@@ -3,7 +3,7 @@ import "./App.css";
 import { demoListener, demoPost, demoFetch } from "./API/DemoAPI";
 import DemoPage from "./DemoPage";
 import { useSelector, useDispatch } from "react-redux";
-import { demoHeader, reSignIn, currentUser as currUser } from "./Redux/actions";
+import { reSignIn, currentUser as currUser } from "./Redux/actions";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import AuthProvider from "./Auth";
 import HomePage from "./Components/HomePage";

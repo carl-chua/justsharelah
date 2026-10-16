@@ -1,4 +1,7 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
 
 let config = {
     /*apiKey: "AIzaSyCYf-0-MKBW5-N8gA15E9cpKrYLENxbl2g",

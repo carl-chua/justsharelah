@@ -15,7 +15,6 @@ import Grid from "@material-ui/core/Grid";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import "../Styles/Styles.css";
-import { firestore } from "firebase";
 
 const useStyles = makeStyles({
   root: {
